@@ -387,7 +387,7 @@ This is not a possible value on a 0-6 sense of belonging scale.
 ---
 # Beyond your data: the mile
 
-Since the first sub-4-minute miles were run in 1954, the men's world record in the mile has fallen at a remarkably steady pace. Let's use the record from 1954 through 1999 to predict the future!
+Since the men's world record in the mile first dipped below 4:10 in 1931, it has fallen at a remarkably steady pace. Let's use the record from 1931 through 1999 to predict the future!
 
 
 ``` r
@@ -396,12 +396,12 @@ mile &lt;- readxl::read_xlsx(here("data/mile_record_progress.xlsx"),
           filter(!is.na(seconds))
 
 mile_fit &lt;- lm(seconds ~ year,
-               data = filter(mile, year &gt;= 1954 &amp; year &lt;= 1999))
+               data = filter(mile, year &gt;= 1931 &amp; year &lt;= 1999))
 ```
 
 &lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-19-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-.small[Looks like a pretty good fit! In fact, R&lt;sup&gt;2&lt;/sup&gt; = 0.96.]
+.small[Looks like a pretty good fit! In fact, R&lt;sup&gt;2&lt;/sup&gt; = 0.97.]
 
 ---
 # Beyond your data: the mile
@@ -415,24 +415,24 @@ tidy(mile_fit)
 ## # A tibble: 2 × 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)  830.     18.5          44.8 2.40e-38
-## 2 year          -0.304   0.00938     -32.4 2.45e-32
+## 1 (Intercept)  994.     16.7          59.4 1.14e-59
+## 2 year          -0.387   0.00852     -45.4 5.00e-52
 ```
 
 --
 
 What would we have predicted the world record to be **today (in 2026)**?
 
-`$$\Large \hat{seconds} = 830.44 - 0.304*(\boldsymbol{2026}) = 214.7$$`
+`$$\Large \hat{seconds} = 994.36 - 0.3866*(\boldsymbol{2026}) = 211.1$$`
 
-That's a predicted world record of **3:34.7**. The actual world record in 2026 is 222.66 seconds, or **3:42.66**...a full eight seconds slower than we predicted!
+That's a predicted world record of **3:31.1**. The actual world record in 2026 is 222.66 seconds, or **3:42.66**...more than eleven seconds slower than we predicted!
 
 ---
 # Beyond your data: the mile
 
 &lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-21-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-.small[Taken to its logical extreme, our model predicts that someone will run a mile in 0 seconds in the year 2733. **Only predict within the bounds of your data!**]
+.small[Taken to its logical extreme, our model predicts that someone will run a mile in 0 seconds in the year 2572. **Only predict within the bounds of your data!**]
 
 ---
 class: middle, inverse

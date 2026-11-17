@@ -523,7 +523,7 @@ This is not a possible value on a 0-6 sense of belonging scale.
 ---
 # Beyond your data: the mile
 
-Since the first sub-4-minute miles were run in 1954, the men's world record in the mile has fallen at a remarkably steady pace. Let's use the record from 1954 through 1999 to predict the future!
+Since the men's world record in the mile first dipped below 4:10 in 1931, it has fallen at a remarkably steady pace. Let's use the record from 1931 through 1999 to predict the future!
 
 ```{r, echo=T}
 mile <- readxl::read_xlsx(here("data/mile_record_progress.xlsx"),
@@ -531,12 +531,12 @@ mile <- readxl::read_xlsx(here("data/mile_record_progress.xlsx"),
           filter(!is.na(seconds))
 
 mile_fit <- lm(seconds ~ year,
-               data = filter(mile, year >= 1954 & year <= 1999))
+               data = filter(mile, year >= 1931 & year <= 1999))
 ```
 
 ```{r, echo=F, fig.height=2.75}
 mile %>%
-  filter(year >= 1954 & year <= 1999) %>%
+  filter(year >= 1931 & year <= 1999) %>%
   ggplot(aes(x = year, y = seconds)) +
   geom_step() +
   geom_smooth(method = 'lm', se = F) +
@@ -557,28 +557,28 @@ tidy(mile_fit)
 
 What would we have predicted the world record to be **today (in 2026)**?
 
-$$\Large \hat{seconds} = 830.44 - 0.304*(\boldsymbol{2026}) = 214.7$$
+$$\Large \hat{seconds} = 994.36 - 0.3866*(\boldsymbol{2026}) = 211.1$$
 
-That's a predicted world record of **3:34.7**. The actual world record in 2026 is 222.66 seconds, or **3:42.66**...a full eight seconds slower than we predicted!
+That's a predicted world record of **3:31.1**. The actual world record in 2026 is 222.66 seconds, or **3:42.66**...more than eleven seconds slower than we predicted!
 
 ---
 # Beyond your data: the mile
 
 ```{r, echo=F, fig.height=5}
-mile_pred <- tibble(year = 1954:2026) %>%
+mile_pred <- tibble(year = 1931:2026) %>%
   mutate(seconds = predict(mile_fit, newdata = .))
 
 ggplot() +
   geom_step(data = mile, aes(x = year, y = seconds)) +
   geom_line(data = filter(mile_pred, year <= 1999), aes(x = year, y = seconds), color = "blue", linewidth = 1) +
   geom_line(data = filter(mile_pred, year >= 1999), aes(x = year, y = seconds), color = "blue", linetype = "dashed", linewidth = 1) +
-  annotate("rect", xmin = 1954, xmax = 1999, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "blue") +
-  annotate("text", x = 1976, y = 265, label = "Data used to fit", color = "blue", size = 5) +
+  annotate("rect", xmin = 1931, xmax = 1999, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "blue") +
+  annotate("text", x = 1965, y = 265, label = "Data used to fit", color = "blue", size = 5) +
   xlab("Year") + ylab("World record (seconds)") +
   theme_minimal(base_size = 16)
 ```
 
-.small[Taken to its logical extreme, our model predicts that someone will run a mile in 0 seconds in the year 2733. **Only predict within the bounds of your data!**]
+.small[Taken to its logical extreme, our model predicts that someone will run a mile in 0 seconds in the year 2572. **Only predict within the bounds of your data!**]
 
 ---
 class: middle, inverse
