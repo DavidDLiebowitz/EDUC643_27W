@@ -1,0 +1,130 @@
+---
+title: "EDUC 643 Assignments"
+site: distill::distill_website
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
+    theme: cosmo
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# 1. General Guidelines
+
+The goal of the assignments is to practice the concepts and vocabulary we have been modeling in class and implement some of the techniques we have learned. You may work on your own or collaborate with one (1) or two partner(s). Please make sure that you engage in a full, fair and mutually-agreeable collaboration if you choose to collaborate. If you do collaborate, you should plan, execute and write-up your analyses together, not simply divide the work. Please make sure to indicate clearly when your work is joint and any other individual or resource (outside of class material) you consulted in your responses. Per the syllabus, please clearly state if you have relied on AI tools to generate your original text. You need not do so if you have used these tools only to help with coding tasks and/or light editing.
+
+
+The first assignment covers the first two units and is worth 20 points. The second through fourth assignments are each worth 13 points, and the final project is worth 30 points. Assignments are due at 11:59pm on their due date. If circumstances arise that require an extension on an assignment, please communicate with the lead instructor *prior* to the assignment's due date. We will publish the answer keys to assignments prior to class the following day; thus, late assignments will be penalized by two (2) points. While it is acceptable to consult the answer keys if you submit an assignment late, submissions that re-iterate word for word (or nearly so) the answer key will not be accepted. All late assignments must be turned in by the last day of classes. Late final projects may result in a final grade of I or D/F. Assignments scoring below 90 percent may be revised and can receive a maximum score of up to 90 percent.
+
+# 2. Submission Requirements
+
+Please upload below two files on Canvas:  
+
+ * An .html, .doc/x, or .pdf file that includes your typed responses (in your own words and not identical to anybody else's), tables, and/or figures to the problems  
+ * The .Rmd or .R file that you used to render the tables and figures in the above html/doc/pdf. 
+
+
+### 3. Details about Assignments
+
+#### 3.1. Assignment 1
+
+**Bivariate relationships and regression assumptions**
+
+Objectives of this assignment:
+
+ * Create bivariate scatterplots and bivariate regression estimates
+
+ * State null hypothesis and interpret results of linear regression test of bivariate continuous relationship
+ 
+ * Substantively interpret results of bivariate relationship to non-expert audience
+ 
+ * Describe assumptions required of Ordinary Least Squares estimators
+ 
+ * Assess regression fit for extent to which it satisfies OLS assumptions
+ 
+ * Propose solutions to OLS assumption violations and discuss their potential merits and drawbacks 
+
+
+Deadline: Feb. 1, 11:59pm
+
+Download: [html file](./assignments/assignment_1.html) | [nerds dataset](./data/nerds.csv)
+
+Key: [doc file](./assignments/keys/assignment_1_key.docx) | [R script](./assignments/keys/assignment_1_key.R)
+
+#### 3.2. Assignment 2
+
+**Multiple regression**
+
+Objectives of this assignment:
+
+ * Fit multiple regression models and interpret results, including making appropriate inferences
+ 
+ * Plot and interpret an estimated bivariate relationship from a multiple regression model at prototypical values of a third variable
+ 
+ * Assess multiple regression results for assumptions violations
+
+Deadline: Feb. 12, 11:59pm
+
+Download: [html file](./assignments/assignment_3.html) | [nerds dataset](./data/nerds.csv)
+
+Key: [doc file](./assignments/keys/assignment_2_key.docx) | [R script](./assignments/keys/assignment_2_key.R)
+
+
+#### 3.3. Assignment 3
+
+**Categorical predictors**
+
+Objectives of this assignment:
+
+ * Fit, visualize and interpret bivariate and multiple regression models including categorical predictors
+ 
+ * Use ANOVA as a mechanism to conduct an omnibus test of between-group variation
+ 
+ * Use categorical predictors as covariates and use them to plot prototypical values of continuous relationships
+
+Deadline: Feb. 26, 12:01pm (noon)
+
+
+Download: [html file](./assignments/assignment_4.html) | [nerds dataset](./data/nerds.csv)
+
+Key: [doc file](./assignments/keys/assignment_3_key.docx) | [R script](./assignments/keys/assignment_3_key.R)
+
+
+#### 3.4. Assignment 4
+
+**Interactions**
+
+Objectives of this assignment:
+
+ * Fit and interpret statistical interaction models
+ 
+ * Construct plots conveying substantively accessible results of interaction models
+ 
+Deadline: March 8, 12:01pm (noon)
+
+
+Download: [html file](./assignments/assignment_5.html) | [nerds dataset](./data/nerds.csv)
+
+Key: [doc file](./assignments/keys/assignment_4_key.docx) | [R script](./assignments/keys/assignment_4_key.R)
+
+#### 3.5. Final Project
+
+**The Works**
+
+Objectives of this assignment:
+
+ * Calculate and interpret descriptive statistics about categorical and continuous quantitative data
+ 
+ * Use the General Linear Model framework to answer relational research questions that are amenable to the use of quantitative methods to respond to these questions
+ 
+ * Using tables, figures and words, interpret the results of your analysis for an academic research audience
+
+Deadline: March 18, 12:01pm
+
+Download: [html file](./assignments/assignment_6.html) | [seda dataset](./data/seda.csv)

@@ -1,0 +1,32 @@
+---
+title: "EDUC 643: Applied Statistics in Education and Human Services II"
+subtitle: "College of Education, University of Oregon"
+author: "David D. Liebowitz"
+
+site: distill::distill_website
+output:
+  html_document:
+    toc: TRUE
+    toc_depth: 2
+    toc_float: TRUE
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE)
+```
+
+# Course Overview
+
+How closely linked are students' scores on standardized tests to their socio-economic status? Do individuals with disordered eating behaviors have lower self esteem? Applied data analysis can answer these and other sorts of questions in educational, social and behavior research. This course is the second in a three course sequence intended to provide a toolkit of statistical concepts, methods and their implementation to producers of applied research in education and other social sciences. The course is organized around the principle that research design depends in part on researchers' substantive questions and their quantitative data available to answer these question. In this intermediate course, we will focus on applying the General Linear Model to Ordinary Least Squares regression analysis. Students will progress from bivariate to multiple regression, developing an understanding of the associated assumptions of these models and tools to solve instances in which those assumptions are unmet. The course seeks to blend a conceptual, mathematical and applied understanding of basic statistical concepts. At the core of our pedagogical approach is the belief that students learn statistical analysis by **doing** statistical analysis. *EDUC 641 (or a similar introductory statistics course) is a pre-requisite as is a basic familiarity with a statistical programming language (preferably R). This course (or substitute) is a pre-requisite for EDUC 645*.
+
+
+# Meeting Time and Location
+- *Class:* Tuesdays and Thursdays, 4:00-5:20pm, Lokey 276
+- *Lab:* Tuesdays, Lokey 115, 5:30-6:20p; Wednesdays, 12:00-12:50pm, Lokey 119
+
+# Instructors
+- David D. Liebowitz
+- Havisha Khurana
+- Brittany Spinner

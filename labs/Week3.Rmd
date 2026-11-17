@@ -1,0 +1,136 @@
+---
+title: "Week 3 Lab"
+author: "(enter your name)"
+date: "2027-01-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Building from last weeks lab we will further invetigate the relationship between the age at which a student gets a mentor (mentee_age) and their high school GPA (gpa) by running an OLS linear regression model. Then you will create a regression table using modelsummary and assess the regression assumptions.**
+
+### Task 1: Load the libraries and read the data
+
+#### load libraries
+
+```{r}
+# For this lab, you will need the following libraries: 
+# tidyverse, modelsummary
+# load them in your environment by completing the blanks
+# Remember to uncomment (remove the hash) to run the code
+# use install.packages("package_name") if you don't have these packages
+
+#library(.......)
+#....
+#....
+```
+
+#### read data 
+
+```{r}
+# Saving the data in an object
+
+# mentor_gpa <- read.csv("https://daviddliebowitz.github.io/EDUC641_24F/data/ah02.csv") %>%
+# select(id, mentee_age, gpa)
+
+
+# Print the head of the data
+# Print the str of the data
+
+# head(...)
+# ....
+```
+
+### Task 2: Fitting the model and creating a summary table
+
+```{r}
+# Run an OLS linear regression model
+# Write the function, and the formula
+# It should be of the type 'outcome ~ predictor'
+# Assign it to an object of your choice
+
+#... <- ...(... ~ ..., data = mentor_gpa)
+
+#modelsummary(...,
+             # output = 'flextable',
+            # stars = TRUE,
+            # estimate  = c("{estimate} {stars} [{conf.low}, {conf.high}]"),
+            # gof_omit = "Adj.|Log.Lik.|AIC|BIC",
+            # coef_rename = c('mentor_gpa' = 'Mentored Students' GPA')) %>% 
+  # autofit()
+
+```
+
+**Q1. Interpret the results of your test in 1-2 sentences.**
+
+*<Enter answer here>*
+
+### Task 3: Regression Assumptions
+
+**Q2. What assumptions have you made in using an Ordinary Least Squares estimator in your analysis in Section 2?**
+
+*<Enter answer here>*
+
+#### Let's test for the assumptions. First, add to your dataset some variables/columns that are
+
+ - fitted/predicted values:
+ 
+```{r}
+# replace the dots with the model_name
+#mentor_gpa$predict <- predict(...)
+```
+ 
+ - raw residuals:
+ 
+```{r}
+# replace the dots with the model_name
+# mentor_gpa$resid <- residuals(...)
+```
+ 
+ - standardized residuals:
+ 
+```{r}
+# replace the dots with the model_name
+# mentor_gpa$std_resid <- rstandard(...)
+```
+ 
+  - studentized residuals:
+ 
+```{r}
+# replace the dots with the model_name
+# mentor_gpa$stu_resid <- rstudent(...)
+```
+
+#### Use the updated dataset to assess the residuals for evidence on fitted model’s linearity and homogeneity of variance
+
+```{r}
+# The x-axis should be the predicted values and y-axis should be residuals
+
+# ggplot(mentor_gpa, aes(x = ..., y = ...)) +
+#   geom_point() +
+#   geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+#   ylab("Raw Residuals") + xlab("Fitted values") +
+#   theme_minimal(base_size = 16)
+```
+
+#### Examine the distribution of studentized residuals using a histogram.
+
+
+```{r}
+# ggplot(mentor_gpa, aes(...)) +
+#   geom_histogram(color = "white", fill = "grey50") +
+#   xlab("Studendized Residuals") +
+#   theme_minimal(base_size = 16)
+```
+
+#### Assess normality of assumptions. 
+
+**Q3.  Assess the residuals from the linear regression you conducted in Section 2 for evidence on the fitted model’s linearity, the normality and homoscedasticity of the residuals, and for the presence of outlier.**
+
+*<Enter answer here>*
+
+
+
+

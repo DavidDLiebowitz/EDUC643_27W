@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Correlation…and causality</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="David D. Liebowitz" />
+    <script src="EDUC643_4_correlation_files/header-attrs/header-attrs.js"></script>
+    <link href="EDUC643_4_correlation_files/remark-css/default.css" rel="stylesheet" />
+    <link href="EDUC643_4_correlation_files/remark-css/uo.css" rel="stylesheet" />
+    <link href="EDUC643_4_correlation_files/remark-css/ki-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my_custom.css" type="text/css" />
+    <link rel="stylesheet" href="xaringanthemer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Correlation…and causality
+]
+.subtitle[
+## EDUC 643: Unit 1
+]
+.author[
+### David D. Liebowitz
+]
+
+---
+
+
+
+# Roadmap
+
+&lt;img src="Roadmap1.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Goals for the unit
+
+.gray[
+- Characterize a bivariate relationship along five dimensions (direction, linearity, outliers, strength and magnitude)
+- Describe how statistical models differ from deterministic models
+- Mathematically represent the population model and interpret its deterministic and stochastic components
+- Formulate a linear regression model to hypothesize a population relationship
+- Estimated a fitted regression line using Ordinary-Least Squares regression
+- Describe residuals and how they can describe the degree of our OLS model fit
+- Conduct an inference test for a regression coefficient and our regression model
+]
+- Explain `\(R^{2}\)`, both in terms of what it tells us and what it does not
+- Calculate a correlation coefficient `\((r)\)` and describe its relationship to `\(R^{2}\)`
+- Distinguish between research designs that permit correlational associations and those that permit causal inferences
+
+
+---
+class: middle, inverse
+
+# Correlation ...and causality
+
+---
+# Correlations
+
+* Correlation coefficients `\((r)\)` describe the .red-pink[**strength**] of a linear relationship between two variables. 
+
+* The concept was first developed by Karl Pearson a eugenics professor at the University College of London. As we discussed last term, he held many despicable [views](https://nautil.us/how-eugenics-shaped-statistics-238014/).
+
+* He (along with Francis Galton and RA Fisher) also pioneered many of the basic tools of modern statistics, including the concepts of standard deviation, `\(\chi^2\)`, goodness of fit and the correlation coefficient
+
+* Correlations are ***dimensionless measures*** that eliminate the metrics of any particular scale. 
+
+* To construct these dimensionless measures requires **standardizing** each variable.
+
+---
+# Standardizing variables
+
+* As a reminder, any variable can be standardized using a simple algorithm.
+
+Each observation `\((i)\)` is transformed into standardized form using the following formula:
+
+`$$z_{i} = \frac{X_{i} - \mu}{\sigma}$$`
+
+* The standardized value is calculated calculated by **subtracting the mean** from each value and **dividing by the standard deviation**.
+
+* The sample mean of the new variable is 0 and its standard deviation is 1
+
+* The new values represent an observation's distance from the mean in standard deviation units.
+
+--
+
+* **Doesn't change anyone's relative rank**
+
+* **Doesn't create a normally distributed variable**
+
+---
+# Correlations visualized
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Visualize in our data
+Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+
+```r
+# Read in the data
+do &lt;- read_spss(here("data/male_do_eating.sav")) %&gt;% 
+    select(OE_frequency, EDEQ_restraint, EDS_total,
+           BMI, age_year, income_group) %&gt;%
+    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %&gt;%
+    drop_na()
+
+# Standardize the variables
+do &lt;- do  %&gt;% 
+      mutate(BMI_std = (BMI - mean(BMI)) / sd(BMI))
+do &lt;- do %&gt;% 
+      mutate(EDEQ_std = 
+      (EDEQ_restraint - mean(EDEQ_restraint)) / sd(EDEQ_restraint))
+```
+
+---
+# Visualize in our data
+Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+- Note that the scale of our variables have changed.
+- The standardized regression line goes through the origin (0, 0)
+
+---
+# Visualize in our data
+Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+The new fitted regression line is:
+
+`$$\hat{BMI_{std}} = 0.000 + 0.2241 * DietaryRestraint_{std}$$`
+
+For fun, multiply that 0.2241 by itself: `\((0.2241)^2 = 0.0502\)`. .blue[**Anything familiar about 0.05?**]
+
+---
+# `\(r\)` and `\(R^2\)`
+
+`$$r = \sqrt{R^2}$$`
+
+--
+
+The coefficient on the regression of two standardized variables is called the .red-pink[**Pearson product-moment coefficient**]. It is the same as the .red-pink[**Pearson product-moment correlation**] (otherwise known as Pearson correlation). And it is the square root of the `\(R^2\)`. 
+
+Correlation coefficient values range from -1 to 1
+  + Positive Values: higher values of Y tend to have higher values of X (and vice-versa)
+  + Negative Values: higher values of Y tend to have lower values of X (and vice-versa)
+
+--
+
+### Calculate correlation coefficient in R
+
+```r
+cor(do$BMI, do$EDEQ_restraint)
+```
+
+```
+## [1] 0.2240726
+```
+
+---
+# Formal correlation coefficient
+
+.red-pink[**Covariance**]: 
+
+`$$\text{cov}_{XY} = \sigma_{XY} = \frac{1}{N-1} \sum_{i=1}^N (X_i - \bar{X})(Y_i - \bar{Y})$$`
+- However, units of covariance are hard to interpret, so...
+
+--
+
+.red-pink[**Correlation**]:
+
+`$$\text{corr}_{XY} = \rho_{XY} = \frac{\text{cov}_{XY}}{\hat{\sigma}_{X} \hat{\sigma}_{Y}}$$`
+
+- Pearson correlation divides by the standard deviation to put on a scale of -1 to 1
+
+---
+# Anscombe's Quartet
+
+...but, correlation is not everything. [Frank Anscombe (1973)](https://www.jstor.org/stable/2682899) first highlighted the following set of distributions, all with correlations `\((r)\)` of exactly 0.816.
+
+&lt;img src="anscombe.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## What correlation does(n't) mean
+
+.small[Here are four datasets, each with two variables with (nearly) identical means and correlations.]
+
+
+```
+## # A tibble: 4 x 4
+##   dataset    `mean(x)` `mean(y)` `cor(x, y)`
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+## 1 circle          54.3      47.8     -0.0683
+## 2 dino            54.3      47.8     -0.0645
+## 3 h_lines         54.3      47.8     -0.0617
+## 4 slant_down      54.3      47.8     -0.0690
+```
+
+.blue[What's the correlation between x and y  across these four datasets?]
+
+--
+
+All seem pretty similar, right? Let's take a look at their bivariate relationship...
+
+---
+## What correlation does(n't) mean
+
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Correlation `\(\neq\)` causation pt. 562
+
+RQ: What is the relationship between Oregon's annual per capita divorce rate and the U.S. per capita annual beef consumption? 
+
+--
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+--
+
+*On the 10 o'clock news tonight: does U.S. beef consumption cause more "beefs" between Oregonians and their spouses?*
+
+---
+# Divorce and Beef
+
+If we regress U.S. beef consumption on Oregon's divorce rate...
+
+
+```
+...
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)    45.551      5.866   7.765 5.41e-05 ***
+*divorce_rate    3.920      1.376   2.849   0.0215 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.498 on 8 degrees of freedom
+*Multiple R-squared:  0.5037,	Adjusted R-squared:  0.4416 
+F-statistic: 8.119 on 1 and 8 DF,  p-value: 0.0215
+...
+```
+
+***The relationship between Oregon's divorce rate and U.S. beef consumption is statistically significant. In fact, Oregon's divorce rate accounts for 50% of the variance in U.S. beef consumption!***
+
+---
+# Divorce and Beef
+
+Do increases in beef consumption in Oregon **cause** increases in the U.S. divorce rate?
+
+--
+
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+--
+
+This is a classic problem of a .blue[**confounder**]!&lt;sup&gt;1&lt;/sup&gt;
+
+
+.footnote[[1] More fun with [spurious correlations](https://www.tylervigen.com/spurious-correlations)]
+
+
+---
+# Why correlation `\(\neq\)` causation?
+
+Common barriers in attributing causality to observed co-relationships include:
+- .blue[Confounders]: a third variable causes changes in X and also in Y
+- [Colliders](http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/): a third variable that is caused by both the predictor and outcome; controlling for this can make a true causal relationship disappear!
+- .blue[Reverse causation]: X may cause Y **or** Y may cause X
+- [Simpson's Paradox](https://daviddliebowitz.github.io/EDUC643_25W/slides/EDUC643_4_correlation.html#46): a third variable may reverse the correlation
+- .blue[Selection bias]: due to the way in which the sample was constructed, observed relationships (or lack thereof) mask the true underlying relationship.
+- Also, **lack** of correlation `\(\neq\)` **lack** of causality
+
+&lt;img src="causalinf.jpg" width="30%" style="display: block; margin: auto;" /&gt;
+h/t [@causalinf](https://twitter.com/causalinf)
+
+
+---
+# No racial bias in policing?
+
+.pull-left[
+In 2016, Harvard economics professor Roland Fryer&lt;sup&gt;1&lt;/sup&gt; released a [study](https://www.journals.uchicago.edu/doi/full/10.1086/701423) that claimed to find that police were ***equally likely*** to use force (i.e., officer-involved shootings) on whether the individuals they stopped were Black or White.
+]
+
+.pull-right[
+&lt;img src="fryer.jpg" width="904" style="display: block; margin: auto;" /&gt;
+]
+
+As you can imagine, this drew substantial media attention and controversy. We read about this in Lily Hu's [article](https://www.bostonreview.net/articles/race-policing-and-the-limits-of-social-science/) in the *Boston Review*.
+
+.footnote[[1] Since this study's release, Fryer has been accused of improper behavior towards members of his research lab.]
+
+---
+# Selection bias
+
+As detailed in [Knox, Lowe and Mummolo (2020)](https://www.cambridge.org/core/journals/american-political-science-review/article/administrative-records-mask-racially-biased-policing/66BC0F9998543868BB20F241796B79B8#article), Fryer's results are a product of a fundamental statistical error: .red-pink[**selecting on the outcome** (dependent variable)]
+
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Selection bias
+
+As detailed in [Knox, Lowe and Mummolo (2020)](https://www.cambridge.org/core/journals/american-political-science-review/article/administrative-records-mask-racially-biased-policing/66BC0F9998543868BB20F241796B79B8#article), Fryer's results are a product of a fundamental statistical error: .red-pink[**selecting on the outcome** (dependent variable)]
+
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+.footnote[Helpful [thread](https://twitter.com/bristimtom/status/1259458866015805440) with a nice illustration of how selecting on the dependent variable and collider bias are interrelated.]
+
+
+---
+# From correlation to causality
+
+### Three criteria for establishing causality:&lt;sup&gt;1&lt;/sup&gt;
+
+.pull-left[
+1. Cause must precede effect in time
+2. Systematic relationship between variation in cause and variation in effect
+3. No plausible alternative explanation
+]
+
+.pull-right[
+&lt;img src="shadish.jpg" width="181" style="display: block; margin: auto;" /&gt;
+]
+
+Highest priority is establishing .red-pink[**exogeneous variation**] in exposure to some "treatment" **OR** make an exceedingly convincing case that whether or not someone receives a "treatment" is a product of .red-pink[**selection  on observables**] (and not on any unobservables).
+
+.footnote[[1] Derived from [Shadish, Cook and Cambpell (2002)](https://books.google.com/books/about/Experimental_and_Quasi_experimental_Desi.html?id=o7jaAAAAMAAJ) and John Stuart Mill.]
+
+--
+
+Research design is critical. So too can be [Directed Acyclical Graphs (DAGs)](https://journals.sagepub.com/doi/pdf/10.1177/2515245917745629) in understanding the role confounders and colliders in causal relationship. We have whole classes dedicated to just this topic (EDLD 650, EDLD 679).
+
+
+
+---
+# Turn and Talk
+
+* Discuss science communication and how you would distinguish correlations from causal relationships to the average person.
+
+* In what contexts might it be difficult to conduct an experimental study to establish causality?
+
+* Consider the debate around the social science study of racial differences in officer-involved violence. Some of the conclusions analysts reach about critically important social issues diverge for highly technical and opaque reasons. What does this imply about the contributions of quantitative social science to public discourse and policy?
+
+
+&gt; .small[.green[*It is easy to prove that the wearing of tall hats and the carrying of umbrellas enlarges the chest, prolongs life, and confers comparative immunity from disease...A university degree, a daily bath, the owning of thirty pairs of trousers, a knowledge of Wagner’s music, a pew in church, anything, in short, that implies more means and better nurture…can be statistically palmed off as a magic spell conferring all sorts of privileges...The mathematician whose correlations would fill a Newton with admiration, may, in collecting and accepting data and drawing conclusions from them, fall into quite crude errors by just such popular oversights.* -George Bernard Shaw (1906)]]
+
+---
+class: middle, inverse
+
+# Color within the dots
+
+### aka, (mostly) don't predict beyond your data
+
+---
+# Regression as a prediction
+
+Regression equations can be used to evaluate the relationship between variables, and to predict expected values based on particular values of our predictors.
+
+We can ask: What is the expected BMI value for a young male with a Dietary Restraint rating of **4**?
+
+--
+`$$\Large \hat{BMI} = 23.92 + 1.04*(\boldsymbol{4}) = 28.1$$`
+The expected BMI for a Dietary Restraint of 4 is 28.1
+
+--
+
+Technically, there is no limit to what we can input!
+
+---
+# Predicting beyond your data
+
+Regression equations can be used to evaluate the relationship between variables, and to predict expected values based on particular values of our predictors.
+
+We can ask: What is the expected BMI value for a young male with a Dietary Restraint rating of **400**?
+
+--
+
+Using our measure, this is not a possible value of Dietary Restraint but we can still estimate the predicted BMI using our regression equation.
+
+--
+`$$\Large \hat{BMI} = 23.92 + 1.04*(\boldsymbol{400}) = 439.9$$`
+This is not a possible value for a human's BMI.
+
+--
+
+**Only predict within the bounds of your data.**
+
+
+---
+class: middle, inverse
+# Synthesis and wrap-up
+
+---
+# Goals for the unit
+
+- Characterize a bivariate relationship along five dimensions (direction, linearity, outliers, strength and magnitude)
+- Describe how statistical models differ from deterministic models
+- Mathematically represent the population model and interpret its deterministic and stochastic components
+- Formulate a linear regression model to hypothesize a population relationship
+- Estimated a fitted regression line using Ordinary-Least Squares regression
+- Describe residuals and how they can describe the degree of our OLS model fit
+- Conduct an inference test for a regression coefficient and our regression model
+- Explain `\(R^{2}\)`, both in terms of what it tells us and what it does not
+- Calculate a correlation coefficient `\((r)\)` and describe its relationship to `\(R^{2}\)`
+- Distinguish between research designs that permit correlational associations and those that permit causal inferences
+
+
+---
+# To-Dos
+
+### Reading: 
+- **By January 21**: LSWR Chapter 5.7
+
+### Quiz #1: 
+- Opens now (closes 5pm on 1/22)
+
+### Assignment 1:
+- Due February 3, 11:59pm
+
+### Next time: Regression assumptions
+
+---
+# Simpson's Paradox
+
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Simpson's Paradox
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

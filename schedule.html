@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>EDUC 643 Schedule</title>
+
+<!--radix_placeholder_navigation_in_header-->
+<meta name="distill:offset" content=""/>
+
+<script type="application/javascript">
+
+  window.headroom_prevent_pin = false;
+
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+
+    // initialize headroom for banner
+    var header = $('header').get(0);
+    var headerHeight = header.offsetHeight;
+    var headroom = new Headroom(header, {
+      tolerance: 5,
+      onPin : function() {
+        if (window.headroom_prevent_pin) {
+          window.headroom_prevent_pin = false;
+          headroom.unpin();
+        }
+      }
+    });
+    headroom.init();
+    if(window.location.hash)
+      headroom.unpin();
+    $(header).addClass('headroom--transition');
+
+    // offset scroll location for banner on hash change
+    // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
+    window.addEventListener("hashchange", function(event) {
+      window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
+    });
+
+    // responsive menu
+    $('.distill-site-header').each(function(i, val) {
+      var topnav = $(this);
+      var toggle = topnav.find('.nav-toggle');
+      toggle.on('click', function() {
+        topnav.toggleClass('responsive');
+      });
+    });
+
+    // nav dropdowns
+    $('.nav-dropbtn').click(function(e) {
+      $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
+      $(this).parent().siblings('.nav-dropdown')
+         .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
+    });
+    $("body").click(function(e){
+      $('.nav-dropdown-content').removeClass('nav-dropdown-active');
+    });
+    $(".nav-dropdown").click(function(e){
+      e.stopPropagation();
+    });
+  });
+</script>
+
+<style type="text/css">
+
+/* Theme (user-documented overrideables for nav appearance) */
+
+.distill-site-nav {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: #0F2E3D;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.distill-site-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.distill-site-nav a:hover {
+  color: white;
+}
+
+@media print {
+  .distill-site-nav {
+    display: none;
+  }
+}
+
+.distill-site-header {
+
+}
+
+.distill-site-footer {
+
+}
+
+
+/* Site Header */
+
+.distill-site-header {
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+.distill-site-header .nav-left {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+@media screen and (max-width: 768px) {
+  .distill-site-header .nav-left {
+    margin-left: 0;
+  }
+}
+
+
+.distill-site-header .nav-right {
+  float: right;
+  margin-right: 8px;
+}
+
+.distill-site-header a,
+.distill-site-header .title {
+  display: inline-block;
+  text-align: center;
+  padding: 14px 10px 14px 10px;
+}
+
+.distill-site-header .title {
+  font-size: 18px;
+  min-width: 150px;
+}
+
+.distill-site-header .logo {
+  padding: 0;
+}
+
+.distill-site-header .logo img {
+  display: none;
+  max-height: 20px;
+  width: auto;
+  margin-bottom: -4px;
+}
+
+.distill-site-header .nav-image img {
+  max-height: 18px;
+  width: auto;
+  display: inline-block;
+  margin-bottom: -3px;
+}
+
+
+
+@media screen and (min-width: 1000px) {
+  .distill-site-header .logo img {
+    display: inline-block;
+  }
+  .distill-site-header .nav-left {
+    margin-left: 20px;
+  }
+  .distill-site-header .nav-right {
+    margin-right: 20px;
+  }
+  .distill-site-header .title {
+    padding-left: 12px;
+  }
+}
+
+
+.distill-site-header .nav-toggle {
+  display: none;
+}
+
+.nav-dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.nav-dropdown .nav-dropbtn {
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 16px 10px;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+  margin-top: 1px;
+  z-index: 2;
+}
+
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+  z-index: 1;
+  margin-top: 2px;
+  white-space: nowrap;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.nav-dropdown-content hr {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.nav-dropdown-active {
+  display: block;
+}
+
+.nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
+  color: black;
+  padding: 6px 24px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.nav-dropdown-content .nav-dropdown-header {
+  display: block;
+  padding: 5px 24px;
+  padding-bottom: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  color: #999999;
+  white-space: nowrap;
+}
+
+.nav-dropdown:hover .nav-dropbtn {
+  color: white;
+}
+
+.nav-dropdown-content a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.nav-right .nav-dropdown-content {
+  margin-left: -45%;
+  right: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
+  .distill-site-header a.nav-toggle {
+    float: right;
+    display: block;
+  }
+  .distill-site-header .title {
+    margin-left: 0;
+  }
+  .distill-site-header .nav-right {
+    margin-right: 0;
+  }
+  .distill-site-header {
+    overflow: hidden;
+  }
+  .nav-right .nav-dropdown-content {
+    margin-left: 0;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .distill-site-header.responsive {position: relative; min-height: 500px; }
+  .distill-site-header.responsive a.nav-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .distill-site-header.responsive a,
+  .distill-site-header.responsive .nav-dropdown {
+    display: block;
+    text-align: left;
+  }
+  .distill-site-header.responsive .nav-left,
+  .distill-site-header.responsive .nav-right {
+    width: 100%;
+  }
+  .distill-site-header.responsive .nav-dropdown {float: none;}
+  .distill-site-header.responsive .nav-dropdown-content {position: relative;}
+  .distill-site-header.responsive .nav-dropdown .nav-dropbtn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Site Footer */
+
+.distill-site-footer {
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 3;
+  margin-top: 30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+}
+
+/* Headroom */
+
+d-title {
+  padding-top: 6rem;
+}
+
+@media print {
+  d-title {
+    padding-top: 4rem;
+  }
+}
+
+.headroom {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.headroom--transition {
+  transition: all .4s ease-in-out;
+}
+
+.headroom--unpinned {
+  top: -100px;
+}
+
+.headroom--pinned {
+  top: 0;
+}
+
+/* adjust viewport for navbar height */
+/* helps vertically center bootstrap (non-distill) content */
+.min-vh-100 {
+  min-height: calc(100vh - 100px) !important;
+}
+
+</style>
+
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+<script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
+<script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
+<script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
+
+<script type="application/javascript">
+
+function getMeta(metaName) {
+  var metas = document.getElementsByTagName('meta');
+  for (let i = 0; i < metas.length; i++) {
+    if (metas[i].getAttribute('name') === metaName) {
+      return metas[i].getAttribute('content');
+    }
+  }
+  return '';
+}
+
+function offsetURL(url) {
+  var offset = getMeta('distill:offset');
+  return offset ? offset + '/' + url : url;
+}
+
+function createFuseIndex() {
+
+  // create fuse index
+  var options = {
+    keys: [
+      { name: 'title', weight: 20 },
+      { name: 'categories', weight: 15 },
+      { name: 'description', weight: 10 },
+      { name: 'contents', weight: 5 },
+    ],
+    ignoreLocation: true,
+    threshold: 0
+  };
+  var fuse = new window.Fuse([], options);
+
+  // fetch the main search.json
+  return fetch(offsetURL('search.json'))
+    .then(function(response) {
+      if (response.status == 200) {
+        return response.json().then(function(json) {
+          // index main articles
+          json.articles.forEach(function(article) {
+            fuse.add(article);
+          });
+          // download collections and index their articles
+          return Promise.all(json.collections.map(function(collection) {
+            return fetch(offsetURL(collection)).then(function(response) {
+              if (response.status === 200) {
+                return response.json().then(function(articles) {
+                  articles.forEach(function(article) {
+                    fuse.add(article);
+                  });
+                })
+              } else {
+                return Promise.reject(
+                  new Error('Unexpected status from search index request: ' +
+                            response.status)
+                );
+              }
+            });
+          })).then(function() {
+            return fuse;
+          });
+        });
+
+      } else {
+        return Promise.reject(
+          new Error('Unexpected status from search index request: ' +
+                      response.status)
+        );
+      }
+    });
+}
+
+window.document.addEventListener("DOMContentLoaded", function (event) {
+
+  // get search element (bail if we don't have one)
+  var searchEl = window.document.getElementById('distill-search');
+  if (!searchEl)
+    return;
+
+  createFuseIndex()
+    .then(function(fuse) {
+
+      // make search box visible
+      searchEl.classList.remove('hidden');
+
+      // initialize autocomplete
+      var options = {
+        autoselect: true,
+        hint: false,
+        minLength: 2,
+      };
+      window.autocomplete(searchEl, options, [{
+        source: function(query, callback) {
+          const searchOptions = {
+            isCaseSensitive: false,
+            shouldSort: true,
+            minMatchCharLength: 2,
+            limit: 10,
+          };
+          var results = fuse.search(query, searchOptions);
+          callback(results
+            .map(function(result) { return result.item; })
+          );
+        },
+        templates: {
+          suggestion: function(suggestion) {
+            var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
+              ? `<img src="${offsetURL(suggestion.preview)}"</img>`
+              : '';
+            var html = `
+              <div class="search-item">
+                <h3>${suggestion.title}</h3>
+                <div class="search-item-description">
+                  ${suggestion.description || ''}
+                </div>
+                <div class="search-item-preview">
+                  ${img}
+                </div>
+              </div>
+            `;
+            return html;
+          }
+        }
+      }]).on('autocomplete:selected', function(event, suggestion) {
+        window.location.href = offsetURL(suggestion.path);
+      });
+      // remove inline display style on autocompleter (we want to
+      // manage responsive display via css)
+      $('.algolia-autocomplete').css("display", "");
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+
+});
+
+</script>
+
+<style type="text/css">
+
+.nav-search {
+  font-size: x-small;
+}
+
+/* Algolioa Autocomplete */
+
+.algolia-autocomplete {
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: sub;
+  background-color: white;
+  color: black;
+  padding: 6px;
+  padding-top: 8px;
+  padding-bottom: 0;
+  border-radius: 6px;
+  border: 1px #0F2E3D solid;
+  width: 180px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .distill-site-nav .algolia-autocomplete {
+    display: none;
+    visibility: hidden;
+  }
+  .distill-site-nav.responsive .algolia-autocomplete {
+    display: inline-block;
+    visibility: visible;
+  }
+  .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
+    margin-left: 0;
+    width: 400px;
+    max-height: 400px;
+  }
+}
+
+.algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+  width: 90%;
+  outline: none;
+  border: none;
+}
+
+.algolia-autocomplete .aa-hint {
+  color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+  width: 550px;
+  max-height: 70vh;
+  overflow-x: visible;
+  overflow-y: scroll;
+  padding: 5px;
+  margin-top: 3px;
+  margin-left: -150px;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid #999;
+  border-top: none;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+  cursor: pointer;
+  padding: 5px 4px;
+  border-bottom: 1px solid #eee;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
+  border-bottom: none;
+  margin-bottom: 2px;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
+  overflow: hidden;
+  font-size: 0.8em;
+  line-height: 1.4em;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
+  font-size: 1rem;
+  margin-block-start: 0;
+  margin-block-end: 5px;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
+  display: inline-block;
+  overflow: hidden;
+  height: 2.8em;
+  width: 80%;
+  margin-right: 4%;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
+  display: inline-block;
+  width: 15%;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
+  height: 3em;
+  width: auto;
+  display: none;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
+  display: initial;
+}
+
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+  background-color: #eee;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+  font-weight: bold;
+  font-style: normal;
+}
+
+</style>
+
+
+<!--/radix_placeholder_navigation_in_header-->
+<!--radix_placeholder_site_in_header-->
+<!--/radix_placeholder_site_in_header-->
+
+<style type="text/css">
+body {
+  padding-top: 60px;
+}
+</style>
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+<!--radix_placeholder_navigation_before_body-->
+<header class="header header--fixed" role="banner">
+<nav class="distill-site-nav distill-site-header">
+<div class="nav-left">
+<a href="index.html" class="title">EDUC 643</a>
+<a href="syllabus.html">Syllabus</a>
+<a href="schedule.html">Schedule</a>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Lectures
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
+<a href="./slides/EDUC643_1_intro.html">1. Intro and bivariate relationships</a>
+<a href="./slides/EDUC643_2_GLM.html">2. GLM</a>
+<a href="./slides/EDUC643_3_inference.html">3. Regression inference</a>
+<a href="./slides/EDUC643_4_correlation.html">4. Correlation...and causality</a>
+<a href="./slides/EDUC643_5_assumptions.html">5. Regression assumptions</a>
+<a href="./slides/EDUC643_5_assumptions.html">6. Regression assumptions</a>
+<a href="./slides/EDUC643_7_mult_regression.html">7. Multiple regression I</a>
+<a href="./slides/EDUC643_7_mult_regression.html">8. Multiple regression II</a>
+<a href="./slides/EDUC643_7_mult_regression.html#85">9. Multiple regression III</a>
+<a href="./slides/EDUC643_10_categorical.html">10. Categorical predictors I</a>
+<a href="./slides/EDUC643_10_categorical.html">11. Categorical predictors II</a>
+<a href="./slides/EDUC643_10_categorical.html">12. Categorical predictors III</a>
+<a href="./slides/EDUC643_10_categorical.html">13. Categorical predictors IV</a>
+<a href="./slides/EDUC643_13_interactions.html">14. Interactions I</a>
+<a href="./slides/EDUC643_13_interactions.html">15. Interactions II</a>
+<a href="./slides/EDUC643_16_nonlinearity.html">16. Non-linearity I</a>
+<a href="./slides/EDUC643_16_nonlinearity.html">17. Non-linearity II</a>
+<a href="./slides/EDUC643_19_modeling.html">19. Model building</a>
+<a href="./slides/EDUC643_19_modeling.html">20. Model building</a>
+</div>
+</div>
+</div>
+<div class="nav-right">
+<a href="assignments.html">Assignments</a>
+<a href="https://github.com/DavidDLiebowitz/EDUC643_25W">
+<i class="fa fa-github" aria-hidden="true"></i>
+</a>
+<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
+</div>
+</nav>
+</header>
+<!--/radix_placeholder_navigation_before_body-->
+<!--radix_placeholder_site_before_body-->
+<!--/radix_placeholder_site_before_body-->
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">EDUC 643</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="syllabus.html">Syllabus</a>
+</li>
+<li>
+  <a href="schedule.html">Schedule</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="./slides/EDUC643_1_intro.html">1. Intro and bivariate relationships</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_2_GLM.html">2. GLM</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_3_inference.html">3. Regression inference</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_4_correlation.html">4. Correlation...and causality</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_5_assumptions.html">5. Regression assumptions</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_5_assumptions.html">6. Regression assumptions</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_7_mult_regression.html">7. Multiple regression I</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_7_mult_regression.html">8. Multiple regression II</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_7_mult_regression.html#85">9. Multiple regression III</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_10_categorical.html">10. Categorical predictors I</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_10_categorical.html">11. Categorical predictors II</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_10_categorical.html">12. Categorical predictors III</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_10_categorical.html">13. Categorical predictors IV</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_13_interactions.html">14. Interactions I</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_13_interactions.html">15. Interactions II</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_16_nonlinearity.html">16. Non-linearity I</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_16_nonlinearity.html">17. Non-linearity II</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_19_modeling.html">19. Model building</a>
+    </li>
+    <li>
+      <a href="./slides/EDUC643_19_modeling.html">20. Model building</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="assignments.html">Assignments</a>
+</li>
+<li>
+  <a href="https://github.com/DavidDLiebowitz/EDUC643_25W">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">EDUC 643 Schedule</h1>
+
+</div>
+
+
+<div id="unit-1-glm-and-regression" class="section level2">
+<h2>Unit 1: GLM and regression</h2>
+<p><strong>Topic: Introduction to the General Linear Model and bivariate
+regression refresher</strong></p>
+<p>Objectives:</p>
+<ul>
+<li>Characterize a bivariate relationship along five dimensions
+(direction, linearity, outliers, strength and magnitude)</li>
+<li>Describe how statistical models differ from deterministic
+models</li>
+<li>Mathematically represent the population model and interpret its
+deterministic and stochastic components</li>
+<li>Formulate a linear regression model to hypothesize a population
+relationship</li>
+<li>Estimated a fitted regression line using Ordinary-Least Squares
+regression</li>
+<li>Describe residuals and how they can describe the degree of our OLS
+model fit</li>
+<li>Explain <span class="math inline">\(R^{2}\)</span>, both in terms of
+what it tells us and what it does not</li>
+<li>Conduct an inference test for a regression coefficient and our
+regression model</li>
+<li>Calculate a correlation coefficient <span
+class="math inline">\((r)\)</span> and describe its relationship to
+<span class="math inline">\(R^{2}\)</span></li>
+<li>Distinguish between research designs that permit correlational
+associations and those that permit causal inferences</li>
+</ul>
+<p>Readings:</p>
+<ul>
+<li>Complete <strong>prior to Jan. 16</strong> class: <a
+href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR Chapter
+15.1-15.2 and 15.4-15.7</a> and <a
+href="https://www.bostonreview.net/articles/race-policing-and-the-limits-of-social-science/">Hu
+2021</a></li>
+<li>Complete <strong>prior to Jan. 21</strong> class: <a
+href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR Chapter
+5.7</a></li>
+</ul>
+<p>Lectures:</p>
+<ul>
+<li>Class 1 (1/7) slides: <a
+href="./slides/EDUC643_1_intro.html">html</a> | <a
+href="./slides/EDUC643_1_intro.pdf">pdf</a></li>
+<li>Class 2 (1/9) slides: <a href="./slides/EDUC643_2_GLM.html">html</a>
+| <a href="./slides/EDUC643_2_GLM.pdf">pdf</a></li>
+<li>Class 3 (1/14) slides: <a
+href="./slides/EDUC643_3_inference.html">html</a> | <a
+href="./slides/EDUC643_3_inference.pdf">pdf</a></li>
+<li>Class 4 (1/16) slides: <a
+href="./slides/EDUC643_4_correlation.html">html</a> | <a
+href="./slides/EDUC643_4_correlation.pdf">pdf</a></li>
+<li>Data: <a href="./data/male_do_eating.sav">male_do_eating.sav</a> |
+<a href="./data/male_do_eating_codebook.pdf">codebook</a></li>
+<li>R code: <a href="./slides/EDUC643_1_code.R">R script</a></li>
+<li>Labs:
+<ul>
+<li>Week 2: <a href="./labs/Week2.Rmd">rmd</a></li>
+</ul></li>
+</ul>
+<p>Assignment 1: get started!!! (see below)</p>
+</div>
+<div id="unit-2-assumptions-diagnostics" class="section level2">
+<h2>Unit 2: Assumptions &amp; diagnostics</h2>
+<p><strong>Topic: Regression assumptions and diagnostics</strong></p>
+<p>Objectives:</p>
+<ul>
+<li>Articulate the assumptions of the General Linear Model broadly and
+least squares estimation and inference particularly</li>
+<li>Describe sources of assumption violation in the regression model
+including: measurement error, non-linearity, heteroscedasticity,
+non-normally distributed residuals, correlated errors, and
+outliers.</li>
+<li>Articulate properties of residuals and describe their centrality in
+understanding the regression model assumptions</li>
+<li>Conduct diagnostic tests on regression model assumption
+violations</li>
+<li>Implement a consistent screening protocol to identify regression
+model assumption violations</li>
+<li>Implement solutions to regression model assumption violations, when
+appropriate</li>
+</ul>
+<p>Readings:</p>
+<ul>
+<li>Complete <strong>prior to 1/28</strong> class: <a
+href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR Chapter
+15.8-15.9</a></li>
+</ul>
+<p>Lecture:</p>
+<ul>
+<li>Class 5-6 (1/21 and 1/23) slides: <a
+href="./slides/EDUC643_5_assumptions.html">html</a> | <a
+href="./slides/EDUC643_5_assumptions.pdf">pdf</a></li>
+<li>Data: <a
+href="./data/male_do_eating.sav">male_do_eating.sav</a></li>
+<li>R code: <a href="./slides/EDUC643_5_code.R">R script</a></li>
+<li>Labs:
+<ul>
+<li>Week 3: <a href="./labs/EDUC643_Wk3.Rmd">rmd</a> | <a
+href="./labs/formatted_rmd_starter.Rmd">RMarkdown assignment
+template</a></li>
+</ul></li>
+</ul>
+<p>Assignment 1:</p>
+<ul>
+<li>Due: February 3, 11:59pm</li>
+<li>Assignment: <a href="./assignments/assignment_1.html">html
+file</a></li>
+<li>Data: <a href="./data/nerds.csv">nerds.csv</a></li>
+</ul>
+</div>
+<div id="unit-3-multiple-regression" class="section level2">
+<h2>Unit 3: Multiple regression</h2>
+<p><strong>Topic: Multiple Regression</strong></p>
+<p>Objectives:</p>
+<ul>
+<li>Articulate the concepts of multiple regression and “statistical
+adjustment”</li>
+<li>Distinguish between the substantive implications of the terms
+“statistical control” and “statistical adjustment”</li>
+<li>Estimate the parameters of a multiple regression model</li>
+<li>Visually display the results of multiple regression models</li>
+<li>State the main effects assumption and what the implication would be
+if it is violated</li>
+<li>Conduct statistical inference tests of single predictors ( <span
+class="math inline">\(t\)</span>-test) and full model ( <span
+class="math inline">\(F\)</span>-test) in multiple regression</li>
+<li>Decompose the total variance into its component parts (model and
+residual) and use the <span class="math inline">\(R^2\)</span> statistic
+to describe this decomposition</li>
+<li>Describe problems for regression associated with the phenomenon of
+multicollinearity</li>
+<li>Use visual schema (e.g., Venn diagrams) to assess regression models
+for the potential of multicollinearity</li>
+<li>Use statistical results (e.g., correlation matrices or heat maps) to
+assess regression models for the potential of multicollinearity</li>
+<li>Describe and implement some solutions to multi-collinearity</li>
+</ul>
+<p>Readings:</p>
+<ul>
+<li>Complete <strong>prior to 2/6</strong> class: <a
+href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR Chapter
+15.3</a></li>
+</ul>
+<p>Lecture:</p>
+<ul>
+<li>Class 7-9 (1/28, 1/30, 2/4) slides: <a
+href="./slides/EDUC643_7_mult_regression.html">html</a> | <a
+href="./slides/EDUC643_7_mult_regression.pdf">pdf</a></li>
+<li>Data: <a
+href="./data/male_do_eating.sav">male_do_eating.sav</a></li>
+<li>R code: <a href="./slides/EDUC643_7_code.R">R script</a></li>
+<li>Prototypical plots: <a
+href="./data/prototypical_plots.xlsx">xlsx</a></li>
+<li>Labs:
+<ul>
+<li>Week 4: <a href="./labs/EDUC643_Wk4.docx">doc</a></li>
+<li>Week 5: <a href="./labs/Week5.Rmd">Rmd</a></li>
+</ul></li>
+</ul>
+<p>Assignment 2:</p>
+<ul>
+<li>Due: Feb. 14, 11:59pm</li>
+<li>Assignment: <a href="./assignments/assignment_3.html">html
+file</a></li>
+<li>Data: <a href="./data/nerds.csv">nerds.csv</a></li>
+</ul>
+</div>
+<div id="unit-4-categorical-predictors" class="section level2">
+<h2>Unit 4: Categorical predictors</h2>
+<p><strong>Topic: Categorical predictors and ANOVA</strong></p>
+<p>Objectives</p>
+<ul>
+<li>Describe the relationship between dichotomous and polychotomous
+variables and convert variables between these forms, as necessary</li>
+<li>Conduct a two-sample <span
+class="math inline">\(t\)</span>-test</li>
+<li>Describe the relationship between a two-sample <span
+class="math inline">\(t\)</span>-test and regressing a continuous
+outcome on a dichotomous predictor</li>
+<li>Estimate a regression with one dummy variable as a predictor and
+interpret the results (including when the reference category
+changes)</li>
+<li>Estimate a multiple regression model with several continuous and
+dummy variables and interpret the results</li>
+<li>Estimate an ANOVA model and interpret the within- and between-group
+variance</li>
+<li>Do the same for an ANCOVA model, adjusting for additional continuous
+predictors</li>
+<li>Describe the similarities and differences of Ordinary-Least Squares
+regression analysis and ANOVA/ANCOVA, and when one would prefer one
+approach to another</li>
+<li>Describe potential Type I error problems that arise from multiple
+group comparisons and potential solutions to these problems, including
+theory, pre-registration, ANOVA and <em>post-hoc</em> corrections</li>
+<li>Describe the relationship between different modeling approaches with
+the General Linear Model family</li>
+</ul>
+<p>Readings:</p>
+<ul>
+<li>Complete <strong>prior to Feb. 18</strong> class: <a
+href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR Chapter 14
+and 16.6</a></li>
+</ul>
+<p>Lecture:</p>
+<ul>
+<li>Class 10 - 13 (2/6, 2/11, 2/13 and 2/18) slides: <a
+href="./slides/EDUC643_10_categorical.html">html</a> | <a
+href="./slides/EDUC643_10_categorical.pdf">pdf</a></li>
+<li>Data: <a href="./data/dibels.csv">dibels.csv</a> | <a
+href="./data/dibels_codebook.pdf">codebook</a></li>
+<li>R code: <a href="./slides/EDUC643_10_code.R">R script</a></li>
+<li>Labs:
+<ul>
+<li>Week 6: <a href="./labs/EDUC643_Wk6.docx">doc</a></li>
+<li>Week 7: <a href="./labs/EDUC643_Wk7.docx">doc</a></li>
+</ul></li>
+</ul>
+<p>Assignment 3:</p>
+<ul>
+<li><p>Due: Feb. 28, 12:01pm (noon!)</p></li>
+<li><p>Assignment: <a href="./assignments/assignment_4.html">html
+file</a></p></li>
+<li><p>Data: <a href="./data/nerds.csv">nerds.csv</a></p></li>
+</ul>
+</div>
+<div id="unit-5-interactions-and-non-linearity" class="section level2">
+<h2>Unit 5: Interactions and non-linearity</h2>
+<p><strong>Topic: Interactions and non-linearity</strong></p>
+<p>Objectives</p>
+<ul>
+<li>Describe in writing and verbally the assumptions we violate when we
+fit a non-linear relationship in a linear model</li>
+<li>Transform non-linear relationships into linear ones by using
+logarithmic scales</li>
+<li>Estimate regression models using logarithmic scales and interpret
+the results</li>
+<li>Describe in writing and verbally the concept of statistical
+interaction</li>
+<li>Estimate and interpret regression models with interactions between
+categorical and continuous predictors</li>
+<li>Visualize interaction effects graphically</li>
+<li>Describe statistical power and Type II error challenges resulting
+from interactions</li>
+<li>Estimate models with quadratic and higher-order polynomial
+terms</li>
+</ul>
+<p>Readings:</p>
+<ul>
+<li><strong>Complete prior to 2/27 class:</strong> <a
+href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR Chapter
+16.2</a></li>
+<li><strong>Complete prior to 3/6 class:</strong> <a
+href="./data/McIntosh%20et%20al%202021.pdf">McIntosh et al. 2021</a>
+<ul>
+<li>Reading questions: <a
+href="./data/McIntosh%20et%20al%20reading%20questions.docx">doc</a></li>
+</ul></li>
+</ul>
+<p>Lecture:</p>
+<ul>
+<li>Class 14-15 (2/20 and 2/25) slides: <a
+href="./slides/EDUC643_13_interactions.html">html</a> | <a
+href="./slides/EDUC643_13_interactions.pdf">pdf</a></li>
+<li>Class 16-17 (2/27 and 3/4) slides: <a
+href="./slides/EDUC643_16_nonlinearity.html">html</a> | <a
+href="./slides/EDUC643_16_nonlinearity.pdf">pdf</a></li>
+<li>Data: <a href="./data/dibels.csv">dibels.csv</a> | <a
+href="./data/pisa.csv">pisa.csv</a> | <a
+href="./data/oecd_2022.xlsx">oecd_2022.xlsx</a></li>
+<li>R script: <a href="./slides/EDUC643_13_code.R">interactions</a> | <a
+href="./slides/EDUC643_16_code.R">non-linearity</a></li>
+<li>Labs:
+<ul>
+<li>Week 8: <a href="./labs/Week8.Rmd">Rmd</a></li>
+<li>Week 9: <a href="./labs/EDUC643_Wk9.docx">doc</a></li>
+</ul></li>
+</ul>
+<p>Assignment 4:</p>
+<ul>
+<li><p>Due: March 10, 12:01pm (noon)</p></li>
+<li><p>Assignment: <a href="./assignments/assignment_5.html">html
+file</a></p></li>
+<li><p>Data: <a href="./data/nerds.csv">nerds.csv</a></p></li>
+</ul>
+</div>
+<div id="unit-6-model-building" class="section level2">
+<h2>Unit 6: Model building</h2>
+<p><strong>Topic: Model building</strong></p>
+<p>Objectives</p>
+<ul>
+<li>Translate research questions into question predictors, covariates,
+outcomes and rival hypothesis predictors</li>
+<li>Develop work processes to address real life data which contain large
+number of predictors</li>
+<li>Build a logical and sequential taxonomy of fitted regression
+models</li>
+<li>Distinguish between model building and reporting, including best
+practices for research transparency, replicability and integrity</li>
+<li>Present results in publication-ready tables and figures</li>
+<li>Write compelling and scientifically accurate interpretation of
+results</li>
+<li>Describe power and limits of quantitative research</li>
+</ul>
+<p>Readings:</p>
+<ul>
+<li><a href="https://learningstatisticswithr.com/lsr-0.6.pdf">LSWR
+Chapter 15.10-15.11</a></li>
+</ul>
+<p>Lecture:</p>
+<ul>
+<li>Class 19-20 (3/11 and 3/13) slides: <a
+href="./slides/EDUC643_19_modeling.html">html</a> | <a
+href="./slides/EDUC643_19_modeling.pdf">pdf</a></li>
+</ul>
+</div>
+<div id="final" class="section level2">
+<h2>Final:</h2>
+<ul>
+<li><p>Due: Mar. 20, 12:01pm</p></li>
+<li><p>Assignment: <a href="./assignments/assignment_6.html">html
+file</a></p></li>
+<li><p>Data: <a href="./data/seda.csv">seda.csv</a></p></li>
+</ul>
+</div>
+
+<!--radix_placeholder_site_after_body-->
+<!--/radix_placeholder_site_after_body-->
+<!--radix_placeholder_navigation_after_body-->
+<!--/radix_placeholder_navigation_after_body-->
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
