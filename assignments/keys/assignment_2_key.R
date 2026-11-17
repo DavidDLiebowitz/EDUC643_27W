@@ -11,6 +11,7 @@
 library(tidyverse)
 library(here)
 library(modelsummary)
+library(marginaleffects)
 
 # Identify directory location of file
 i_am("assignments/keys/assignment_2_key.R")
@@ -85,18 +86,18 @@ quantile(nerds$baplusavgall, probs = seq(0, 1, 0.1))
 sd(nerds$baplusavgall)
 
 # Going to select mean +/- 1SD
-# Use the margins package and define prototypical values
-df3 <- margins::margins(fit3, at = 
-                          list(baplusavgall = c(mean(nerds$baplusavgall) - sd(nerds$baplusavgall),
-                                                mean(nerds$baplusavgall),
-                                                mean(nerds$baplusavgall + sd(nerds$baplusavgall)))))
-
-# Use prototypical values in resulting dataset to show results
-ggplot(data=df3, aes(x=frpl, y=fitted, color=as.factor(baplusavgall))) + 
-  geom_smooth(method='lm', se=F) +
+# Use plot_predictions() from the marginaleffects package and define prototypical values
+# (vcov = FALSE draws the fitted lines without confidence bands)
+plot_predictions(fit3, 
+                 condition = list("frpl",
+                                  "baplusavgall" = c(mean(nerds$baplusavgall) - sd(nerds$baplusavgall),
+                                                     mean(nerds$baplusavgall),
+                                                     mean(nerds$baplusavgall) + sd(nerds$baplusavgall))),
+                 vcov = FALSE) + 
   xlab("Proportion students receiving FRPL") + ylab("Predicted PPE") +
   scale_color_discrete(name = "BA-plus rate",
-                       labels=c("1 SD below mean (14%)","Mean (27%)","1 SD above mean (40%)")) +
+                       labels=c("1 SD below mean (14%)","Mean (27%)","1 SD above mean (40%)"),
+                       aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 ggsave("assignments/keys/assignment_2_prototypical.png")

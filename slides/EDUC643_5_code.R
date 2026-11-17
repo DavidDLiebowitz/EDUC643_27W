@@ -31,7 +31,7 @@ pb <- rownames_to_column(pb, "id")
 # Plot bivariate relationship
 
 lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) +
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   geom_smooth(method = "lm") +
   xlab("Extraversion") +
   theme_minimal(base_size = 16)
@@ -70,7 +70,7 @@ sd(pb$std_resid)
 
 # Generate residuals vs. fitted plot
 ggplot(pb, aes(x = predict, y = resid)) +
-  geom_jitter(alpha=0.2, width=0.01, height=0) +
+  geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -101,7 +101,7 @@ ggplot(pb) +
 modelsummary(fit,
              stars=T,
              gof_omit = "Adj.|AIC|BIC|Log|RMSE",
-             coef_rename = c("extraversion" = "Extraversion (1-5)"),
+             coef_rename = c("extraversion" = "Extraversion (0-5)"),
              vcov =  list("iid", "robust"))
 
 ### Students in our data are clustered within 11 colleges and universities
@@ -120,7 +120,7 @@ modelsummary(lm_school,
              stars=T,
              coef_omit = "school",
              gof_omit = "Adj.|AIC|BIC|Log|RMSE",
-             coef_rename = c("extraversion" = "Extraversion (1-5)"),
+             coef_rename = c("extraversion" = "Extraversion (0-5)"),
              vcov =  list("iid", ~ school))
 
 ## As an alternative, can use estimatr::lm_robust

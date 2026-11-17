@@ -716,14 +716,18 @@ $$\text{ln}(\hat{PPE}_j) = \text{ln}(\beta_0) + \beta_1 \text{ln}(GDP_j) + \vare
 ---
 ## "Forbidden" log transformations
 So far, we've been dealing with situations in which all the variables we needed to transform were non-zero. In fact this is often not the case:
-```{r, fig.height=5}
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %>%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+```{r, fig.height=2.6}
+pb <- read.csv(here("data/belonging.csv")) %>%
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert) %>%
     drop_na()
-do <- rownames_to_column(do, "id")
-ggplot(data=do, aes(OE_frequency)) + geom_bar()
+ggplot(data=pb, aes(extraversion)) + geom_histogram(binwidth=0.05) +
+  theme_minimal(base_size = 16)
+```
+
+```{r, echo=T}
+sum(pb$extraversion==0)
+summary(log(pb$extraversion))
 ```
 
 --

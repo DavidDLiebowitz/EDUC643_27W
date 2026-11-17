@@ -178,7 +178,7 @@ Five ways to characterize them
 ```{r, echo = F}
 set.seed(643)
 lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) +
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   theme_minimal(base_size = 16)
 
 
@@ -539,7 +539,7 @@ An OLS-fitted regression finds the best intercept and slope values to minimize t
 ```{r, echo = F}
 good_fit_plot
 ```
-$\bf{\Sigma(e_i)^2 = 3,951}$
+$\bf{\Sigma(e_i)^2 = 3,954}$
 
 ]
 
@@ -547,10 +547,10 @@ $\bf{\Sigma(e_i)^2 = 3,951}$
 ```{r, echo = F}
 bad_fit_plot
 ```
-$\Sigma(e_i)^2 = 5,382$
+$\Sigma(e_i)^2 = 5,377$
 ]
 
-The regression line on the left is a better fit because the sum of its squared errors is smaller  (3,951 < 5,382).
+The regression line on the left is a better fit because the sum of its squared errors is smaller  (3,954 < 5,377).
 
 ---
 ## Sum of Squared Residuals (SSR)

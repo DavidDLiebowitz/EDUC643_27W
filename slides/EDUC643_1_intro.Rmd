@@ -321,6 +321,8 @@ head(pb)
 str(pb)
 ```
 
+.small[**Note:** The original survey composites could only take a handful of values (each is an average of 2-4 Likert items). To make them truly continuous, we added a small amount of random noise ("jitter") to *belong*, *extraversion* and *neuroticism*: no more than half the distance between adjacent possible scores. We also extended the bottom of each scale down to 0, so *belong* now ranges from 0-6 and the personality traits from 0-5. The unaltered data are available on [OSF](https://osf.io/mv6ek/).]
+
 ---
 # Check for missingness
 
@@ -385,7 +387,7 @@ We are interested in the *relationship* between extraversion (*extraversion*) an
 ```{r, echo=F}
 set.seed(643)
 ggplot(pb, aes(x=belong, y=extraversion)) +
-  geom_jitter(alpha=0.2, width=0.05, height=0.1) +
+  geom_point(alpha=0.2) +
   ggtitle("Belonging Predicting Extraversion") +
   theme_minimal(base_size = 16)
 ```
@@ -394,7 +396,7 @@ ggplot(pb, aes(x=belong, y=extraversion)) +
 ```{r, echo = F}
 set.seed(643)
 ggplot(pb, aes(x = extraversion, y = belong)) +
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   ggtitle("Extraversion Predicting Belonging") +
   theme_minimal(base_size = 16)
 
@@ -408,18 +410,18 @@ However, our convention is to consider the variable on the Y-axis to be the one 
 ---
 # Bivariate relationships
 
-Given the focus of the Stubblebine et al. paper, we are choosing to plot sense of belonging against extraversion. Because both measures take on a limited set of values, many students share the exact same point on the plot. So, we "jitter" the points (add a small amount of random noise to each one) and make them partially transparent so we can see them all.
+Given the focus of the Stubblebine et al. paper, we are choosing to plot sense of belonging against extraversion. With more than 4,000 students, many of the points overlap, so we make them partially transparent so we can see them all.
 
 ```{r, echo=T}
 biv <- ggplot(data=pb, aes(x=extraversion, y=belong)) +
-          geom_jitter(alpha=0.2, width=0.1, height=0.05)
+          geom_point(alpha=0.2)
 ```
 
 ```{r, echo = F, fig.height=3.75, fig.width = 6}
 set.seed(643)
 lm_plot <- biv +
-            xlab("Extraversion (1-5)") +
-            ylab("Sense of belonging (1-6)") +
+            xlab("Extraversion (0-5)") +
+            ylab("Sense of belonging (0-6)") +
             theme_minimal(base_size = 16)
 
 
@@ -621,5 +623,3 @@ class: middle, inverse
 
 ### Review: 
 - Review EDUC 641, Unit 4 (Lectures 13 - 16)
-
-

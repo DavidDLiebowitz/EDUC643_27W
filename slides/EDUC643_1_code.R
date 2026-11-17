@@ -76,12 +76,11 @@ sum(is.na(pb$first_gen))
 ### Visualization of bivariate relationship
 #######################################################
 
-# Both variables take on a limited number of values, so many students "stack" on top of
-# one another. geom_jitter() adds a little random noise so we can see them all
+# With more than 4,000 students, many points overlap, so we make them partially transparent
 lm_plot <- ggplot(data=pb, aes(x=extraversion, y=belong)) +
-              geom_jitter(alpha=0.2, width=0.1, height=0.05) +
-              xlab("Extraversion (1-5)") +
-              ylab("Sense of belonging (1-6)") +
+              geom_point(alpha=0.2) +
+              xlab("Extraversion (0-5)") +
+              ylab("Sense of belonging (0-6)") +
               theme_minimal(base_size = 16)
 
 
@@ -131,12 +130,12 @@ confint(fit)
 # Produce the table
 modelsummary(fit, stars=T,
              gof_omit = "Adj.|AIC|BIC|Log",
-             coef_rename = c("extraversion" = "Extraversion (1-5)"))
+             coef_rename = c("extraversion" = "Extraversion (0-5)"))
 
 # Produce the table and export it to a Word file
 modelsummary(fit, stars=T,
              gof_omit = "Adj.|AIC|BIC|Log",
-             coef_rename = c("extraversion" = "Extraversion (1-5)"),
+             coef_rename = c("extraversion" = "Extraversion (0-5)"),
              output = "Tables/belong_extraversion.docx") # <- need to set up your directory structure to have a Tables file in your root directory
 
 ############################################################
@@ -152,7 +151,7 @@ pb <- pb %>%
 
 # Graph the standardized versions of the data
 std <- ggplot(pb, aes(extraversion_std, belong_std)) +
-  geom_jitter(alpha=0.2, width=0.05, height=0.03) +
+  geom_point(alpha=0.2) +
   geom_smooth(method='lm', se=F) +
   theme_minimal(base_size=16)
 

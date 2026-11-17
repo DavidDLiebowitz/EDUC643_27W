@@ -8,48 +8,41 @@ library(tidyverse)
 ## SEDA data
 ##################
 
-seda <- read.csv(here("data/seda_geodist_poolsub_cs_4.1.csv"))
-cov <- read.csv(here("data/seda_cov_geodist_pool_4.1.csv"))
+## SEDA 2025.2 (administrative school districts), pooled grade-cohort-scale (GCS) achievement
+## GCS scores are in grade-level units and are comparable across grades and over time.
+## Achievement is pooled separately for the pre-pandemic (2009-2019) and post-pandemic
+## (2022-2025) periods; we keep both as separate variables.
 
-seda <- select(seda, c(sedalea, sedaleaname, fips, stateabb, cs_mn_avg_mth_ol, cs_mn_avg_rla_ol)) %>%
+seda <- data.table::fread(here("data/seda_admindist_poolsub_gcs_2025.2.csv")) %>%
+  filter(subgroup == "all", gap == 0) %>%
+  select(sedaadmin, sedaadminname, fips, stateabb, pooled_years,
+         math = gcs_mn_avg_mth_ol, read = gcs_mn_avg_rla_ol) %>%
+  mutate(period = case_when(pooled_years == "2009-2019" ~ "pre",
+                            pooled_years == "2022-2025" ~ "post")) %>%
+  select(-pooled_years) %>%
+  pivot_wider(names_from = period, values_from = c(math, read)) %>%
+  select(sedaadmin, sedaadminname, fips, stateabb, math_pre, read_pre, math_post, read_post)
+
+# Covariates pooled across the full 2009-2025 window
+cov <- data.table::fread(here("data/seda_cov_admindist_pool_2025.2.csv")) %>%
+  filter(pooled_years == "2009-2025") %>%
+  select(sedaadmin, urban, suburb, town, rural, urbanicity, pernam, perasn, perhsp, perblk, perwht, perfl, perecd, perell, perspeced,
+         totenrl, rsflnfl, sesavgall, lninc50avgall, baplusavgall, unempavgall, snapavgall, single_momavgall)
+
+seda2 <- inner_join(seda, cov, by = "sedaadmin")
+
+# Locale: where the majority of students attend school; fall back on SEDA's urbanicity otherwise
+seda2 <- seda2 %>% mutate(locale = case_when(urban > 0.5 ~ "Urban",
+                                             suburb > 0.5 ~ "Suburb",
+                                             town > 0.5 ~ "Town",
+                                             rural > 0.5 ~ "Rural",
+                                             urbanicity == "City" ~ "Urban",
+                                             TRUE ~ urbanicity))
+
+seda2 <- seda2 %>%
+  select(-c(urban, suburb, town, rural, urbanicity)) %>%
+  rename(sedalea = sedaadmin, sedaleaname = sedaadminname) %>%
   drop_na()
-
-cov <- select(cov, c(sedalea, sedaleaname, fips, urban, suburb, town, rural, pernam, perasn, perhsp, perblk, perwht, perfl, perecd, perell, perspeced,
-                     totenrl, rsflnfl, sesavgall, lninc50avgall, baplusavgall, unempavgall, snapavgall, single_momavgall)) %>%
-  drop_na()
-
-seda2 <- left_join(seda, cov, by = c("sedalea")) %>% drop_na()
-
-seda2 <- seda2 %>% rename(sedaleaname = sedaleaname.x,
-                          fips = fips.x) %>%
-  select(-c(sedaleaname.y, fips.y))
-
-seda2 <- seda2 %>% group_by(sedalea, sedaleaname, fips, stateabb) %>% 
-  summarise(across(everything(), mean))
-
-seda2 <- seda2 %>% rename(math = cs_mn_avg_mth_ol,
-                          read = cs_mn_avg_rla_ol)
-
-seda2 <- seda2 %>% mutate(urban2 = ifelse(urban>0.5, 1, 0))
-seda2 <- seda2 %>% mutate(town2 = ifelse(town>0.5, 1, 0))
-seda2 <- seda2 %>% mutate(suburb2 = ifelse(suburb>0., 1, 0))
-seda2 <- seda2 %>% mutate(rural2 = ifelse(rural>0.5, 1, 0))
-
-seda2 <- seda2 %>% mutate(locale = case_when(urban2==1 ~ "Urban", 
-                                            suburb2==1 ~ "Suburb", 
-                                            town2==1 ~ "Town", 
-                                            rural2==1 ~ "Rural", 
-                                            TRUE ~ NA_character_))
-
-seda2 <- seda2 %>% mutate(locale = case_when(!is.na(locale) ~ locale,
-                                             sedalea==408850 ~ "Rural",
-                                             sedalea==1735400 ~ "Town",
-                                             sedalea==4012240 ~ "Town",
-                                             sedalea==4203840 ~ "Urban",
-                                             sedalea==4501110 ~ "Town",
-                                             sedalea==4832370 ~ "Urban"))
-
-seda2 <- select(seda2, -c(urban, suburb, town, rural, urban2, suburb2, town2, rural2))
 
 data.table::fwrite(seda2, "data/seda.csv")
 

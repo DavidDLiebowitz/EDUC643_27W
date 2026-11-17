@@ -15,7 +15,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer, reshape2, car, modelsummary)
+p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer, reshape2, car, modelsummary, marginaleffects)
 
 i_am("slides/EDUC643_10_categorical.rmd")
 
@@ -842,7 +842,7 @@ df <- mutate(df, period = case_when(id %in% c(1:50) ~ "p1",
 
 little <- ggplot(df, aes(x=period, y=mean_orf, color=period)) +
               geom_jitter(width=0.05, height=0) +
-              labs("Little variability") +
+              labs(title = "Little variability") +
               ylim(0, 225) +
               stat_summary(fun = "mean",
                                  geom = "crossbar", 
@@ -867,7 +867,7 @@ df2 <- mutate(df2, period = case_when(id %in% c(1:50) ~ "p1",
 
 mid <- ggplot(df2, aes(x=period, y=mean_orf, color=period)) +
               geom_jitter(width=0.05, height=0) +
-              labs("Moderate variability") +
+              labs(title = "Moderate variability") +
               ylim(0, 225) +
               stat_summary(fun = "mean",
                                  geom = "crossbar", 
@@ -892,7 +892,7 @@ df3 <- mutate(df3, period = case_when(id %in% c(1:50) ~ "p1",
 
 large <- ggplot(df3, aes(x=period, y=mean_orf, color=period)) +
               geom_jitter(width=0.05, height=0) +
-              labs("Large variability") +
+              labs(title = "Large variability") +
               ylim(0, 225) +
               stat_summary(fun = "mean",
                                  geom = "crossbar", 
@@ -1295,19 +1295,16 @@ ggplot(dibels_long, aes(x=school_enroll, y=mean_orf, color=period)) +
 # An aside
 **If our question predictor were continuous, and we wanted to adjust for a categorical, how might we do so? With multiple predictors?**
 ```{r, echo=T}
-df3 <- margins::margins(fit4,
-            at = list(period=c("y1_boy", "y1_moy", 
-                               "y2_boy", "y2_moy")))
-
-# Use prototypical values in resulting dataset to show results
-proto <-ggplot(data=df3, aes(x=school_enroll, y=fitted,color=period)) + 
-   geom_smooth(method='lm') +
+# Use plot_predictions() from the marginaleffects package to show
+# predicted values across school enrollment, separately for each period
+proto <- plot_predictions(fit4, condition = list("school_enroll", "period")) +
    xlab("School Enrollment") + ylab("Predicted ORF") +
    scale_color_discrete(name = "Period",
-                       breaks=c("y1_boy", "y1_moy", 
+                       breaks=c("y1_boy", "y1_moy",
                                "y2_boy", "y2_moy"),
                        labels=c("Fall 2019","Winter 2020",
-                                "Fall 2020", "Winter 2021")) +
+                                "Fall 2020", "Winter 2021"),
+                       aesthetics = c("colour", "fill")) +
    theme_minimal(base_size=16)
 ```
 

@@ -149,7 +149,7 @@ pb <- read.csv(here("data/belonging.csv")) %>%
 ```{r, echo = F, fig.height=5.5, fig.width = 8}
 set.seed(643)
 lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   ggtitle("Belonging vs Extraversion") +
     theme_minimal(base_size = 16)
 
@@ -189,9 +189,7 @@ summary(fit)
 
 ```
 
-**The predicted sense of belonging for a student with an extraversion rating of 0 is 4.05 $(\beta_0)$.**
-
-.small[Notice that the extraversion scale runs from 1 to 5, so no student in our data actually has a rating of 0! More on this next class.]
+**The predicted sense of belonging for a student with an extraversion rating of 0 is 4.09 $(\beta_0)$.**
 
 ---
 ## Evaluating regressions: Coefficients
@@ -204,9 +202,9 @@ summary(fit)
 ```
 
 --
-.small[**A one unit difference in extraversion is positively associated with a 0.22 difference in sense of belonging.**]
+.small[**A one unit difference in extraversion is positively associated with a 0.21 difference in sense of belonging.**]
 
-.small[Even better: **We reject the null hypothesis, and conclude that *on average, in the population* there is a relationship between extraversion and sense of belonging. We estimate that students who are one unit apart on extraversion will have a sense of belonging score 0.22 points different from each other.**]
+.small[Even better: **We reject the null hypothesis, and conclude that *on average, in the population* there is a relationship between extraversion and sense of belonging. We estimate that students who are one unit apart on extraversion will have a sense of belonging score 0.21 points different from each other.**]
 
 --
 
@@ -236,9 +234,9 @@ summary(fit)
 
 The .red-pink[**residual standard error (RSE)**] is the standard deviation of the residuals. This summarizes the variability of observed values around the model-predicted values, in the original units of the outcome. 
 
-$$RSE = 0.956$$
+$$RSE = 0.957$$
 
-This means observed values vary around our model-predicted sense of belonging with a standard deviation of 0.956. On a 1-6 scale, almost a full point is quite large!
+This means observed values vary around our model-predicted sense of belonging with a standard deviation of 0.957. On a 0-6 scale, almost a full point is quite large!
 
 ---
 # Degrees of freedom
@@ -269,7 +267,7 @@ summary(fit)
 
 ```
 
-The R-squared value is .06. This means that our model accounts for 6% of the variance in sense of belonging. Since our model has only one predictor, we can alternatively say Extraversion accounts for 6% of the variance in sense of belonging.
+The R-squared value is .055. This means that our model accounts for 5.5% of the variance in sense of belonging. Since our model has only one predictor, we can alternatively say Extraversion accounts for 5.5% of the variance in sense of belonging.
 
 --
 
@@ -531,8 +529,8 @@ summary(fit)
 summary(fit)
 ```
 
-$$t = \frac{\hat{\beta_1} - 0}{SE(\hat{\beta_1})} = \frac{0.2222}{0.0136} = 16.38$$
-$$Pr(t < -16.38 \text{ or } t > 16.38)|H_0 = 0.00000...0017 \text{ (57 zeros!) or } p <0.001$$
+$$t = \frac{\hat{\beta_1} - 0}{SE(\hat{\beta_1})} = \frac{0.2067}{0.0131} = 15.78$$
+$$Pr(t < -15.78 \text{ or } t > 15.78)|H_0 = 0.00000...0015 \text{ (53 zeros!) or } p <0.001$$
 ---
 # Regression coefficients
 
@@ -540,7 +538,7 @@ $$Pr(t < -16.38 \text{ or } t > 16.38)|H_0 = 0.00000...0017 \text{ (57 zeros!) o
 summary(fit)
 ```
 
-Under the null hypothesis, it is extremely unlikely to obtain an Extraversion slope of 0.22 (p < .001). Therefore, we can reject the null hypothesis and conclude that there is a positive relationship between extraversion and sense of belonging, on average in the population.
+Under the null hypothesis, it is extremely unlikely to obtain an Extraversion slope of 0.21 (p < .001). Therefore, we can reject the null hypothesis and conclude that there is a positive relationship between extraversion and sense of belonging, on average in the population.
 
 ---
 # Confidence intervals (CIs)
@@ -782,9 +780,9 @@ summary(fit)
 ```
 95% CIs:
 $$\hat{\beta_1} \pm t_{n-2}[se(\hat{\beta_1})]$$
-$$ 0.222 \pm 1.96(0.0136)$$
+$$ 0.207 \pm 1.96(0.0131)$$
 
-$$[0.196, 0.249]$$
+$$[0.181, 0.232]$$
 
 ---
 # Confidence intervals (CIs)
@@ -831,8 +829,8 @@ Our omnibus test is significant at an $\alpha$-threshold of 0.05 $(p < 0.001)$, 
 ## Summarizing regression results
 ```{r, echo=T, results='asis'}
 modelsummary(fit, stars=T,
-  gof_omit = "Adj.|AIC|BIC|Log|^F$",
-  coef_rename = c("extraversion" = "Extraversion (1-5)"),
+  gof_omit = "Adj.|AIC|BIC|Log",
+  coef_rename = c("extraversion" = "Extraversion (0-5)"),
   escape=F) # <- necessary for html, but don't need this for Word
 ```
 
@@ -841,14 +839,14 @@ modelsummary(fit, stars=T,
 
 ```{r, echo=F, results='asis'}
 modelsummary(fit, stars=T,
-     gof_omit = "Adj.|AIC|BIC|Log|^F$",
-     coef_rename = c("extraversion" = "Extraversion (1-5)"),
+     gof_omit = "Adj.|AIC|BIC|Log",
+     coef_rename = c("extraversion" = "Extraversion (0-5)"),
      escape=F)
 ```
 
 
 
-.small[We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between sense of belonging and extraversion, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 6 percent of the variance in belonging. We estimate that students one unit apart on extraversion will have belonging scores 0.22 (*p*<0.001, 95% CI: 0.20, 0.25) points different from each other.]
+.tiny[We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between sense of belonging and extraversion, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 5.5 percent of the variance in belonging. We estimate that students one unit apart on extraversion will have belonging scores 0.21 (*p*<0.001, 95% CI: 0.18, 0.23) points different from each other.]
 
 
  

@@ -247,13 +247,13 @@ head(pb)
 ```
 
 ```
-#&gt;   belong extraversion neuroticism   school first_gen
-#&gt; 1   5.50          3.5         3.0 School C         2
-#&gt; 2   5.25           NA          NA School K         2
-#&gt; 3   5.00          4.0         3.5 School C         2
-#&gt; 4   4.75          3.0         4.0 School A         1
-#&gt; 5   4.75          2.0         2.5 School B         2
-#&gt; 6   2.50          2.0         3.5 School E         1
+#&gt;     belong extraversion neuroticism   school first_gen
+#&gt; 1 5.613640     3.585739    3.050645 School C         2
+#&gt; 2 5.338332           NA          NA School K         2
+#&gt; 3 5.084311     4.212392    3.579742 School C         2
+#&gt; 4 4.770018     3.189266    4.180084 School A         1
+#&gt; 5 4.734687     1.848689    2.505564 School B         2
+#&gt; 6 2.464962     2.227994    3.338264 School E         1
 ```
 
 ---
@@ -266,12 +266,14 @@ str(pb)
 
 ```
 #&gt; 'data.frame':	4753 obs. of  5 variables:
-#&gt;  $ belong      : num  5.5 5.25 5 4.75 4.75 2.5 5.5 3.5 3 5.25 ...
-#&gt;  $ extraversion: num  3.5 NA 4 3 2 2 3 3.5 3 4 ...
-#&gt;  $ neuroticism : num  3 NA 3.5 4 2.5 3.5 4.5 5 4.5 1.5 ...
+#&gt;  $ belong      : num  5.61 5.34 5.08 4.77 4.73 ...
+#&gt;  $ extraversion: num  3.59 NA 4.21 3.19 1.85 ...
+#&gt;  $ neuroticism : num  3.05 NA 3.58 4.18 2.51 ...
 #&gt;  $ school      : chr  "School C" "School K" "School C" "School A" ...
 #&gt;  $ first_gen   : int  2 2 2 1 2 1 1 2 2 1 ...
 ```
+
+.small[**Note:** The original survey composites could only take a handful of values (each is an average of 2-4 Likert items). To make them truly continuous, we added a small amount of random noise ("jitter") to *belong*, *extraversion* and *neuroticism*: no more than half the distance between adjacent possible scores. We also extended the bottom of each scale down to 0, so *belong* now ranges from 0-6 and the personality traits from 0-5. The unaltered data are available on [OSF](https://osf.io/mv6ek/).]
 
 ---
 # Check for missingness
@@ -308,7 +310,7 @@ summary(pb$belong)
 
 ```
 #&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;    1.00    4.25    5.00    4.74    5.50    6.00
+#&gt;   0.000   4.248   4.936   4.732   5.442   6.000
 ```
 
 ``` r
@@ -317,7 +319,7 @@ summary(pb$extraversion)
 
 ```
 #&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   1.000   2.500   3.000   3.127   4.000   5.000
+#&gt;   0.000   2.356   3.087   3.094   3.948   5.000
 ```
 
 ``` r
@@ -326,7 +328,7 @@ summary(pb$neuroticism)
 
 ```
 #&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   1.000   2.500   3.000   3.183   4.000   5.000
+#&gt;   0.000   2.471   3.152   3.163   3.983   5.000
 ```
 
 ---
@@ -384,12 +386,12 @@ However, our convention is to consider the variable on the Y-axis to be the one 
 ---
 # Bivariate relationships
 
-Given the focus of the Stubblebine et al. paper, we are choosing to plot sense of belonging against extraversion. Because both measures take on a limited set of values, many students share the exact same point on the plot. So, we "jitter" the points (add a small amount of random noise to each one) and make them partially transparent so we can see them all.
+Given the focus of the Stubblebine et al. paper, we are choosing to plot sense of belonging against extraversion. With more than 4,000 students, many of the points overlap, so we make them partially transparent so we can see them all.
 
 
 ``` r
 biv &lt;- ggplot(data=pb, aes(x=extraversion, y=belong)) +
-          geom_jitter(alpha=0.2, width=0.1, height=0.05)
+          geom_point(alpha=0.2)
 ```
 
 &lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-14-1.svg" alt="" style="display: block; margin: auto;" /&gt;
@@ -480,8 +482,6 @@ class: middle, inverse
 
 ### Review: 
 - Review EDUC 641, Unit 4 (Lectures 13 - 16)
-
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

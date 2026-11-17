@@ -25,7 +25,7 @@ body{
 
 ```{r}
 #loading libraries 
-pacman::p_load(tidyverse, modelsummary, margins)
+pacman::p_load(tidyverse, modelsummary, marginaleffects)
 
 #read in dataset 
 dibel_df <- read.csv("https://daviddliebowitz.github.io/EDUC643_W24/data/dibels.csv") 
@@ -100,10 +100,12 @@ modelsummary(list(fit1),
 ### Task 2: Plotting the relationship between time and scores by grades 
 
 ```{r, fig.width = 10}
-margins::margins(fit1,
-                 at = list(grade = c("1", "2", "3", "4", "5"))) %>% 
-  ggplot(aes(x = relevel(time, ref = 'Pre'), 
-             y = fitted, 
+# draw = FALSE returns the predicted values so we can build our own plot
+plot_predictions(fit1,
+                 condition = list("time", grade = c("1", "2", "3", "4", "5")),
+                 draw = FALSE) %>% 
+  ggplot(aes(x = relevel(factor(time), ref = 'Pre'), 
+             y = estimate, 
              color = grade,
              group = grade)) +
   geom_point() +
@@ -137,18 +139,14 @@ modelsummary(list(fit2),
 ### Task 4: Plot prototypical values of specified levels 
 
 ```{r, fig.width = 10}
-margins::margins(fit2,
-                 at = list(grade = c("1", "2", "3", "4", "5"))) %>% 
-  ggplot(aes(x = frpl, 
-             y = fitted, 
-             color = grade)) +
-  geom_smooth(method = "lm") +
+plot_predictions(fit2,
+                 condition = list("frpl", grade = c("1", "2", "3", "4", "5"))) +
   theme_minimal(base_size = 16) +
-  labs(x = "School enrollment",
+  labs(x = "Proportion FRPL",
        y = "ORF score",
-       color = "Grade")
+       color = "Grade",
+       fill = "Grade")
 ```
 
 
 **Q: Interpret the answer to the research question in 3-4 lines. **
-

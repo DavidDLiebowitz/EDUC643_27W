@@ -8,7 +8,7 @@
 
 # Load necessary packages
 library(pacman)
-p_load(here, tidyverse, modelsummary, margins)
+p_load(here, tidyverse, modelsummary, marginaleffects)
 
 
 i_am("slides/EDUC643_7_code.R")
@@ -54,7 +54,7 @@ cor(pb$belong, pb$extraversion)
 
 # Bivariate visualization
 lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   geom_smooth(method = "lm") +
   xlab("Extraversion") +
   ylab("Sense of belonging") +
@@ -79,7 +79,7 @@ ggplot(pb, aes(x = resid)) +
 
 # Residuals v fitted plot
 ggplot(pb, aes(x = predict, y = stu_resid)) + 
-  geom_jitter(alpha=0.2, width=0.01, height=0) +
+  geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Studentized Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -91,7 +91,7 @@ ggplot(pb, aes(x = predict, y = stu_resid)) +
 
 ### The relationship between belong and neuroticism
 bel_neuro <- ggplot(pb, aes(x=neuroticism, y=belong)) + 
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   geom_smooth(method = "lm") +
   xlab("Neuroticism") +
   ylab("Sense of belonging") +
@@ -161,30 +161,20 @@ ggplot(df) +
 
 # Preparing a nice regression table -- on screen
 
-# Unfortunately, modelsummary requires a work-around to produce the F-statistic in your table
-# I'm showing you how to do in below, but you don't need to add this extra row
-
-# Add a row with the F-statistic
-row <- tribble(~term,          ~'1',  ~'2', 
-               'F-statistic',  round(summary(fit)$fstatistic[1], 2), round(summary(fit2)$fstatistic[1], 3))
-attr(row, 'position') <- c(8)
-
-
-# Produce the model onscreen with the added row
+# modelsummary reports the F-statistic ("F") by default, so we leave it out of gof_omit
 modelsummary(list(fit, fit2),
              stars=T,
              gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE",
-             coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
-             add_rows = row,   # <- with the added row
+             coef_rename = c("extraversion" = "Extraversion (0-5)", "neuroticism" = "Neuroticism (0-5)"),
              escape=F)  
 
 
 
-# Preparing a nice regression table -- output to .doc (without the added row)
+# Preparing a nice regression table -- output to .doc
 modelsummary(list(fit, fit2),
              stars=T,
              gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE",
-             coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
+             coef_rename = c("extraversion" = "Extraversion (0-5)", "neuroticism" = "Neuroticism (0-5)"),
              output = "slides/belong_multiple.docx")
 
 ## Creating a prototypical plot
@@ -192,16 +182,15 @@ modelsummary(list(fit, fit2),
 # Use our multiple regression of belonging on extraversion and neuroticism
 fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
 
-# Use the margins package and define prototypical values
-df2 <- margins::margins(fit2, at = list(neuroticism = c(2,3,4)))
-
-# Use prototypical values in resulting dataset to show results
-proto <-  ggplot(data=df2, aes(x=extraversion, y=fitted, color=as.factor(neuroticism))) + 
-  geom_smooth(method='lm', se=F) +
+# Use plot_predictions() from the marginaleffects package:
+# the first variable in `condition` goes on the x-axis, and we supply
+# prototypical values for the second (all other predictors are held at their means)
+proto <- plot_predictions(fit2, 
+                          condition = list("extraversion", "neuroticism" = c(2,3,4))) + 
   xlab("Extraversion") + ylab("Predicted sense of belonging") +
   scale_color_discrete(name = "Neuroticism",
-                       breaks=c(2,3,4),
-                       labels=c("Low (2)","Middle (3)","High (4)")) +
+                       labels=c("Low (2)","Middle (3)","High (4)"),
+                       aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 proto

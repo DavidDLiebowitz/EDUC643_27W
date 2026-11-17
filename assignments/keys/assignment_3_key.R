@@ -11,7 +11,7 @@
 library(tidyverse)
 library(here)
 library(modelsummary)
-library(margins)
+library(marginaleffects)
 
 # Identify directory location of file
 i_am("assignments/keys/assignment_3_key.R")
@@ -171,15 +171,12 @@ modelsummary(list(fit5, fit6),
              output = "assignments/keys/assignment_3_MR.docx")
 
 
-# Use the margins package and show at schooling-level values
-df <- margins(fit6, at = 
-                    list(level = c("Elementary", "Middle", "High")))
-
-# Use prototypical values in resulting dataset to show results
-ggplot(data=df, aes(x=frpl, y=fitted, color=as.factor(level))) + 
-  geom_smooth(method='lm', se=F) +
+# Use plot_predictions() from the marginaleffects package and show at schooling-level values
+plot_predictions(fit6, 
+                 condition = list("frpl", level = c("Elementary", "Middle", "High")),
+                 vcov = FALSE) + 
   xlab("Proportion students receiving FRPL") + ylab("Predicted PPE") +
-  scale_color_discrete(name = "Grade Level") +
+  scale_color_discrete(name = "Grade Level", aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 ggsave("assignments/keys/assignment_3_prototypical.png")

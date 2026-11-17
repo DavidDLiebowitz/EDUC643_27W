@@ -108,7 +108,7 @@ pb <- rownames_to_column(pb, "id")
 ```{r}
 set.seed(643)
 lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   geom_smooth(method = "lm") +
   xlab("Extraversion") + 
   theme_minimal(base_size = 16)
@@ -126,8 +126,8 @@ tidy(fit)
 ```
 
 .small[
-- Each 1 unit difference in extraversion (*extraversion*) is associated with a 0.22 unit difference in sense of belonging (*belong*).
- + This represents nearly a quarter of a standard deviation of the outcome (*belong*), or a moderately sized relationship
+- Each 1 unit difference in extraversion (*extraversion*) is associated with a 0.21 unit difference in sense of belonging (*belong*).
+ + This represents about a fifth of a standard deviation of the outcome (*belong*), or a moderately sized relationship
 - Relationship is statistically significant
  + Unlikely that in the population of first-year college students that there is no relationship between extraversion and sense of belonging.
 - There is still a lot of residual variation
@@ -322,24 +322,24 @@ lm_plot
 
 Our fitted regression line contains the "predicted" values of *belong* for each value of *extraversion*. But almost all of the "actual" values of *belong* lie off the actual line regression line.
 ---
-# Example: Student #1142
+# Example: Student #1663
 
 ```{r, fig.height=5}
 fit <- lm(belong ~ extraversion, data=pb)
 pb$predict <- predict(fit)
 pb$resid <- residuals(fit)
 
-pb1142 <- filter(pb, id==1142)
+pb1663 <- filter(pb, id==1663)
 set.seed(643)
  resid_c <- ggplot(pb, aes(x = extraversion, y = belong)) + 
-   geom_jitter(alpha=0.2, width=0.1, height=0.05) + 
+   geom_point(alpha=0.2) + 
    geom_smooth(method=lm, data=pb) +
-   geom_point(aes(x = extraversion, y = predict), data=pb1142, col = "red", alpha=0.3) +
-   geom_point(data = pb1142, aes(x = extraversion, y = belong),
+   geom_point(aes(x = extraversion, y = predict), data=pb1663, col = "red", alpha=0.3) +
+   geom_point(data = pb1663, aes(x = extraversion, y = belong),
                      color = 'red',
                      size = 3) +
-   geom_segment(aes(xend = extraversion, yend=predict), col = "red", alpha = 0.8, data= pb1142) +
-   annotate('text', label = "#1142", x = 1.07, y = 5.3, hjust = 0, color = "red", size = 5) +
+   geom_segment(aes(xend = extraversion, yend=predict), col = "red", alpha = 0.8, data= pb1663) +
+   annotate('text', label = "#1663", x = 0.85, y = 5.35, hjust = 0, color = "red", size = 5) +
    xlab("Extraversion") +
    theme_minimal(base_size = 16)
 resid_c
@@ -424,7 +424,7 @@ sd(pb$resid)
 ```
 
 - Sample mean of the residuals is *always* exactly zero
-- On a scale ranging from 1 to 6, most of our residuals are within about one point of sense of belonging. However, we've done a poor job of predicting belonging for some students (by as much as four points!).
+- On a scale ranging from 0 to 6, most of our residuals are within about one point of sense of belonging. However, we've done a poor job of predicting belonging for some students (by more than four points!).
 
 
 ---
@@ -521,7 +521,7 @@ ggplot(quad, aes(x = predict, y = resid)) +
 Let's look at this for our estimates of sense of belonging:
 ```{r, fig.height=5}
 ggplot(pb, aes(x = predict, y = resid)) + 
-         geom_jitter(alpha=0.2, width=0.01, height=0) +
+         geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -535,7 +535,7 @@ ggplot(pb, aes(x = predict, y = resid)) +
 Let's look at this for our estimates of sense of belonging:
 ```{r, echo=T, fig.height=4.25}
 ggplot(pb, aes(x = predict, y = resid)) + 
-         geom_jitter(alpha=0.2, width=0.01, height=0) +
+         geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -581,7 +581,7 @@ ggplot(het, aes(x, y2)) +
 # Residual heterodscedasticity
 ```{r, fig.height=5}
 ggplot(pb, aes(x = predict, y = resid)) + 
-         geom_jitter(alpha=0.2, width=0.01, height=0) +
+         geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -608,8 +608,8 @@ However, we generally can correct for the presence of heteroscedasticity by the 
 .small[
 ```{r, echo=T, highlight.output=c(5)}
 modelsummary(fit, 
-  stars=T, gof_omit = "Adj.|AIC|BIC|Log|RMSE|^F$",
-  coef_rename = c("extraversion" = "Extraversion (1-5)"),
+  stars=T, gof_omit = "Adj.|AIC|BIC|Log|RMSE",
+  coef_rename = c("extraversion" = "Extraversion (0-5)"),
   vcov =  list("iid", "robust"), escape=F)
 ```
 ]
@@ -653,7 +653,7 @@ And this is confirmed in this histogram. .blue[What sort of skew is this distrib
 For the standard errors (and associated inference tests) that we conduct in the regression analysis to be correct, the residuals **must be normally distributed**
 ```{r, echo=F, fig.height=4.5}
 ggplot(pb, aes(x = predict, y = stu_resid)) + 
-         geom_jitter(alpha=0.2, width=0.01, height=0) +
+         geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Studentized Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -691,7 +691,7 @@ If observations (and residuals) are correlated (i.e., there is some feature in o
 ```{r, fig.height=4.5}
 set.seed(643)
 lm_plot_school <- ggplot(pb, aes(x=extraversion, y=belong, col=school)) + 
-  geom_jitter(alpha=0.5, width=0.1, height=0.05) +
+  geom_point(alpha=0.5) +
   xlab("Extraversion") +
   theme_minimal(base_size = 16)
 
@@ -732,8 +732,8 @@ ggplot(pb, aes(x = school, y = stu_resid, col=school)) +
 ```{r, echo=T}
 modelsummary(lm_school,
   stars=T, coef_omit = "school", escape=F,
-  gof_omit = "Adj.|AIC|BIC|Log|RMSE|^F$",
-  coef_rename = c("extraversion" = "Extraversion (1-5)"),
+  gof_omit = "Adj.|AIC|BIC|Log|RMSE",
+  coef_rename = c("extraversion" = "Extraversion (0-5)"),
   vcov =  list("iid", ~ school))
 ```
 ]
@@ -767,13 +767,13 @@ pb2506 <- filter(pb, id==2506)
 
 set.seed(643)
 outlier <- ggplot(pb, aes(x = extraversion, y = belong)) + 
-    geom_jitter(alpha=0.2, width=0.1, height=0.05) + 
+    geom_point(alpha=0.2) + 
     geom_smooth(method=lm, se=F, data=pb) +
     geom_point(aes(x = extraversion, y = predict), data=pb2506, col = "red", alpha=0.3) +
     geom_point(data = pb2506, aes(x = extraversion, y = belong),
                       color = 'red',
                       size = 3) +
-    annotate('text', label = "#2506 (5, 1)", x = 4.5, y = 1.25, color = "red", size = 5) +
+    annotate('text', label = "#2506 (4.77, 0.75)", x = 4.3, y = 1.05, color = "red", size = 5) +
     xlab("Extraversion") +
   theme_minimal(base_size = 16)
 outlier

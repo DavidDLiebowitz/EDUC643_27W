@@ -65,13 +65,13 @@ tidy(fit)
 ## # A tibble: 2 × 5
 ##   term         estimate std.error statistic  p.value
 ##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)     4.05     0.0449      90.1 0       
-## 2 extraversion    0.222    0.0136      16.4 1.69e-58
+## 1 (Intercept)     4.09     0.0431      95.0 0       
+## 2 extraversion    0.207    0.0131      15.8 1.53e-54
 ```
 
 .small[
-- Each 1 unit difference in extraversion (*extraversion*) is associated with a 0.22 unit difference in sense of belonging (*belong*).
- + This represents nearly a quarter of a standard deviation of the outcome (*belong*), or a moderately sized relationship
+- Each 1 unit difference in extraversion (*extraversion*) is associated with a 0.21 unit difference in sense of belonging (*belong*).
+ + This represents about a fifth of a standard deviation of the outcome (*belong*), or a moderately sized relationship
 - Relationship is statistically significant
  + Unlikely that in the population of first-year college students that there is no relationship between extraversion and sense of belonging.
 - There is still a lot of residual variation
@@ -186,18 +186,18 @@ summary(lm(belong ~ extraversion, data=pb))
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -4.1565 -0.4621  0.1768  0.6768  1.7322 
+## -4.6814 -0.4606  0.1817  0.6960  1.7489 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
-*## extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
+## (Intercept)    4.0929     0.0431   94.96   &lt;2e-16 ***
+*## extraversion   0.2067     0.0131   15.78   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-*## Residual standard error: 0.9559 on 4260 degrees of freedom
-## Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
-## F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
+*## Residual standard error: 0.9566 on 4260 degrees of freedom
+## Multiple R-squared:  0.0552,	Adjusted R-squared:  0.05498 
+## F-statistic: 248.9 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ```
 ---
 # Addding measurement error
@@ -217,18 +217,18 @@ summary(lm(belong ~ extraversion_noise, data=pb))
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -4.2108 -0.4545  0.1662  0.6874  1.7053 
+## -4.7568 -0.4657  0.1814  0.6967  1.7046 
 ## 
 ## Coefficients:
 ##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)         4.19993    0.04046  103.81   &lt;2e-16 ***
-*## extraversion_noise  0.17187    0.01198   14.34   &lt;2e-16 ***
+## (Intercept)         4.23693    0.03902  108.59   &lt;2e-16 ***
+*## extraversion_noise  0.15921    0.01161   13.71   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-*## Residual standard error: 0.9626 on 4260 degrees of freedom
-## Multiple R-squared:  0.04606,	Adjusted R-squared:  0.04584 
-## F-statistic: 205.7 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
+*## Residual standard error: 0.9632 on 4260 degrees of freedom
+## Multiple R-squared:  0.04229,	Adjusted R-squared:  0.04206 
+## F-statistic: 188.1 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ```
 
 ---
@@ -275,7 +275,7 @@ class: middle, inverse
 
 Our fitted regression line contains the "predicted" values of *belong* for each value of *extraversion*. But almost all of the "actual" values of *belong* lie off the actual line regression line.
 ---
-# Example: Student #1142
+# Example: Student #1663
 
 &lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-11-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
@@ -360,7 +360,7 @@ summary(pb$resid)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -4.1565 -0.4621  0.1768  0.0000  0.6768  1.7322
+## -4.6814 -0.4606  0.1817  0.0000  0.6960  1.7489
 ```
 
 ``` r
@@ -368,11 +368,11 @@ sd(pb$resid)
 ```
 
 ```
-## [1] 0.955782
+## [1] 0.9565318
 ```
 
 - Sample mean of the residuals is *always* exactly zero
-- On a scale ranging from 1 to 6, most of our residuals are within about one point of sense of belonging. However, we've done a poor job of predicting belonging for some students (by as much as four points!).
+- On a scale ranging from 0 to 6, most of our residuals are within about one point of sense of belonging. However, we've done a poor job of predicting belonging for some students (by more than four points!).
 
 
 ---
@@ -387,7 +387,7 @@ summary(pb$std_resid)
 
 ```
 ##       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
-## -4.3503102 -0.4834990  0.1849729 -0.0000029  0.7081121  1.8132067
+## -4.8941864 -0.4815822  0.1899276 -0.0000007  0.7276297  1.8300122
 ```
 
 ``` r
@@ -395,7 +395,7 @@ sd(pb$std_resid)
 ```
 
 ```
-## [1] 1.000127
+## [1] 1.000129
 ```
 
 - Note the minima and maxima standardized residual values. .blue[*Given a sample of ~4,300 students, what does this make you think?*]
@@ -449,7 +449,7 @@ Let's look at this for our estimates of sense of belonging:
 
 ``` r
 ggplot(pb, aes(x = predict, y = resid)) + 
-         geom_jitter(alpha=0.2, width=0.01, height=0) +
+         geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -495,8 +495,8 @@ However, we generally can correct for the presence of heteroscedasticity by the 
 
 ``` r
 modelsummary(fit, 
-  stars=T, gof_omit = "Adj.|AIC|BIC|Log|RMSE|^F$",
-  coef_rename = c("extraversion" = "Extraversion (1-5)"),
+  stars=T, gof_omit = "Adj.|AIC|BIC|Log|RMSE",
+  coef_rename = c("extraversion" = "Extraversion (0-5)"),
   vcov =  list("iid", "robust"), escape=F)
 ```
 
@@ -511,22 +511,22 @@ modelsummary(fit,
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 4.046*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 4.046*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.093*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.093*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.045) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.047) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.043) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.046) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Extraversion (1-5) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.222*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.222*** &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extraversion (0-5) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.207*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.207*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.013) &lt;/td&gt;
    &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
@@ -536,8 +536,13 @@ modelsummary(fit,
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.059 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.059 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.055 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.055 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 248.906 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 226.011 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Std.Errors &lt;/td&gt;
@@ -640,8 +645,8 @@ If observations (and residuals) are correlated (i.e., there is some feature in o
 ``` r
 modelsummary(lm_school,
   stars=T, coef_omit = "school", escape=F,
-  gof_omit = "Adj.|AIC|BIC|Log|RMSE|^F$",
-  coef_rename = c("extraversion" = "Extraversion (1-5)"),
+  gof_omit = "Adj.|AIC|BIC|Log|RMSE",
+  coef_rename = c("extraversion" = "Extraversion (0-5)"),
   vcov =  list("iid", ~ school))
 ```
 
@@ -656,23 +661,23 @@ modelsummary(lm_school,
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 4.036*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 4.036*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.085*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.085*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.092) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.079) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.091) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.081) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Extraversion (1-5) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.220*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.220*** &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extraversion (0-5) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.206*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.206*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.025) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.013) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.026) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
@@ -681,8 +686,13 @@ modelsummary(lm_school,
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.081 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.081 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.076 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.076 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 31.818 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Std.Errors &lt;/td&gt;
@@ -737,8 +747,8 @@ tidy(lm(belong ~ extraversion, data=pb))
 ## # A tibble: 2 × 5
 ##   term         estimate std.error statistic  p.value
 ##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 (Intercept)     4.05     0.0449      90.1 0       
-*## 2 extraversion    0.222    0.0136      16.4 1.69e-58
+*## 1 (Intercept)     4.09     0.0431      95.0 0       
+*## 2 extraversion    0.207    0.0131      15.8 1.53e-54
 ```
 
 ``` r
@@ -749,8 +759,8 @@ tidy(lm(belong ~ extraversion, data=pb_out))
 ## # A tibble: 2 × 5
 ##   term         estimate std.error statistic  p.value
 ##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 (Intercept)     4.04     0.0448      90.2 0       
-*## 2 extraversion    0.224    0.0135      16.5 1.79e-59
+*## 1 (Intercept)     4.09     0.0430      95.1 0       
+*## 2 extraversion    0.208    0.0131      15.9 1.98e-55
 ```
 
 --

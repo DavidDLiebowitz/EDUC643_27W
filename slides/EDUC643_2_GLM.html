@@ -198,13 +198,13 @@ pb %&gt;%
 ```
 
 ```
-#&gt;      extraversion belong
-#&gt; 4257          3.5   5.00
-#&gt; 4258          4.5   4.50
-#&gt; 4259          2.5   4.75
-#&gt; 4260          5.0   5.50
-#&gt; 4261          3.0   5.25
-#&gt; 4262          3.0   4.00
+#&gt;      extraversion   belong
+#&gt; 4257     3.426438 5.051531
+#&gt; 4258     4.730905 4.496578
+#&gt; 4259     2.331512 4.764328
+#&gt; 4260     4.926179 5.450991
+#&gt; 4261     2.756136 5.367520
+#&gt; 4262     3.024369 3.928024
 ```
 
 --
@@ -351,12 +351,12 @@ Squaring the residual terms `\((\varepsilon_i^2)\)` allows us to treat negative 
 
 ```
      belong predicted_belong residual residual_sq
-4257   5.00             4.82     0.18        0.03
-4258   4.50             5.05    -0.55        0.30
-4259   4.75             4.60     0.15        0.02
-4260   5.50             5.16     0.34        0.12
-4261   5.25             4.71     0.54        0.29
-4262   4.00             4.71    -0.71        0.51
+4257   5.05             4.80     0.25        0.06
+4258   4.50             5.07    -0.57        0.33
+4259   4.76             4.57     0.19        0.04
+4260   5.45             5.11     0.34        0.12
+4261   5.37             4.66     0.70        0.50
+4262   3.93             4.72    -0.79        0.62
 ```
 --
 
@@ -387,16 +387,16 @@ An OLS-fitted regression finds the best intercept and slope values to minimize t
 
 .pull-left[
 &lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-14-1.svg" alt="" style="display: block; margin: auto;" /&gt;
-`\(\bf{\Sigma(e_i)^2 = 3,951}\)`
+`\(\bf{\Sigma(e_i)^2 = 3,954}\)`
 
 ]
 
 .pull-right[
 &lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-15-1.svg" alt="" style="display: block; margin: auto;" /&gt;
-`\(\Sigma(e_i)^2 = 5,382\)`
+`\(\Sigma(e_i)^2 = 5,377\)`
 ]
 
-The regression line on the left is a better fit because the sum of its squared errors is smaller  (3,951 &lt; 5,382).
+The regression line on the left is a better fit because the sum of its squared errors is smaller  (3,954 &lt; 5,377).
 
 ---
 ## Sum of Squared Residuals (SSR)

@@ -530,22 +530,19 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
 ---
 # A complete figure
 ```{r, echo=T}
-df1 <- margins::cplot(fit5,
-                x="frpl", dx="ppe",
-                what="prediction",
-                data=nerds[nerds[["rural"]]==0,],
-                draw=F)
-df2 <- margins::cplot(fit5,
-                x="frpl", dx="ppe",
-                what="prediction",
-                data=nerds[nerds[["rural"]]==1,],
-                draw=F)
+# draw=FALSE returns predicted values (with 95% CIs) across frpl,
+# separately for non-rural (0) and rural (1) schools
+df <- marginaleffects::plot_predictions(fit5,
+                condition = list("frpl", "rural" = c(0, 1)),
+                draw = FALSE)
+df1 <- filter(df, rural==0)
+df2 <- filter(df, rural==1)
 
 proto <- ggplot() +
-                geom_line(data=df1, aes(x=xvals, y=yvals), color="deeppink") +
-                geom_ribbon(data=df1, aes(x=xvals, ymin=lower, ymax=upper), fill="deeppink", alpha=0.3, linetype=0) +
-                geom_line(data=df2, aes(x=xvals, y=yvals), color="cornflowerblue") +
-                geom_ribbon(data=df2, aes(x=xvals, ymin=lower, ymax=upper), fill="cornflowerblue", alpha=0.3, linetype=0) +
+                geom_line(data=df1, aes(x=frpl, y=estimate), color="deeppink") +
+                geom_ribbon(data=df1, aes(x=frpl, ymin=conf.low, ymax=conf.high), fill="deeppink", alpha=0.3, linetype=0) +
+                geom_line(data=df2, aes(x=frpl, y=estimate), color="cornflowerblue") +
+                geom_ribbon(data=df2, aes(x=frpl, ymin=conf.low, ymax=conf.high), fill="cornflowerblue", alpha=0.3, linetype=0) +
           xlab("Proportion receiving FRPL") + ylab("Predicted PPE") +
           annotate('text', x=0.9, y=12500, label="Non-rural", color="deeppink", size=6) +
           annotate('text', x=0.9, y=16500, label="Rural", color="cornflowerblue", size=6) +

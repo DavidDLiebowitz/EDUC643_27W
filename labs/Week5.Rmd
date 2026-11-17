@@ -78,7 +78,7 @@ In this analysis, two key variables, belong and extraversion. First, let's plot 
 # Replace x with the predictor variable and y with the outcome variable.
 
 # ggplot(df0, aes(x = ..., y = ...)) +
-#   geom_jitter(color = "grey60", alpha = 0.3, width = 0.1, height = 0.05) +
+#   geom_point(color = "grey60", alpha=0.3) +
 #   geom_smooth(method = "lm", color = "#de6386") +
 #   labs( y = "Sense of belonging",
 #         x = "Extraversion") +
@@ -183,20 +183,18 @@ summary(df0$agreeableness)
 ```
 
 ```{r}
-# To make the prototypical plot, we will use the margins package
+# To make the prototypical plot, we will use plot_predictions() from the marginaleffects package
 
-# install.packages("margins")
+# install.packages("marginaleffects")
 
-# This gives the predicted values at different levels of agreeableness. 
+# This plots the predicted values across extraversion at different levels of agreeableness. 
 # In agreeableness = c(...) write the 3 values you want to depict
 
-# margins::margins(model, at = list(agreeableness = c(...))) %>% 
-#   ggplot(aes(x = extraversion, 
-#              y = fitted, 
-#              color = as.factor(agreeableness))) +
-#   geom_smooth(method = 'lm', se = F) +
+# marginaleffects::plot_predictions(model, 
+#                                   condition = list("extraversion", "agreeableness" = c(...))) +
 #   labs( y = "Sense of belonging",
 #         x = "Extraversion",
-#         color = "Agreeableness")+
+#         color = "Agreeableness",
+#         fill = "Agreeableness")+
 #   theme_bw()
 ```

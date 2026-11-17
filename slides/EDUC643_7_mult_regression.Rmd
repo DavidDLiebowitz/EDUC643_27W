@@ -16,7 +16,7 @@ output:
 
 ```{R, setup, include = F}
 library(pacman)
-p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer, reshape2, modelsummary)
+p_load(here, tidyverse, xaringan, knitr, kableExtra, haven, broom, xaringanthemer, reshape2, modelsummary, marginaleffects)
 
 i_am("slides/EDUC643_7_mult_regression.rmd")
 
@@ -175,7 +175,7 @@ cor(pb$belong, pb$extraversion)
 ```{r, echo=F, fig.height=5.5}
 set.seed(643)
 lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   geom_smooth(method = "lm") +
   xlab("Extraversion") +
   ylab("Sense of belonging") +
@@ -230,7 +230,7 @@ ggplot(pb, aes(x = resid)) +
 # Residuals v. fitted
 ```{r, echo=F, fig.height=4.5}
 ggplot(pb, aes(x = predict, y = stu_resid)) + 
-         geom_jitter(alpha=0.2, width=0.01, height=0) +
+         geom_point(alpha=0.2) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Studentized Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -261,7 +261,7 @@ What about another personality trait that Stubblebine et al. hypothesized would 
 ```{r, echo=F, fig.height=5.5}
 set.seed(643)
 bel_neuro <- ggplot(pb, aes(x=neuroticism, y=belong)) + 
-  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  geom_point(alpha=0.2) +
   geom_smooth(method = "lm") +
   xlab("Neuroticism") +
   ylab("Sense of belonging") +
@@ -377,14 +377,12 @@ fig %>%
 
 ```{r, echo=F}
 car <- lm(mpg ~ hp + wt, data=mtcars)
-df2 <- margins::margins(car, at = list(wt = c(2,3,4)))
 
-two_d <- ggplot() + 
-    geom_smooth(data=df2, aes(x=hp, y=fitted, color=as.factor(wt)), method='lm', se=F) + 
+two_d <- plot_predictions(car, condition = list("hp", "wt" = c(2,3,4))) + 
     xlab("Horsepower") + ylab("Predicted MPG") +
     scale_color_discrete(name = "Weight",
-                       breaks=c(2,3,4),
-                       labels=c("2,000 lbs", "3,000 lbs", "4,000 lbs")) +
+                       labels=c("2,000 lbs", "3,000 lbs", "4,000 lbs"),
+                       aesthetics = c("colour", "fill")) +
     theme_minimal(base_size=16)
 
 two_d
@@ -418,14 +416,12 @@ two_d
 .pull-left[
 ```{r, fig.width=6}
 car2 <- lm(mpg ~ hp + wt + hp:wt, data=mtcars)
-df3 <- margins::margins(car2, at = list(wt = c(2,3,4)))
 
-two_d2 <- ggplot() + 
-    geom_smooth(data=df3, aes(x=hp, y=fitted, color=as.factor(wt)), method='lm', se=F) +
+two_d2 <- plot_predictions(car2, condition = list("hp", "wt" = c(2,3,4))) +
     xlab("Horsepower") + ylab("Predicted MPG") +
     scale_color_discrete(name = "Weight",
-                       breaks=c(2,3,4),
-                       labels=c("2,000 lbs","3,000 lbs","4,000 lbs")) +
+                       labels=c("2,000 lbs","3,000 lbs","4,000 lbs"),
+                       aesthetics = c("colour", "fill")) +
     theme_minimal(base_size=16)
 
 two_d2
@@ -462,30 +458,30 @@ We make **the same** assumptions as in bivariate regression, but now extended to
 ```{r, output.lines=-c(1:2), highlight.output=c(10)}
 summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
-.small[**Interpretation of the intercept:** we estimate that students with an extraversion score=0 and neuroticism score=0 will have a sense of belonging score of 4.36 (again, neither of these is a value that either scale can actually take!)]
+.small[**Interpretation of the intercept:** we estimate that students with an extraversion score=0 and neuroticism score=0 will have a sense of belonging score of 4.37]
 
 ---
 # Interpreting our results
 ```{r, output.lines=-c(1:2), highlight.output=c(11)}
 summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
-.small[**Interpretation of *extraversion*:** adjusting for students' neuroticism, we estimate that students who score one unit apart on extraversion will have 0.20 unit different sense of belonging scores.]
+.small[**Interpretation of *extraversion*:** adjusting for students' neuroticism, we estimate that students who score one unit apart on extraversion will have 0.19 unit different sense of belonging scores.]
 
 ---
 # Interpreting our results
 ```{r, output.lines=-c(1:2), highlight.output=c(12)}
 summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
-.small[**Interpretation of *neuroticism*:** adjusting for students' extraversion, we estimate that students who score one unit apart on neuroticism will have 0.08 unit lower sense of belonging scores.]
+.small[**Interpretation of *neuroticism*:** adjusting for students' extraversion, we estimate that students who score one unit apart on neuroticism will have 0.07 unit lower sense of belonging scores.]
 
 --
-.small[That's quite a bit smaller than the unadjusted relationship (-0.14)...]
+.small[That's quite a bit smaller than the unadjusted relationship (-0.12)...]
 
 ---
 # Multiple regression
 We can now use these regression estimates to construct our .red-pink[**fitted equation**]:
 
-$$\hat{Belonging_{i}} = 4.364 + 0.201 * Extraversion_{i} + (-0.079) * Neuroticism_{i} + \varepsilon_{i}$$
+$$\hat{Belonging_{i}} = 4.371 + 0.189 * Extraversion_{i} + (-0.070) * Neuroticism_{i} + \varepsilon_{i}$$
 
 --
 
@@ -802,20 +798,18 @@ class: middle, inverse
 ```{r}
 fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
 
-# Add a row with the F-statistic
-row <- tribble(~term,          ~'1',  ~'2', 
-               'F-statistic',  round(summary(fit)$fstatistic[1], 2), round(summary(fit2)$fstatistic[1], 3))
-attr(row, 'position') <- c(8)
-
 ```
 
+.tiny[
 ```{r, echo=T}
 modelsummary(list(fit, fit2),
    stars=T,
-   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE|^F$",
-   coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
-   add_rows = row, escape=F)
+   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE",
+   coef_rename = c("extraversion" = "Extraversion (0-5)",
+                   "neuroticism" = "Neuroticism (0-5)"),
+   escape=F)
 ```
+]
 
 ---
 # Communicating results II
@@ -828,16 +822,15 @@ Let's do this for our worked example, displaying the relationship between extrav
 ```{r, echo=T, fig.height=5}
 # Fit your regression
 fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
-# Use the margins package and define prototypical values
-df2 <- margins::margins(fit2, at = list(neuroticism = c(2,3,4)))
-
-# Use prototypical values in resulting dataset to show results
-proto <-  ggplot(data=df2, aes(x=extraversion, y=fitted, color=as.factor(neuroticism))) + 
-   geom_smooth(method='lm', se=F) +
+# Use plot_predictions() from the marginaleffects package:
+# the first variable in `condition` goes on the x-axis, and we
+# supply prototypical values for the second
+proto <- plot_predictions(fit2, 
+            condition = list("extraversion", "neuroticism" = c(2,3,4))) + 
    xlab("Extraversion") + ylab("Predicted sense of belonging") +
    scale_color_discrete(name = "Neuroticism",
-                       breaks=c(2,3,4),
-                       labels=c("Low (2)","Middle (3)","High (4)")) +
+                       labels=c("Low (2)","Middle (3)","High (4)"),
+                       aesthetics = c("colour", "fill")) +
    theme_minimal(base_size=16)
 ```
 
@@ -855,7 +848,7 @@ summary(fit2)
 ```
 
 --
-Fitted equation: $\hat{belong} = 4.36357 + (0.20106)*extraversion + (-0.07917)*neuroticism$
+Fitted equation: $\hat{belong} = 4.37105 + (0.18874)*extraversion + (-0.07039)*neuroticism$
 
 ---
 # Communicating results III
@@ -893,17 +886,16 @@ Examine the distribution of the other predictors and consider:
 ```{r}
 modelsummary(list(fit, fit2),
    stars=T,
-   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE|Std|^F$",
+   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE|Std",
    vcov = "robust",
-   coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
-   add_rows = row,
+   coef_rename = c("extraversion" = "Extraversion (0-5)", "neuroticism" = "Neuroticism (0-5)"),
    notes=c("Cells report coefficients and heteroscedastic-robust standard errors in parentheses."),
    escape=F)
 ```
 
 ---
 # Putting it all together
-> We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between extraversion and sense of belonging, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 6 percent of the overall variance in belonging. We estimated that students who are one unit apart on extraversion will have a sense of belonging score 0.22 (*p*<0.001, 95% CI: 0.19, 0.25) points different from each other (Table 1). Adjusting for students' neuroticism modestly attenuates this relationship: holding neuroticism constant, we estimate that students who are one unit apart on extraversion will have sense of belonging scores 0.20 (*p*<0.001, 95% CI: 0.17, 0.23) points different from each other. When we hold students' extraversion constant, we also reject the null and conclude that there is an adjusted-relationship between neuroticism and belonging, on average in the population; students who are one unit apart on neuroticism report sense of belonging scores 0.08 points lower (*p*<0.001). Because neuroticism is theoretically related to belonging and improves the fit of our model, we adopt Model 2 as our preferred specification.
+> We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between extraversion and sense of belonging, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 5.5 percent of the overall variance in belonging. We estimated that students who are one unit apart on extraversion will have a sense of belonging score 0.21 (*p*<0.001, 95% CI: 0.18, 0.23) points different from each other (Table 1). Adjusting for students' neuroticism modestly attenuates this relationship: holding neuroticism constant, we estimate that students who are one unit apart on extraversion will have sense of belonging scores 0.19 (*p*<0.001, 95% CI: 0.16, 0.22) points different from each other. When we hold students' extraversion constant, we also reject the null and conclude that there is an adjusted-relationship between neuroticism and belonging, on average in the population; students who are one unit apart on neuroticism report sense of belonging scores 0.07 points lower (*p*<0.001). Because neuroticism is theoretically related to belonging and improves the fit of our model, we adopt Model 2 as our preferred specification.
 
 
 ---

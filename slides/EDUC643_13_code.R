@@ -8,7 +8,7 @@
 
 # Load necessary packages
 library(pacman)
-p_load(here, tidyverse, modelsummary)
+p_load(here, tidyverse, modelsummary, marginaleffects)
 
 
 i_am("slides/EDUC643_13_code.R")
@@ -59,19 +59,15 @@ modelsummary(list(fit3, fit4),
              notes=c("Cells report coefficients and heteroscedastic-robust standard errors in parentheses. Each observation is a school-grade-test value. Covariates include grade-level and total school enrollment."))
 
 # Visualize main effects model
-df4 <- margins::margins(fit4,
-                        at = list(period=c("y1_boy", "y1_moy", 
-                                           "y2_boy", "y2_moy")))
-
-# Use prototypical values in resulting dataset to show results
-proto1 <- ggplot(data=df4, aes(x=frpl_prop, y=fitted, color=period)) + 
-  geom_smooth(method='lm') +
+# Use plot_predictions() from the marginaleffects package
+proto1 <- plot_predictions(fit4, condition = list("frpl_prop", "period")) +
   xlab("Proportion receiving FRPL") + ylab("Predicted ORF") +
   scale_color_discrete(name = "Period",
                        breaks=c("y1_boy", "y1_moy", 
                                 "y2_boy", "y2_moy"),
                        labels=c("Fall 2019","Winter 2020",
-                                "Fall 2020", "Winter 2021")) +
+                                "Fall 2020", "Winter 2021"),
+                                aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 proto1
@@ -97,20 +93,16 @@ summary(lm(mean_orf ~ period * frpl_prop, dibels_long))
 
 # Generate fitted values, including interaction
 fit5 <- lm(mean_orf ~ period * frpl_prop, data=dibels_long)
-df5 <- margins::margins(fit5,
-                        at = list(period=c("y1_boy", "y1_moy", 
-                                           "y2_boy", "y2_moy")))
-
-# Use prototypical values in resulting dataset to show results
-proto2 <- ggplot(data=df5, aes(x=frpl_prop, y=fitted, color=period)) + 
-  geom_smooth(method='lm') +
+# Use plot_predictions() from the marginaleffects package
+proto2 <- plot_predictions(fit5, condition = list("frpl_prop", "period")) +
   xlab("Proportion receiving FRPL") + ylab("Predicted ORF") +
-  ylim(35, 110) +
+  coord_cartesian(ylim = c(35, 110)) +
   scale_color_discrete(name = "Period",
                        breaks=c("y1_boy", "y1_moy", 
                                 "y2_boy", "y2_moy"),
                        labels=c("Fall 2019","Winter 2020",
-                                "Fall 2020", "Winter 2021")) +
+                                "Fall 2020", "Winter 2021"),
+                                aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 proto2
@@ -142,21 +134,24 @@ summary(lm(mean_orf ~ period * title1, dibels_long))
 ## Visualize results
 fit6 <- lm(mean_orf ~ period * title1, dibels_long)
 
-df6 <- margins::margins(fit6,
-                        at = list(period=c("y2_boy", "y2_moy"),
+# draw=FALSE asks plot_predictions() for the predicted values (and CIs)
+# so we can build our own plot from them
+df6 <- plot_predictions(fit6,
+                        condition = list(period=c("y2_boy", "y2_moy"),
                                   title1 = c("Not Title I", "Title I schoolwide", 
-                                             "Title I targeted", "Missing")))
+                                             "Title I targeted", "Missing")),
+                        draw = FALSE)
 
 # Show results for each category
 categ <- ggplot(data=df6, 
-                aes(x=period, y=fitted, 
-                    ymin=fitted-1.96*se.fitted, ymax=fitted+1.96*se.fitted, 
+                aes(x=period, y=estimate, 
+                    ymin=conf.low, ymax=conf.high, 
                     group=title1, color=title1)) + 
   geom_pointrange(position=position_dodge(width=0.2)) +
   ylab("Predicted ORF") + xlab(" ") +
   scale_x_discrete(labels= c("y2_boy" = "Fall 2020",
                              "y2_moy" = "Winter 2021")) +
-  ylim(0, 110) +
+  coord_cartesian(ylim = c(0, 110)) +
   theme_minimal(base_size=16) +
   theme(legend.title = element_blank())
 
@@ -186,26 +181,31 @@ quantile(dibels_long$school_enroll, probs = seq(0, 1, 0.1))
 # Visualizing -- select prototypical values
 fit7 <- lm(mean_orf ~ frpl_prop * school_enroll, dibels_long)
 
-df7 <- margins::margins(fit7,
-                        at = list(school_enroll=c(120, 326, 600)))
-
-# Use prototypical values in resulting dataset to show results
-cont <- ggplot(data=df7, aes(x=frpl_prop, y=fitted, 
-                             color=as.factor(school_enroll))) +
-  geom_smooth(method='lm') +
+# Use plot_predictions() at our prototypical values of school enrollment;
+# vcov = FALSE draws just the fitted lines (no confidence bands)
+cont <- plot_predictions(fit7, 
+                         condition = list("frpl_prop", "school_enroll" = c(120, 326, 600)),
+                         vcov = FALSE) +
   xlab("Proportion receiving FRPL") + ylab("Predicted ORF") +
-  ylim(35, 100) +
+  coord_cartesian(ylim = c(35, 100)) +
   scale_color_discrete(name = "School Enrollment",
-                       breaks=c(120, 326, 600),
                        label=c("~10th pctile (120 stu.)", 
                                "Median (326 stu.)", 
-                               "~90th pctile (600 stu.)")) +
+                               "~90th pctile (600 stu.)"),
+                       aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 cont
 
-# could also add a 95% confidence interval band
+# could also add a 95% confidence interval band (plot_predictions' default)
 
-cont +
-  geom_ribbon(aes(ymin=fitted-1.96*se.fitted, ymax=fitted+1.96*se.fitted, fill=as.factor(school_enroll)), 
-              alpha=0.3, linetype=0, show.legend = F)
+plot_predictions(fit7, 
+                 condition = list("frpl_prop", "school_enroll" = c(120, 326, 600))) +
+  xlab("Proportion receiving FRPL") + ylab("Predicted ORF") +
+  coord_cartesian(ylim = c(35, 100)) +
+  scale_color_discrete(name = "School Enrollment",
+                       label=c("~10th pctile (120 stu.)", 
+                               "Median (326 stu.)", 
+                               "~90th pctile (600 stu.)"),
+                       aesthetics = c("colour", "fill")) +
+  theme_minimal(base_size=16)

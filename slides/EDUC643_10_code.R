@@ -8,7 +8,7 @@
 
 # Load necessary packages
 library(pacman)
-p_load(here, tidyverse, modelsummary)
+p_load(here, tidyverse, modelsummary, marginaleffects)
 
 
 i_am("slides/EDUC643_10_code.R")
@@ -227,20 +227,17 @@ ggplot(dibels_long, aes(x=school_enroll, y=mean_orf, color=period)) +
 
 ### Display a continuous against a continuous, adjusting for multiple covariates and displaying variation by ONE categorical
 
-# First, estimate the margins at the relevant values of the crucial categorical
-df3 <- margins::margins(fit4,
-                        at = list(period=c("y1_boy", "y1_moy", 
-                                           "y2_boy", "y2_moy")))
-
-# Then use prototypical values in resulting dataset to show results
-ggplot(data=df3, aes(x=school_enroll, y=fitted,color=period)) + 
-  geom_smooth(method='lm') +
+# Use plot_predictions() from the marginaleffects package: the first variable in
+# `condition` goes on the x-axis; the second gets a separate line for each of its values.
+# All other covariates are held at their means (or modes)
+plot_predictions(fit4, condition = list("school_enroll", "period")) +
   xlab("School Enrollment") + ylab("Predicted ORF") +
   scale_color_discrete(name = "Period",
-                       breaks=c("y1_boy", "y1_moy", 
+                       breaks=c("y1_boy", "y1_moy",
                                 "y2_boy", "y2_moy"),
                        labels=c("Fall 2019","Winter 2020",
-                                "Fall 2020", "Winter 2021")) +
+                                "Fall 2020", "Winter 2021"),
+                       aesthetics = c("colour", "fill")) +
   theme_minimal(base_size=16)
 
 ## Show the multiple regression results alongside single categorical predictor

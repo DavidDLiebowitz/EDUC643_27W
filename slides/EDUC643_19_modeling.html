@@ -32,7 +32,7 @@ class: center, middle, inverse, title-slide
 
 
 # Roadmap
-&lt;img src="Roadmap6.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap6.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 ---
 # Unit goals
 
@@ -145,7 +145,7 @@ Let's review how we've approached assignments in this class:
 # Mediation analysis
 .small[A third variable that "explains" why or how one predictor variable is related to the outcome]
 
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-2-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -162,10 +162,10 @@ Let's review how we've approached assignments in this class:
 
 ---
 # Mediation analysis
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-3-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
-```r
+``` r
 summary(lm(mpg ~ qsec, data=mtcars))
 ```
 
@@ -186,10 +186,10 @@ summary(lm(mpg ~ qsec, data=mtcars))
 
 ---
 # Mediation analysis
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-5-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
-```r
+``` r
 summary(lm(mpg ~ vs, data=mtcars))
 ```
 
@@ -210,10 +210,10 @@ summary(lm(mpg ~ vs, data=mtcars))
 
 ---
 # Mediation analysis
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-7-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
-```r
+``` r
 summary(lm(mpg ~ qsec + vs, data=mtcars))
 ```
 
@@ -235,7 +235,7 @@ summary(lm(mpg ~ qsec + vs, data=mtcars))
 
 ---
 ## Problems with mediation analysis
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-9-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 .small[If your "mediator" is correlated with any other variable (observed or unobserved), then it is **not** the case that the mediator is the mechanism by which your predictor is "indirectly" related to your outcome. This is true both for mediation analysis in the OLS framework as well as with Structural Equation Modeling (SEM).]
@@ -352,7 +352,7 @@ class: middle, inverse
 --
 
 
-```r
+``` r
 fit1 &lt;- lm(ppe ~ frpl, nerds)
 
 fit2 &lt;- lm(ppe ~ frpl + I(frpl^2), nerds)
@@ -374,30 +374,30 @@ fit6 &lt;- lm(ppe ~ frpl * rural + I(frpl^2) * rural + enroll + sesavgall+
 
 .pull-left[
 
-```r
+``` r
 ggplot(nerds, aes(frpl, ppe)) +
  geom_point() + theme_minimal()
 ```
 
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-12-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 --
 
 .pull.right[
 
-```r
+``` r
 binsreg::binsreg(y=nerds$ppe, 
                  x=nerds$frpl)
 ```
 
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-13-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
 # A complete table
 
-```r
+``` r
 row &lt;- tribble(~term, ~Bivariate, ~Bivariate, ~Bivariate, ~Multivariate,~Multivariate,~Multivariate,
                "&lt;b&gt;Addtl. Covariates?&lt;/b&gt;", "&lt;b&gt;No&lt;/b&gt;", "&lt;b&gt;No&lt;/b&gt;", "&lt;b&gt;No&lt;/b&gt;", "&lt;b&gt;Yes&lt;/b&gt;", "&lt;b&gt;Yes&lt;/b&gt;", "&lt;b&gt;Yes&lt;/b&gt;")
 # Tell which position it should go
@@ -459,11 +459,11 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; FRPL&lt;sup&gt;2&lt;/sup&gt; &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -6517.77*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -6818.83*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -6393.22*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -5843.26*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -5158.04** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −6517.77*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −6818.83*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −6393.22*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −5843.26*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −5158.04** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
@@ -478,10 +478,10 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
    &lt;td style="text-align:left;"&gt; Tot. Enrol. &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -0.80* &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -1.04* &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -0.52 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -0.53 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.80* &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −1.04* &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.52 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −0.53 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
@@ -499,7 +499,7 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;"&gt; 1747.18*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -759.37 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −759.37 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
@@ -535,7 +535,7 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; -6344.90 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; −6344.90 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
@@ -573,6 +573,15 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
    &lt;td style="text-align:center;"&gt; 0.166 &lt;/td&gt;
    &lt;td style="text-align:center;"&gt; 0.168 &lt;/td&gt;
   &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; F &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 37.908 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 25.163 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 18.256 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 14.211 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 15.734 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 12.874 &lt;/td&gt;
+  &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
 &lt;sup&gt;&lt;/sup&gt; &lt;i&gt;Notes&lt;/i&gt;: +&lt;i&gt;p&lt;/i&gt;&amp;lt;0.1, *&lt;i&gt;p&lt;/i&gt;&amp;lt;0.05, **&lt;i&gt;p&lt;/i&gt;&amp;lt;0.01, ***&lt;i&gt;p&lt;/i&gt;&amp;lt;0.001. Cells report coefficients
@@ -585,23 +594,20 @@ modelsummary(list(fit1, fit2, fit3, fit4, fit5, fit6),
 ---
 # A complete figure
 
-```r
-df1 &lt;- margins::cplot(fit5,
-                x="frpl", dx="ppe",
-                what="prediction",
-                data=nerds[nerds[["rural"]]==0,],
-                draw=F)
-df2 &lt;- margins::cplot(fit5,
-                x="frpl", dx="ppe",
-                what="prediction",
-                data=nerds[nerds[["rural"]]==1,],
-                draw=F)
+``` r
+# draw=FALSE returns predicted values (with 95% CIs) across frpl,
+# separately for non-rural (0) and rural (1) schools
+df &lt;- marginaleffects::plot_predictions(fit5,
+                condition = list("frpl", "rural" = c(0, 1)),
+                draw = FALSE)
+df1 &lt;- filter(df, rural==0)
+df2 &lt;- filter(df, rural==1)
 
 proto &lt;- ggplot() +
-                geom_line(data=df1, aes(x=xvals, y=yvals), color="deeppink") +
-                geom_ribbon(data=df1, aes(x=xvals, ymin=lower, ymax=upper), fill="deeppink", alpha=0.3, linetype=0) +
-                geom_line(data=df2, aes(x=xvals, y=yvals), color="cornflowerblue") +
-                geom_ribbon(data=df2, aes(x=xvals, ymin=lower, ymax=upper), fill="cornflowerblue", alpha=0.3, linetype=0) +
+                geom_line(data=df1, aes(x=frpl, y=estimate), color="deeppink") +
+                geom_ribbon(data=df1, aes(x=frpl, ymin=conf.low, ymax=conf.high), fill="deeppink", alpha=0.3, linetype=0) +
+                geom_line(data=df2, aes(x=frpl, y=estimate), color="cornflowerblue") +
+                geom_ribbon(data=df2, aes(x=frpl, ymin=conf.low, ymax=conf.high), fill="cornflowerblue", alpha=0.3, linetype=0) +
           xlab("Proportion receiving FRPL") + ylab("Predicted PPE") +
           annotate('text', x=0.9, y=12500, label="Non-rural", color="deeppink", size=6) +
           annotate('text', x=0.9, y=16500, label="Rural", color="cornflowerblue", size=6) +
@@ -610,7 +616,7 @@ proto &lt;- ggplot() +
 
 ---
 .small[**Figure 1.** *The predicted relationship between school-level poverty and per-pupil expenditure in Oregon, 2018-19*]
-&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_19_modeling_files/figure-html/unnamed-chunk-17-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 .tiny[*Notes*: fitted lines generated from Model 5 in Table 1, which includes adjustments for school enrollment, rurality, school level, avg. SES status and median log-income. Shaded areas are 95% confidence intervals using heteroscedastic-robust standard errors.]
 
@@ -668,10 +674,10 @@ Your Results section is not a diary of everything you did (e.g., don't walk your
 # To-Dos
 
 ### Final
-- Due March 20, 12:01p
+- Due March 18, 12:01p
 
 ### Re- (late) submissions
-- Everything due .red[**March 14, 5:00p**] (**no exceptions**)
+- Everything due .red[**March 12, 5:00p**] (**no exceptions**)
 - Assignments with scores &lt;90% only
 - Earn up to 90%
 
@@ -684,9 +690,9 @@ Your Results section is not a diary of everything you did (e.g., don't walk your
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

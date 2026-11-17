@@ -19,7 +19,7 @@ editor_options:
 ```{R, setup, include = F}
 library(pacman)
 
-p_load(here, MASS, tidyverse, ggplot2, xaringan, knitr, kableExtra, haven, xaringanthemer)
+p_load(here, MASS, tidyverse, ggplot2, xaringan, knitr, kableExtra, haven, broom, xaringanthemer)
 
 
 i_am("slides/EDUC643_4_correlation.rmd")
@@ -201,7 +201,7 @@ Let's transform *belong* and *extraversion* into standardized versions:
 ```{r, echo=F, fig.height=5}
 set.seed(643)
 std <- ggplot(pb, aes(extraversion_std, belong_std)) +
-  geom_jitter(alpha=0.2, width=0.05, height=0.03) +
+  geom_point(alpha=0.2) +
   geom_smooth(method='lm', se=F) +
   theme_minimal(base_size=16)
 
@@ -219,9 +219,9 @@ std
 ```
 The new fitted regression line is:
 
-$$\hat{Belonging_{std}} = 0.000 + 0.2434 * Extraversion_{std}$$
+$$\hat{Belonging_{std}} = 0.000 + 0.2350 * Extraversion_{std}$$
 
-For fun, multiply that 0.2434 by itself: $(0.2434)^2 = 0.0592$. .blue[**Anything familiar about 0.059?**]
+For fun, multiply that 0.2350 by itself: $(0.2350)^2 = 0.0552$. .blue[**Anything familiar about 0.055?**]
 
 ---
 # $r$ and $R^2$
@@ -494,7 +494,7 @@ Regression equations can be used to evaluate the relationship between variables,
 We can ask: What is the expected sense of belonging for a student with an extraversion rating of **4**?
 
 --
-$$\Large \hat{Belonging} = 4.05 + 0.22*(\boldsymbol{4}) = 4.93$$
+$$\Large \hat{Belonging} = 4.09 + 0.21*(\boldsymbol{4}) = 4.93$$
 The expected sense of belonging for an extraversion rating of 4 is 4.93
 
 --
@@ -513,13 +513,72 @@ We can ask: What is the expected sense of belonging for a student with an extrav
 Using our measure, this is not a possible value of extraversion but we can still estimate the predicted sense of belonging using our regression equation.
 
 --
-$$\Large \hat{Belonging} = 4.05 + 0.22*(\boldsymbol{400}) = 92.05$$
-This is not a possible value on a 1-6 sense of belonging scale.
+$$\Large \hat{Belonging} = 4.09 + 0.21*(\boldsymbol{400}) = 88.09$$
+This is not a possible value on a 0-6 sense of belonging scale.
 
 --
 
 **Only predict within the bounds of your data.**
 
+---
+# Beyond your data: the mile
+
+Since the first sub-4-minute miles were run in 1954, the men's world record in the mile has fallen at a remarkably steady pace. Let's use the record from 1954 through 1999 to predict the future!
+
+```{r, echo=T}
+mile <- readxl::read_xlsx(here("data/mile_record_progress.xlsx"),
+                          col_names = c("year", "seconds")) %>%
+          filter(!is.na(seconds))
+
+mile_fit <- lm(seconds ~ year,
+               data = filter(mile, year >= 1954 & year <= 1999))
+```
+
+```{r, echo=F, fig.height=2.75}
+mile %>%
+  filter(year >= 1954 & year <= 1999) %>%
+  ggplot(aes(x = year, y = seconds)) +
+  geom_step() +
+  geom_smooth(method = 'lm', se = F) +
+  xlab("Year") + ylab("World record (seconds)") +
+  theme_minimal(base_size = 16)
+```
+
+.small[Looks like a pretty good fit! In fact, R<sup>2</sup> = `r round(summary(mile_fit)$r.squared, 2)`.]
+
+---
+# Beyond your data: the mile
+
+```{r, echo=T}
+tidy(mile_fit)
+```
+
+--
+
+What would we have predicted the world record to be **today (in 2026)**?
+
+$$\Large \hat{seconds} = 830.44 - 0.304*(\boldsymbol{2026}) = 214.7$$
+
+That's a predicted world record of **3:34.7**. The actual world record in 2026 is 222.66 seconds, or **3:42.66**...a full eight seconds slower than we predicted!
+
+---
+# Beyond your data: the mile
+
+```{r, echo=F, fig.height=5}
+mile_pred <- tibble(year = 1954:2026) %>%
+  mutate(seconds = predict(mile_fit, newdata = .))
+
+ggplot() +
+  geom_step(data = mile, aes(x = year, y = seconds)) +
+  geom_line(data = filter(mile_pred, year <= 1999), aes(x = year, y = seconds), color = "blue", linewidth = 1) +
+  geom_line(data = filter(mile_pred, year >= 1999), aes(x = year, y = seconds), color = "blue", linetype = "dashed", linewidth = 1) +
+  annotate("rect", xmin = 1954, xmax = 1999, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "blue") +
+  annotate("text", x = 1976, y = 265, label = "Data used to fit", color = "blue", size = 5) +
+  xlab("Year") + ylab("World record (seconds)") +
+  theme_minimal(base_size = 16)
+```
+
+.small[Taken to its logical extreme, our model predicts that someone will run a mile in 0 seconds in the year 2733. **Only predict within the bounds of your data!**]
 
 ---
 class: middle, inverse
