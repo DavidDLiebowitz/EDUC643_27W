@@ -88,7 +88,7 @@ include_graphics("Roadmap3.jpg")
 Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
 ```{r, echo=F, out.width="70%"}
-include_graphics("stubblebine_etal.png")
+include_graphics("stubblebine_authors.png")
 ```
 
 .small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]

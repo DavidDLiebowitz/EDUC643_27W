@@ -268,7 +268,7 @@ class: middle, inverse
 Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
 ```{r, echo=F, out.width="70%"}
-include_graphics("stubblebine_etal.png")
+include_graphics("stubblebine_authors.png")
 ```
 
 .small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
@@ -376,7 +376,7 @@ The core question of the Stubblebine et al. study is how students' personalities
 
 > In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-> Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
+> Note that the study measured each personality trait with only two survey items (originally scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2. (For our purposes, we've added a small amount of random noise to make *belong*, *extraversion* and *neuroticism* truly continuous, with scales running from 0-6 and 0-5.)
 
 ---
 # Bivariate relationships

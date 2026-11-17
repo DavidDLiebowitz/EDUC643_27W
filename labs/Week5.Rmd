@@ -29,6 +29,8 @@ library(here)
 
 ```{r}
 # Read the data
+# NOTE: belong, extraversion and neuroticism have had a small amount of random noise
+# ("jitter") added to make them truly continuous (belong: 0-6; personality: 0-5)
 df0 <- read.csv("https://daviddliebowitz.github.io/EDUC643_27W/data/belonging.csv")
 
 # You can look at the variables and their types using this function

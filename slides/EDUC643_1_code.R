@@ -20,6 +20,9 @@ i_am("slides/EDUC643_1_code.R")
 # Let's first access the data
 # These data come from Stubblebine, Gopalan & Brady (2024) and were posted publicly
 # by the authors on the Open Science Framework: https://osf.io/mv6ek/
+# NOTE: to make belong, extraversion and neuroticism truly continuous, we added a small
+# amount of random noise ("jitter") to them and extended the bottom of each scale to 0
+# (belong: 0-6; personality: 0-5). See data/belonging_jitter.R for details.
 # We use select() to keep only the variables we need and give them shorter names
 pb <- read.csv(here("data/belonging.csv")) %>%
         select(belong = t2__dv_composite__belonging,
