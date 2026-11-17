@@ -4,7 +4,7 @@
     <title>General Linear Model (GLM)</title>
     <meta charset="utf-8" />
     <meta name="author" content="David D. Liebowitz" />
-    <script src="EDUC643_2_GLM_files/header-attrs-2.20/header-attrs.js"></script>
+    <script src="EDUC643_2_GLM_files/header-attrs-2.31/header-attrs.js"></script>
     <link href="EDUC643_2_GLM_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC643_2_GLM_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC643_2_GLM_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 
 # Roadmap
 
-&lt;img src="Roadmap1.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap1.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -62,35 +62,36 @@ class: middle, inverse
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-&lt;img src="kelly_etal.png" width="775" height="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="stubblebine_etal.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[In particular, we are going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[In particular, we are going to explore the .purple[**relationship**] between **extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and **sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).]
 
 
 ---
-# A preliminary analysis
+# Our research question
 
-Before we get to the core question of the Kelly et al. study--how are dietary restraint behaviors related to over-eating frequency?--we are going to explore another important relationship in the data that may also be related to our main research question: the .purple[**relationship**] between .red-pink[**dietary restraint behaviors**] (self-reports on the extent to which participants consciously restricted/controlled their food intake) and .red-pink[**body-mass index (BMI)**]. In particular, we are going to operationalize this by examining the relationship in our sample of young men between our predictor variable (***EDEQ_restraint***) and their body-mass index (***BMI***). 
+The core question of the Stubblebine et al. study is how students' personalities are related to their sense of belonging in college. The authors hypothesized that .red-pink[**extraversion**] would be positively related to belonging, and that .red-pink[**neuroticism**] would be negatively related to belonging. We are going to start by exploring the .purple[**relationship**] between .red-pink[**extraversion**] (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and .red-pink[**sense of belonging**] (students' average agreement with four statements such as, "I feel like I belong at [school name]") at the end of their first year of college. In particular, we are going to operationalize this by examining the relationship in our sample of first-year college students between our predictor variable (***extraversion***) and their sense of belonging (***belong***).
 
 --
 
-&gt; We are examining this relationship so that we can better understand how all three of these variables (***OE_frequency***, ***EDEQ_restraint*** and ***BMI***) are related in Unit 3. Additionally, the properties of the variable ***BMI*** are pedadogically helpful in demonstrating the assumptions of OLS.
+&gt; In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-&gt; However, we recognize that BMI has been shown to be relatively uninformative about individuals' overall health and categorizes individuals based on distributions initially derived exclusively from white Western European (French and Scottish) study participants. We use the measure for pedagogical purposes because the variable is one of the few continuous measures in one of the few datasets that our UO colleagues shared with us, while noting its problematic historical use.
+&gt; Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
 
 
 ---
 # Reading in the data
 
-```r
-do &lt;- read_spss(here("data/male_do_eating.sav")) %&gt;% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %&gt;%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %&gt;%
+``` r
+pb &lt;- read.csv(here("data/belonging.csv")) %&gt;%
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert,
+           neuroticism = t2__dv_composite__personality_neuroticism,
+           school = college_name) %&gt;%
     drop_na()
 ```
 
@@ -108,16 +109,16 @@ Five ways to characterize them
 ]
 
 .pull-right[
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-4-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-4-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 ]
 ---
 # A line through our cloud
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-5-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-5-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 We added a line running through our data. That line is defined by the intercept (value `\(Y\)` takes when `\(X=0\)`) and the slope (the difference in `\(Y\)` per 1 unit difference in `\(X\)`)
 &gt; `\(Y = intercept + slope*X\)` (you may have seen this in HS as Y = mX + b)
 
-&gt; We could think of this relationship, therefore, as `\(BMI = slope*EDEQ\_restraint + intercept\)` ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
+&gt; We could think of this relationship, therefore, as `\(Belonging = slope*Extraversion + intercept\)` ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
 
 ---
 # Mathematical representations
@@ -142,14 +143,14 @@ In addition to visual representations, we can borrow from mathematical models to
 
 --
 
-.blue[**What is wrong about describing the relationship between BMI and eating restraint as we did on the previous slide?**]
+.blue[**What is wrong about describing the relationship between extraversion and belonging as we did on the previous slide?**]
 
 ---
 # Statistical model
 
 In order to develop our statistical model (inspired by a deterministic mathematical model), we need to first determine our model's functional form.
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-6-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-6-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -178,34 +179,32 @@ We'll learn about lots of different modeling approaches. .red-pink[**They are al
 Okay, so once we have selected our model's functional form (which for now and the foreseeable future is going to be "linear"), we can move on to a mathematical representation. In this case, we are going to postulate a .red-pink[**linear regression**] model.
 
 A linear regression equation borrows the mathematical framework for a line to summarize this relationship.
-`$$BMI = \beta_0 + \beta_1(EDEQ\_restraint)$$`
+`$$Belonging = \beta_0 + \beta_1(Extraversion)$$`
 ---
 # Regression equations
 
 The regression line describes the mean value of Y for each possible "input" value of X.
 
-`$$BMI = \beta_0 + \beta_1(EDEQ\_restraint)$$`
+`$$Belonging = \beta_0 + \beta_1(Extraversion)$$`
 
 --
-.small[Our data already provides us with observations of over-eating frequency and dietary restraint:]
+.small[Our data already provides us with observations of sense of belonging and extraversion:]
 
 
-```r
-do %&gt;% 
-  select(EDEQ_restraint, BMI) %&gt;% 
+``` r
+pb %&gt;% 
+  select(extraversion, belong) %&gt;% 
   tail()
 ```
 
 ```
-#&gt; # A tibble: 6 x 2
-#&gt;   EDEQ_restraint   BMI
-#&gt;            &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1            3    36.0
-#&gt; 2            0    29.7
-#&gt; 3            6    22.3
-#&gt; 4            0.2  26.5
-#&gt; 5            1    38.0
-#&gt; 6            0    23.0
+#&gt;      extraversion belong
+#&gt; 4257          3.5   5.00
+#&gt; 4258          4.5   4.50
+#&gt; 4259          2.5   4.75
+#&gt; 4260          5.0   5.50
+#&gt; 4261          3.0   5.25
+#&gt; 4262          3.0   4.00
 ```
 
 --
@@ -214,7 +213,7 @@ do %&gt;%
 ---
 ## Regression equation components
 
-`$$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(EDEQ\_restraint)$$`
+`$$Belonging = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(Extraversion)$$`
 
 .orange[Intercept] `\(\color{orange}{(\beta_0)}\)`: Predicted outcome when `\(x\)` is equal to 0.
 
@@ -224,7 +223,7 @@ do %&gt;%
 
 --
 
-.blue[**Write out the appropriate regression equation for a line that has an intercept of 20 and a Dietary Restraint slope of 1.5.**]
+.blue[**Write out the appropriate regression equation for a line that has an intercept of 4 and an Extraversion slope of 0.25.**]
 
 --
 
@@ -238,10 +237,10 @@ do %&gt;%
 .purple[Slope] `\(\color{purple}{(\beta_1)}\)`: Predicted difference in the outcome for every one unit difference in `\(x\)`.
 
 
-`$$BMI = \color{orange}{20} + \color{purple}{1.5}(EDEQ\_restraint)$$`
+`$$Belonging = \color{orange}{4} + \color{purple}{0.25}(Extraversion)$$`
 
 --
-.blue[**What is an individual's expected BMI given a Dietary Restraint rating of 2?**]
+.blue[**What is a student's expected sense of belonging given an Extraversion rating of 2?**]
 
 ---
 ## Regression equation components
@@ -252,16 +251,16 @@ do %&gt;%
 
 
 
-`$$BMI = \color{orange}{20} + \color{purple}{1.5}(2) = 20 + 3 = 23$$`
-**We predict that individuals with an observed Dietary Restraint rating of 2 will have a body-mass index of 23.**
+`$$Belonging = \color{orange}{4} + \color{purple}{0.25}(2) = 4 + 0.5 = 4.5$$`
+**We predict that students with an observed Extraversion rating of 2 will have a sense of belonging score of 4.5.**
 
 ---
 # Residual (error) term
 "No model is perfect, but some are useful." - George Box
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-8-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-8-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
-Is Dietary Restraint a perfect predictor of BMI? 
+Is Extraversion a perfect predictor of sense of belonging? 
 
 --
 .red[**NO!**]
@@ -270,7 +269,7 @@ Is Dietary Restraint a perfect predictor of BMI?
 # Omitted variables
 A "perfect" regression equation would probably include a lot more variables:
 
-`$$BMI = \beta_0 + \beta_1(EDEQ\_restraint) + \beta_2(\text{Meal Frequency}) + \beta_3(\text{Nutritional Habits}) + ... \beta_\infty$$`
+`$$Belonging = \beta_0 + \beta_1(Extraversion) + \beta_2(\text{Friendships}) + \beta_3(\text{Campus Involvement}) + ... \beta_\infty$$`
 Many of these might not even be measurable!
 
 --
@@ -286,9 +285,9 @@ However, omitted variables often introduce bias into our estimates of the relati
 
 In a regression model, all the variability that we can't explain with our predictor(s) is condensed into a .green[residual term] (often represented by the Greek letter epsilon, `\(\color{green}{\varepsilon}\)`).
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-9-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-9-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
-`$$BMI = \beta_0 + \beta_1(EDEQ\_restraint) + \color{green}{\varepsilon}$$`
+`$$Belonging = \beta_0 + \beta_1(Extraversion) + \color{green}{\varepsilon}$$`
 ---
 # The regression model
 
@@ -334,7 +333,7 @@ For any observation, the residual is the difference between the observed and pre
 An OLS-fitted regression would go through the "center" of the data, finding the best intercept and slope to minimize the total distance between all of the residual and itself.
 
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-10-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-10-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -351,15 +350,13 @@ Squaring the residual terms `\((\varepsilon_i^2)\)` allows us to treat negative 
 
 
 ```
-# A tibble: 6 x 4
-    BMI predicted_BMI residual residual_sq
-  &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;       &lt;dbl&gt;
-1  36.0          27.0     8.99       80.8 
-2  29.7          23.9     5.76       33.2 
-3  22.3          30.1    -7.83       61.3 
-4  26.5          24.1     2.37        5.6 
-5  38.0          25.0    13.0       169.  
-6  23.0          23.9    -0.97        0.94
+     belong predicted_belong residual residual_sq
+4257   5.00             4.82     0.18        0.03
+4258   4.50             5.05    -0.55        0.30
+4259   4.75             4.60     0.15        0.02
+4260   5.50             5.16     0.34        0.12
+4261   5.25             4.71     0.54        0.29
+4262   4.00             4.71    -0.71        0.51
 ```
 --
 
@@ -373,11 +370,11 @@ The **sum of squares** is the sum of all our squared residuals:
 An OLS-fitted regression finds the best intercept and slope values to **minimize the sum of squared residuals**.
 
 .pull-left[
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-12-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-12-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-13-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-13-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -389,17 +386,17 @@ Which regression line appears to be a better fit?
 An OLS-fitted regression finds the best intercept and slope values to minimize the sum of squared residuals.
 
 .pull-left[
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-14-1.svg" style="display: block; margin: auto;" /&gt;
-`\(\bf{\Sigma(e_i)^2 = 40,153}\)`
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-14-1.svg" alt="" style="display: block; margin: auto;" /&gt;
+`\(\bf{\Sigma(e_i)^2 = 3,951}\)`
 
 ]
 
 .pull-right[
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-15-1.svg" style="display: block; margin: auto;" /&gt;
-`\(\Sigma(e_i)^2 = 101,566\)`
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-15-1.svg" alt="" style="display: block; margin: auto;" /&gt;
+`\(\Sigma(e_i)^2 = 5,382\)`
 ]
 
-The regression line on the left is a better fit because the sum of its squared errors is smaller  (40,153 &lt; 101,566).
+The regression line on the left is a better fit because the sum of its squared errors is smaller  (3,951 &lt; 5,382).
 
 ---
 ## Sum of Squared Residuals (SSR)
@@ -409,10 +406,10 @@ SSR is a bigger concept than just model predictions. It is a way of thinking abo
 --
 Our outcome's variability is simply the sum of squared deviations from its mean, aka the .red-pink[**sum of the squares (SS)**].&lt;sup&gt;1&lt;/sup&gt;
 
-`$$\color{pink}{SS_\text{BMI}} = \sum{(Y_i - \bar{Y})^2}$$`
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-16-1.svg" style="display: block; margin: auto;" /&gt;
+`$$\color{pink}{SS_\text{Belonging}} = \sum{(Y_i - \bar{Y})^2}$$`
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-16-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
-.footnote[.small[[1] Note that this is a univariate statistic that depends only on the variability of BMI.]]
+.footnote[.small[[1] Note that this is a univariate statistic that depends only on the variability of sense of belonging.]]
 
 ---
 
@@ -420,11 +417,11 @@ Our outcome's variability is simply the sum of squared deviations from its mean,
 
 The goal of regression is to account for some of this variability with our model's predictors.
 
-We can partition the outcome's total variance `\((SS_{BMI})\)` into:
+We can partition the outcome's total variance `\((SS_{Belonging})\)` into:
 * Model-accounted variance `\((SS_\text{Model})\)`
 * Residual variance `\((SS_\text{Residual})\)`
 
-`$$\color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$`
+`$$\color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$`
 --
 
 Remember our goal with OLS regression is to find the model coefficients that minimize `\(SS_\text{Residual}\)`.
@@ -432,22 +429,22 @@ Remember our goal with OLS regression is to find the model coefficients that min
 
 ---
 # Partitioning variance
-`$$\text{If } \color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + {SS_\text{Residual}}$$`
+`$$\text{If } \color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + {SS_\text{Residual}}$$`
 
 `\(\color{purple}{SS_\text{Model}}\)` is the sum of squared deviations between the model predicted values `\((\hat{Y})\)` and the mean `\((\bar{Y})\)`. Let's visualize this for a set of 30 participants:
 
 --
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-17-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-17-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 `$$\color{purple}{SS_\text{Model} = \sum{(\hat{Y} - \bar{Y})^2}}$$`
 
 ---
 # Partitioning variance
-`$$\text{If } \color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$`
+`$$\text{If } \color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$`
 
 `\(\color{green}{SS_\text{Residual}}\)` is the sum of squared deviations between the model predicted values `\((\hat{Y})\)` and the observed values `\((Y)\)`.
 
-&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-18-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_2_GLM_files/figure-html/unnamed-chunk-18-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 `$$\color{green}{SS_\text{Residual} = \sum{(Y - \hat{Y})^2}}$$`
 ---
 Get a feel for trying to minimize the *sum of the square of the residuals*
@@ -458,12 +455,12 @@ Get a feel for trying to minimize the *sum of the square of the residuals*
 
 Partitioning variance can be useful for model evaluation.
 
-`$$\color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$`
+`$$\color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$`
 `\(R^2\)` ("R-squared") is the proportion of variance in the outcome our model accounts for.
 
-`$$R^2 = \frac{SS_\text{Model}}{SS_\text{BMI}}$$`
+`$$R^2 = \frac{SS_\text{Model}}{SS_\text{Belonging}}$$`
 --
-For example, if `\(R^2 = 0.30\)`, then our model accounts for 30% of our sample's variance in body-mass index.
+For example, if `\(R^2 = 0.30\)`, then our model accounts for 30% of our sample's variance in sense of belonging.
 
 --
 More on this soon.
@@ -490,7 +487,7 @@ We've developed some understanding of the formal structures of linear models (GL
 - `\(R^2\)`
 ]
 
-Next, we're going to turn to actually fitting our regression so we can say something substantive about the relationship between dietary restraint behaviors and BMI.
+Next, we're going to turn to actually fitting our regression so we can say something substantive about the relationship between extraversion and sense of belonging.
 
 
 ---
@@ -511,18 +508,17 @@ class: middle, inverse
 # To-Dos
 
 ### Reading: 
-- **By January 18 class**: LSWR Chapter 15.1 - 15.2 and 15.4 - 15.7 and Hu (2021)
+- **By January 14 class**: LSWR Chapter 15.1 - 15.2 and 15.4 - 15.7 and Hu (2021)
 
 ### Review: 
 - Review EDUC 641, Unit 4 (Lectures 13 - 16)
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

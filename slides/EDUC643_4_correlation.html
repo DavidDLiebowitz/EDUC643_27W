@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 
 # Roadmap
 
-&lt;img src="Roadmap1.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap1.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -92,44 +92,45 @@ Each observation `\((i)\)` is transformed into standardized form using the follo
 
 ---
 # Correlations visualized
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-2-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 # Visualize in our data
-Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+Let's transform *belong* and *extraversion* into standardized versions:
 
-```r
+``` r
 # Read in the data
-do &lt;- read_spss(here("data/male_do_eating.sav")) %&gt;% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %&gt;%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %&gt;%
+pb &lt;- read.csv(here("data/belonging.csv")) %&gt;% 
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert,
+           neuroticism = t2__dv_composite__personality_neuroticism,
+           school = college_name) %&gt;%
     drop_na()
 
 # Standardize the variables
-do &lt;- do  %&gt;% 
-      mutate(BMI_std = (BMI - mean(BMI)) / sd(BMI))
-do &lt;- do %&gt;% 
-      mutate(EDEQ_std = 
-      (EDEQ_restraint - mean(EDEQ_restraint)) / sd(EDEQ_restraint))
+pb &lt;- pb  %&gt;% 
+      mutate(belong_std = (belong - mean(belong)) / sd(belong))
+pb &lt;- pb %&gt;% 
+      mutate(extraversion_std = 
+      (extraversion - mean(extraversion)) / sd(extraversion))
 ```
 
 ---
 # Visualize in our data
-Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+Let's transform *belong* and *extraversion* into standardized versions:
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-4-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 - Note that the scale of our variables have changed.
 - The standardized regression line goes through the origin (0, 0)
 
 ---
 # Visualize in our data
-Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+Let's transform *belong* and *extraversion* into standardized versions:
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-5-1.png" alt="" style="display: block; margin: auto;" /&gt;
 The new fitted regression line is:
 
-`$$\hat{BMI_{std}} = 0.000 + 0.2241 * DietaryRestraint_{std}$$`
+`$$\hat{Belonging_{std}} = 0.000 + 0.2434 * Extraversion_{std}$$`
 
-For fun, multiply that 0.2241 by itself: `\((0.2241)^2 = 0.0502\)`. .blue[**Anything familiar about 0.05?**]
+For fun, multiply that 0.2434 by itself: `\((0.2434)^2 = 0.0592\)`. .blue[**Anything familiar about 0.059?**]
 
 ---
 # `\(r\)` and `\(R^2\)`
@@ -148,12 +149,12 @@ Correlation coefficient values range from -1 to 1
 
 ### Calculate correlation coefficient in R
 
-```r
-cor(do$BMI, do$EDEQ_restraint)
+``` r
+cor(pb$belong, pb$extraversion)
 ```
 
 ```
-## [1] 0.2240726
+## [1] 0.2433557
 ```
 
 ---
@@ -177,7 +178,7 @@ cor(do$BMI, do$EDEQ_restraint)
 
 ...but, correlation is not everything. [Frank Anscombe (1973)](https://www.jstor.org/stable/2682899) first highlighted the following set of distributions, all with correlations `\((r)\)` of exactly 0.816.
 
-&lt;img src="anscombe.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="anscombe.jpg" alt="" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -187,7 +188,7 @@ cor(do$BMI, do$EDEQ_restraint)
 
 
 ```
-## # A tibble: 4 x 4
+## # A tibble: 4 × 4
 ##   dataset    `mean(x)` `mean(y)` `cor(x, y)`
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
 ## 1 circle          54.3      47.8     -0.0683
@@ -205,7 +206,7 @@ All seem pretty similar, right? Let's take a look at their bivariate relationshi
 ---
 ## What correlation does(n't) mean
 
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-9-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Correlation `\(\neq\)` causation pt. 562
@@ -213,7 +214,7 @@ All seem pretty similar, right? Let's take a look at their bivariate relationshi
 RQ: What is the relationship between Oregon's annual per capita divorce rate and the U.S. per capita annual beef consumption? 
 
 --
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-10-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -249,7 +250,7 @@ Do increases in beef consumption in Oregon **cause** increases in the U.S. divor
 
 --
 
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-12-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -266,11 +267,11 @@ Common barriers in attributing causality to observed co-relationships include:
 - .blue[Confounders]: a third variable causes changes in X and also in Y
 - [Colliders](http://www.the100.ci/2017/03/14/that-one-weird-third-variable-problem-nobody-ever-mentions-conditioning-on-a-collider/): a third variable that is caused by both the predictor and outcome; controlling for this can make a true causal relationship disappear!
 - .blue[Reverse causation]: X may cause Y **or** Y may cause X
-- [Simpson's Paradox](https://daviddliebowitz.github.io/EDUC643_25W/slides/EDUC643_4_correlation.html#46): a third variable may reverse the correlation
+- [Simpson's Paradox](https://daviddliebowitz.github.io/EDUC643_27W/slides/EDUC643_4_correlation.html#46): a third variable may reverse the correlation
 - .blue[Selection bias]: due to the way in which the sample was constructed, observed relationships (or lack thereof) mask the true underlying relationship.
 - Also, **lack** of correlation `\(\neq\)` **lack** of causality
 
-&lt;img src="causalinf.jpg" width="30%" style="display: block; margin: auto;" /&gt;
+&lt;img src="causalinf.jpg" alt="" width="30%" style="display: block; margin: auto;" /&gt;
 h/t [@causalinf](https://twitter.com/causalinf)
 
 
@@ -282,7 +283,7 @@ In 2016, Harvard economics professor Roland Fryer&lt;sup&gt;1&lt;/sup&gt; releas
 ]
 
 .pull-right[
-&lt;img src="fryer.jpg" width="904" style="display: block; margin: auto;" /&gt;
+&lt;img src="fryer.jpg" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 As you can imagine, this drew substantial media attention and controversy. We read about this in Lily Hu's [article](https://www.bostonreview.net/articles/race-policing-and-the-limits-of-social-science/) in the *Boston Review*.
@@ -294,14 +295,14 @@ As you can imagine, this drew substantial media attention and controversy. We re
 
 As detailed in [Knox, Lowe and Mummolo (2020)](https://www.cambridge.org/core/journals/american-political-science-review/article/administrative-records-mask-racially-biased-policing/66BC0F9998543868BB20F241796B79B8#article), Fryer's results are a product of a fundamental statistical error: .red-pink[**selecting on the outcome** (dependent variable)]
 
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-15-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Selection bias
 
 As detailed in [Knox, Lowe and Mummolo (2020)](https://www.cambridge.org/core/journals/american-political-science-review/article/administrative-records-mask-racially-biased-policing/66BC0F9998543868BB20F241796B79B8#article), Fryer's results are a product of a fundamental statistical error: .red-pink[**selecting on the outcome** (dependent variable)]
 
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-16-1.png" alt="" style="display: block; margin: auto;" /&gt;
 .footnote[Helpful [thread](https://twitter.com/bristimtom/status/1259458866015805440) with a nice illustration of how selecting on the dependent variable and collider bias are interrelated.]
 
 
@@ -317,7 +318,7 @@ As detailed in [Knox, Lowe and Mummolo (2020)](https://www.cambridge.org/core/jo
 ]
 
 .pull-right[
-&lt;img src="shadish.jpg" width="181" style="display: block; margin: auto;" /&gt;
+&lt;img src="shadish.jpg" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 Highest priority is establishing .red-pink[**exogeneous variation**] in exposure to some "treatment" **OR** make an exceedingly convincing case that whether or not someone receives a "treatment" is a product of .red-pink[**selection  on observables**] (and not on any unobservables).
@@ -354,11 +355,11 @@ class: middle, inverse
 
 Regression equations can be used to evaluate the relationship between variables, and to predict expected values based on particular values of our predictors.
 
-We can ask: What is the expected BMI value for a young male with a Dietary Restraint rating of **4**?
+We can ask: What is the expected sense of belonging for a student with an extraversion rating of **4**?
 
 --
-`$$\Large \hat{BMI} = 23.92 + 1.04*(\boldsymbol{4}) = 28.1$$`
-The expected BMI for a Dietary Restraint of 4 is 28.1
+`$$\Large \hat{Belonging} = 4.05 + 0.22*(\boldsymbol{4}) = 4.93$$`
+The expected sense of belonging for an extraversion rating of 4 is 4.93
 
 --
 
@@ -369,15 +370,15 @@ Technically, there is no limit to what we can input!
 
 Regression equations can be used to evaluate the relationship between variables, and to predict expected values based on particular values of our predictors.
 
-We can ask: What is the expected BMI value for a young male with a Dietary Restraint rating of **400**?
+We can ask: What is the expected sense of belonging for a student with an extraversion rating of **400**?
 
 --
 
-Using our measure, this is not a possible value of Dietary Restraint but we can still estimate the predicted BMI using our regression equation.
+Using our measure, this is not a possible value of extraversion but we can still estimate the predicted sense of belonging using our regression equation.
 
 --
-`$$\Large \hat{BMI} = 23.92 + 1.04*(\boldsymbol{400}) = 439.9$$`
-This is not a possible value for a human's BMI.
+`$$\Large \hat{Belonging} = 4.05 + 0.22*(\boldsymbol{400}) = 92.05$$`
+This is not a possible value on a 1-6 sense of belonging scale.
 
 --
 
@@ -407,32 +408,31 @@ class: middle, inverse
 # To-Dos
 
 ### Reading: 
-- **By January 21**: LSWR Chapter 5.7
+- **By January 19**: LSWR Chapter 5.7
 
 ### Quiz #1: 
-- Opens now (closes 5pm on 1/22)
+- Opens now (closes 5pm on 1/20)
 
 ### Assignment 1:
-- Due February 3, 11:59pm
+- Due February 1, 11:59pm
 
 ### Next time: Regression assumptions
 
 ---
 # Simpson's Paradox
 
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-18-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Simpson's Paradox
-&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="EDUC643_4_correlation_files/figure-html/unnamed-chunk-19-1.png" alt="" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

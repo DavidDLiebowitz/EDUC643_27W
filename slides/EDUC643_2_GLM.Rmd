@@ -127,36 +127,37 @@ class: middle, inverse
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-```{r, echo=F, out.height="80%"}
-include_graphics("kelly_etal.png")
+```{r, echo=F, out.width="70%"}
+include_graphics("stubblebine_etal.png")
 ```
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[In particular, we are going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[In particular, we are going to explore the .purple[**relationship**] between **extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and **sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).]
 
 
 ---
-# A preliminary analysis
+# Our research question
 
-Before we get to the core question of the Kelly et al. study--how are dietary restraint behaviors related to over-eating frequency?--we are going to explore another important relationship in the data that may also be related to our main research question: the .purple[**relationship**] between .red-pink[**dietary restraint behaviors**] (self-reports on the extent to which participants consciously restricted/controlled their food intake) and .red-pink[**body-mass index (BMI)**]. In particular, we are going to operationalize this by examining the relationship in our sample of young men between our predictor variable (***EDEQ_restraint***) and their body-mass index (***BMI***). 
+The core question of the Stubblebine et al. study is how students' personalities are related to their sense of belonging in college. The authors hypothesized that .red-pink[**extraversion**] would be positively related to belonging, and that .red-pink[**neuroticism**] would be negatively related to belonging. We are going to start by exploring the .purple[**relationship**] between .red-pink[**extraversion**] (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and .red-pink[**sense of belonging**] (students' average agreement with four statements such as, "I feel like I belong at [school name]") at the end of their first year of college. In particular, we are going to operationalize this by examining the relationship in our sample of first-year college students between our predictor variable (***extraversion***) and their sense of belonging (***belong***).
 
 --
 
-> We are examining this relationship so that we can better understand how all three of these variables (***OE_frequency***, ***EDEQ_restraint*** and ***BMI***) are related in Unit 3. Additionally, the properties of the variable ***BMI*** are pedadogically helpful in demonstrating the assumptions of OLS.
+> In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-> However, we recognize that BMI has been shown to be relatively uninformative about individuals' overall health and categorizes individuals based on distributions initially derived exclusively from white Western European (French and Scottish) study participants. We use the measure for pedagogical purposes because the variable is one of the few continuous measures in one of the few datasets that our UO colleagues shared with us, while noting its problematic historical use.
+> Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
 
 
 ---
 # Reading in the data
 ```{r, echo=T}
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %>%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+pb <- read.csv(here("data/belonging.csv")) %>%
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert,
+           neuroticism = t2__dv_composite__personality_neuroticism,
+           school = college_name) %>%
     drop_na()
 ```
 
@@ -175,8 +176,9 @@ Five ways to characterize them
 
 .pull-right[
 ```{r, echo = F}
-lm_plot <- ggplot(do, aes(x=EDEQ_restraint, y=BMI)) + 
-  geom_point() +
+set.seed(643)
+lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) +
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
   theme_minimal(base_size = 16)
 
 
@@ -193,7 +195,7 @@ lm_plot +
 We added a line running through our data. That line is defined by the intercept (value $Y$ takes when $X=0$) and the slope (the difference in $Y$ per 1 unit difference in $X$)
 > $Y = intercept + slope*X$ (you may have seen this in HS as Y = mX + b)
 
-> We could think of this relationship, therefore, as $BMI = slope*EDEQ\_restraint + intercept$ ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
+> We could think of this relationship, therefore, as $Belonging = slope*Extraversion + intercept$ ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
 
 ---
 # Mathematical representations
@@ -218,7 +220,7 @@ In addition to visual representations, we can borrow from mathematical models to
 
 --
 
-.blue[**What is wrong about describing the relationship between BMI and eating restraint as we did on the previous slide?**]
+.blue[**What is wrong about describing the relationship between extraversion and belonging as we did on the previous slide?**]
 
 ---
 # Statistical model
@@ -281,20 +283,20 @@ We'll learn about lots of different modeling approaches. .red-pink[**They are al
 Okay, so once we have selected our model's functional form (which for now and the foreseeable future is going to be "linear"), we can move on to a mathematical representation. In this case, we are going to postulate a .red-pink[**linear regression**] model.
 
 A linear regression equation borrows the mathematical framework for a line to summarize this relationship.
-$$BMI = \beta_0 + \beta_1(EDEQ\_restraint)$$
+$$Belonging = \beta_0 + \beta_1(Extraversion)$$
 ---
 # Regression equations
 
 The regression line describes the mean value of Y for each possible "input" value of X.
 
-$$BMI = \beta_0 + \beta_1(EDEQ\_restraint)$$
+$$Belonging = \beta_0 + \beta_1(Extraversion)$$
 
 --
-.small[Our data already provides us with observations of over-eating frequency and dietary restraint:]
+.small[Our data already provides us with observations of sense of belonging and extraversion:]
 
 ```{r, echo = T}
-do %>% 
-  select(EDEQ_restraint, BMI) %>% 
+pb %>% 
+  select(extraversion, belong) %>% 
   tail()
 ```
 
@@ -304,7 +306,7 @@ do %>%
 ---
 ## Regression equation components
 
-$$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(EDEQ\_restraint)$$
+$$Belonging = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(Extraversion)$$
 
 .orange[Intercept] $\color{orange}{(\beta_0)}$: Predicted outcome when $x$ is equal to 0.
 
@@ -314,7 +316,7 @@ $$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(EDEQ\_restraint)$$
 
 --
 
-.blue[**Write out the appropriate regression equation for a line that has an intercept of 20 and a Dietary Restraint slope of 1.5.**]
+.blue[**Write out the appropriate regression equation for a line that has an intercept of 4 and an Extraversion slope of 0.25.**]
 
 --
 
@@ -328,10 +330,10 @@ $$BMI = \color{orange}{(\beta_0)} + \color{purple}{(\beta_1)}(EDEQ\_restraint)$$
 .purple[Slope] $\color{purple}{(\beta_1)}$: Predicted difference in the outcome for every one unit difference in $x$.
 
 
-$$BMI = \color{orange}{20} + \color{purple}{1.5}(EDEQ\_restraint)$$
+$$Belonging = \color{orange}{4} + \color{purple}{0.25}(Extraversion)$$
 
 --
-.blue[**What is an individual's expected BMI given a Dietary Restraint rating of 2?**]
+.blue[**What is a student's expected sense of belonging given an Extraversion rating of 2?**]
 
 ---
 ## Regression equation components
@@ -342,8 +344,8 @@ $$BMI = \color{orange}{20} + \color{purple}{1.5}(EDEQ\_restraint)$$
 
 
 
-$$BMI = \color{orange}{20} + \color{purple}{1.5}(2) = 20 + 3 = 23$$
-**We predict that individuals with an observed Dietary Restraint rating of 2 will have a body-mass index of 23.**
+$$Belonging = \color{orange}{4} + \color{purple}{0.25}(2) = 4 + 0.5 = 4.5$$
+**We predict that students with an observed Extraversion rating of 2 will have a sense of belonging score of 4.5.**
 
 ---
 # Residual (error) term
@@ -354,7 +356,7 @@ lm_plot +
   geom_smooth(method='lm', se=F)
 ```
 
-Is Dietary Restraint a perfect predictor of BMI? 
+Is Extraversion a perfect predictor of sense of belonging? 
 
 --
 .red[**NO!**]
@@ -363,7 +365,7 @@ Is Dietary Restraint a perfect predictor of BMI?
 # Omitted variables
 A "perfect" regression equation would probably include a lot more variables:
 
-$$BMI = \beta_0 + \beta_1(EDEQ\_restraint) + \beta_2(\text{Meal Frequency}) + \beta_3(\text{Nutritional Habits}) + ... \beta_\infty$$
+$$Belonging = \beta_0 + \beta_1(Extraversion) + \beta_2(\text{Friendships}) + \beta_3(\text{Campus Involvement}) + ... \beta_\infty$$
 Many of these might not even be measurable!
 
 --
@@ -380,20 +382,20 @@ However, omitted variables often introduce bias into our estimates of the relati
 In a regression model, all the variability that we can't explain with our predictor(s) is condensed into a .green[residual term] (often represented by the Greek letter epsilon, $\color{green}{\varepsilon}$).
 
 ```{r, echo = F, fig.height = 4, fig.width = 7}
-fit <- lm(BMI ~ EDEQ_restraint, data=do)
-do$predict <- predict(fit)
-do %>% 
+fit <- lm(belong ~ extraversion, data=pb)
+pb$predict <- predict(fit)
+pb %>% 
   sample_n(100) %>% 
-  ggplot(aes(x=EDEQ_restraint, y=BMI)) + 
+  ggplot(aes(x=extraversion, y=belong)) + 
   geom_point() + 
   geom_point(aes(y=predict), col = "blue", alpha=0.3) +
-  geom_segment(aes(xend = EDEQ_restraint, yend=predict), col = "green", alpha = 0.5) +
-  geom_smooth(aes(EDEQ_restraint, predict)) +
+  geom_segment(aes(xend = extraversion, yend=predict), col = "green", alpha = 0.5) +
+  geom_smooth(aes(extraversion, predict)) +
   theme_minimal(base_size = 16)
 
 ```
 
-$$BMI = \beta_0 + \beta_1(EDEQ\_restraint) + \color{green}{\varepsilon}$$
+$$Belonging = \beta_0 + \beta_1(Extraversion) + \color{green}{\varepsilon}$$
 ---
 # The regression model
 
@@ -440,15 +442,15 @@ An OLS-fitted regression would go through the "center" of the data, finding the 
 
 
 ```{r, echo = F, fig.height = 3.5, fig.width = 7}
-fit <- lm(BMI ~ EDEQ_restraint, data=do)
-do$predict <- predict(fit)
-do %>% 
+fit <- lm(belong ~ extraversion, data=pb)
+pb$predict <- predict(fit)
+pb %>% 
   sample_n(100) %>% 
-  ggplot(aes(x=EDEQ_restraint, y=BMI)) + 
+  ggplot(aes(x=extraversion, y=belong)) + 
   geom_point() + 
   geom_point(aes(y=predict), col = "blue", alpha=0.3) +
-  geom_segment(aes(xend = EDEQ_restraint, yend=predict), col = "green", alpha = 0.5) +
-  geom_smooth(aes(EDEQ_restraint, predict)) +
+  geom_segment(aes(xend = extraversion, yend=predict), col = "green", alpha = 0.5) +
+  geom_smooth(aes(extraversion, predict)) +
   theme_minimal(base_size = 16)
 
 ```
@@ -467,10 +469,10 @@ $$\varepsilon_i = Y_i - \hat{Y_i}$$
 Squaring the residual terms $(\varepsilon_i^2)$ allows us to treat negative and positive deviations equally, and puts a greater penalty on larger deviations.
 
 ```{r, echo = F, comment = NA}
-resid_table <- do %>% 
-  select(BMI, predict) %>% 
-  rename(predicted_BMI = predict) %>% 
-  mutate(residual = BMI - predicted_BMI,
+resid_table <- pb %>% 
+  select(belong, predict) %>% 
+  rename(predicted_belong = predict) %>% 
+  mutate(residual = belong - predicted_belong,
          residual_sq = residual^2) %>% 
   mutate(across(everything(), round, 2))
 
@@ -489,16 +491,16 @@ An OLS-fitted regression finds the best intercept and slope values to **minimize
 
 .pull-left[
 ```{r, echo = F}
-good_fit <- do %>% 
-  mutate(predict = (24 + 1*EDEQ_restraint))
+good_fit <- pb %>% 
+  mutate(predict = (4 + 0.2*extraversion))
 set.seed(100)
 good_fit_plot <- good_fit %>% 
   sample_n(100) %>% 
-  ggplot(aes(x=EDEQ_restraint, y=BMI)) + 
+  ggplot(aes(x=extraversion, y=belong)) + 
   geom_point() + 
   geom_point(aes(y=predict), col = "blue", alpha=0.3) +
-  geom_segment(aes(xend = EDEQ_restraint, yend=predict), col = "green", alpha = 0.5) +
-  geom_smooth(aes(EDEQ_restraint, predict)) +
+  geom_segment(aes(xend = extraversion, yend=predict), col = "green", alpha = 0.5) +
+  geom_smooth(aes(extraversion, predict)) +
   theme_minimal(base_size = 16)
 
 good_fit_plot
@@ -508,16 +510,16 @@ good_fit_plot
 
 .pull-right[
 ```{r, echo = F}
-bad_fit <- do %>% 
-  mutate(predict = (30 + 2*EDEQ_restraint))
+bad_fit <- pb %>% 
+  mutate(predict = (5.5 - 0.3*extraversion))
 set.seed(100)
 bad_fit_plot <- bad_fit %>% 
   sample_n(100) %>% 
-  ggplot(aes(x=EDEQ_restraint, y=BMI)) + 
+  ggplot(aes(x=extraversion, y=belong)) + 
   geom_point() + 
   geom_point(aes(y=predict), col = "blue", alpha=0.3) +
-  geom_segment(aes(xend = EDEQ_restraint, yend=predict), col = "green", alpha = 0.5) +
-  geom_smooth(aes(EDEQ_restraint, predict)) +
+  geom_segment(aes(xend = extraversion, yend=predict), col = "green", alpha = 0.5) +
+  geom_smooth(aes(extraversion, predict)) +
   theme_minimal(base_size = 16)
 
 bad_fit_plot
@@ -537,7 +539,7 @@ An OLS-fitted regression finds the best intercept and slope values to minimize t
 ```{r, echo = F}
 good_fit_plot
 ```
-$\bf{\Sigma(e_i)^2 = 40,153}$
+$\bf{\Sigma(e_i)^2 = 3,951}$
 
 ]
 
@@ -545,10 +547,10 @@ $\bf{\Sigma(e_i)^2 = 40,153}$
 ```{r, echo = F}
 bad_fit_plot
 ```
-$\Sigma(e_i)^2 = 101,566$
+$\Sigma(e_i)^2 = 5,382$
 ]
 
-The regression line on the left is a better fit because the sum of its squared errors is smaller  (40,153 < 101,566).
+The regression line on the left is a better fit because the sum of its squared errors is smaller  (3,951 < 5,382).
 
 ---
 ## Sum of Squared Residuals (SSR)
@@ -558,28 +560,28 @@ SSR is a bigger concept than just model predictions. It is a way of thinking abo
 --
 Our outcome's variability is simply the sum of squared deviations from its mean, aka the .red-pink[**sum of the squares (SS)**].<sup>1</sup>
 
-$$\color{pink}{SS_\text{BMI}} = \sum{(Y_i - \bar{Y})^2}$$
+$$\color{pink}{SS_\text{Belonging}} = \sum{(Y_i - \bar{Y})^2}$$
 ```{r, fig.height = 3.25, fig.width = 6, echo = F}
-do <- do %>% 
-  mutate(mean_bmi = mean(BMI))
+pb <- pb %>% 
+  mutate(mean_belong = mean(belong))
 
 set.seed(100)
-ssr_plot <- do %>% 
+ssr_plot <- pb %>% 
   sample_n(100) %>% 
-  ggplot(aes(x=EDEQ_restraint, y=BMI)) + 
+  ggplot(aes(x=extraversion, y=belong)) + 
   geom_point() + 
-  geom_hline(aes(yintercept=mean(do$BMI)), col = "pink", alpha=0.8, size=0.8) +
-  annotate('text', x=5, y=24, label="Mean BMI", col = "pink") +
-  annotate('text', x=5.75, y=32, label="Best fit", col="blue", size=3) +
-  geom_segment(aes(xend = EDEQ_restraint, yend=mean_bmi), col = "pink", alpha = 0.5) +
-  geom_smooth(aes(EDEQ_restraint, BMI), method='lm', linetype="dashed", se=F, alpha=0.3, size=0.2) +
+  geom_hline(aes(yintercept=mean(pb$belong)), col = "pink", alpha=0.8, size=0.8) +
+  annotate('text', x=1.75, y=4.55, label="Mean belonging", col = "pink") +
+  annotate('text', x=4.75, y=5.4, label="Best fit", col="blue", size=3) +
+  geom_segment(aes(xend = extraversion, yend=mean_belong), col = "pink", alpha = 0.5) +
+  geom_smooth(aes(extraversion, belong), method='lm', linetype="dashed", se=F, alpha=0.3, size=0.2) +
   theme_minimal(base_size = 16)
 
 ssr_plot
 
 ```
 
-.footnote[.small[[1] Note that this is a univariate statistic that depends only on the variability of BMI.]]
+.footnote[.small[[1] Note that this is a univariate statistic that depends only on the variability of sense of belonging.]]
 
 ---
 
@@ -587,11 +589,11 @@ ssr_plot
 
 The goal of regression is to account for some of this variability with our model's predictors.
 
-We can partition the outcome's total variance $(SS_{BMI})$ into:
+We can partition the outcome's total variance $(SS_{Belonging})$ into:
 * Model-accounted variance $(SS_\text{Model})$
 * Residual variance $(SS_\text{Residual})$
 
-$$\color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
+$$\color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
 --
 
 Remember our goal with OLS regression is to find the model coefficients that minimize $SS_\text{Residual}$.
@@ -599,24 +601,24 @@ Remember our goal with OLS regression is to find the model coefficients that min
 
 ---
 # Partitioning variance
-$$\text{If } \color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + {SS_\text{Residual}}$$
+$$\text{If } \color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + {SS_\text{Residual}}$$
 
 $\color{purple}{SS_\text{Model}}$ is the sum of squared deviations between the model predicted values $(\hat{Y})$ and the mean $(\bar{Y})$. Let's visualize this for a set of 30 participants:
 
 --
 
 ```{r, echo = F, fig.height = 3.75, fig.width=6}
-do <- do %>% 
-  mutate(participant_id = seq(1:1085))
+pb <- pb %>% 
+  mutate(participant_id = seq(1:nrow(pb)))
 
-do %>% 
+pb %>% 
   filter(participant_id <= 30) %>% 
-  ggplot(aes(x = participant_id, y = BMI)) +
+  ggplot(aes(x = participant_id, y = belong)) +
   geom_point() + 
   geom_point(aes(y=predict), col = "purple", alpha=0.3) +
-  geom_segment(aes(xend = participant_id, y = mean(do$BMI), yend=predict), col = "purple", alpha = 0.5) +
-  geom_hline(aes(yintercept=mean(do$BMI)), col = "pink", alpha=0.8, size=0.8) +
-  annotate('text', x=3, y=28, label="Mean BMI", col = "pink") +
+  geom_segment(aes(xend = participant_id, y = mean(pb$belong), yend=predict), col = "purple", alpha = 0.5) +
+  geom_hline(aes(yintercept=mean(pb$belong)), col = "pink", alpha=0.8, size=0.8) +
+  annotate('text', x=31, y=4.55, hjust=0, label="Mean belonging", col = "pink") +
   theme_minimal(base_size=16)
 
 ```
@@ -624,20 +626,20 @@ $$\color{purple}{SS_\text{Model} = \sum{(\hat{Y} - \bar{Y})^2}}$$
 
 ---
 # Partitioning variance
-$$\text{If } \color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
+$$\text{If } \color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
 
 $\color{green}{SS_\text{Residual}}$ is the sum of squared deviations between the model predicted values $(\hat{Y})$ and the observed values $(Y)$.
 
 ```{r, echo = F, fig.height = 3.75, fig.width=6}
-do %>% 
+pb %>% 
   filter(participant_id <= 30) %>% 
-  ggplot(aes(x = participant_id, y = BMI)) +
+  ggplot(aes(x = participant_id, y = belong)) +
   geom_point() + 
   geom_point(aes(y=predict), col = "purple", alpha=0.3) +
-  geom_segment(aes(xend = participant_id, y = mean(do$BMI), yend=predict), col = "purple", alpha = 0.5) +
-  geom_hline(aes(yintercept=mean(do$BMI)), col = "pink", alpha=0.8, size=0.8) +
-  annotate('text', x=3, y=28, label="Mean BMI", col = "pink") +
-  geom_segment(aes(xend = participant_id, y = predict, yend=BMI), col = "green", alpha = 0.5) + 
+  geom_segment(aes(xend = participant_id, y = mean(pb$belong), yend=predict), col = "purple", alpha = 0.5) +
+  geom_hline(aes(yintercept=mean(pb$belong)), col = "pink", alpha=0.8, size=0.8) +
+  annotate('text', x=31, y=4.55, hjust=0, label="Mean belonging", col = "pink") +
+  geom_segment(aes(xend = participant_id, y = predict, yend=belong), col = "green", alpha = 0.5) + 
   theme_minimal(base_size=16)
 
 ```
@@ -654,12 +656,12 @@ include_app(c("https://daviddl.shinyapps.io/line_ss/"), height="550px")
 
 Partitioning variance can be useful for model evaluation.
 
-$$\color{pink}{SS_\text{BMI}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
+$$\color{pink}{SS_\text{Belonging}} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
 $R^2$ ("R-squared") is the proportion of variance in the outcome our model accounts for.
 
-$$R^2 = \frac{SS_\text{Model}}{SS_\text{BMI}}$$
+$$R^2 = \frac{SS_\text{Model}}{SS_\text{Belonging}}$$
 --
-For example, if $R^2 = 0.30$, then our model accounts for 30% of our sample's variance in body-mass index.
+For example, if $R^2 = 0.30$, then our model accounts for 30% of our sample's variance in sense of belonging.
 
 --
 More on this soon.
@@ -686,7 +688,7 @@ We've developed some understanding of the formal structures of linear models (GL
 - $R^2$
 ]
 
-Next, we're going to turn to actually fitting our regression so we can say something substantive about the relationship between dietary restraint behaviors and BMI.
+Next, we're going to turn to actually fitting our regression so we can say something substantive about the relationship between extraversion and sense of belonging.
 
 
 ---
@@ -711,4 +713,3 @@ class: middle, inverse
 
 ### Review: 
 - Review EDUC 641, Unit 4 (Lectures 13 - 16)
-

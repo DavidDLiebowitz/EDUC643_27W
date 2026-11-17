@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 
 # Roadmap
 
-&lt;img src="Roadmap1.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap1.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -59,25 +59,25 @@ class: center, middle, inverse, title-slide
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-&lt;img src="kelly_etal.png" width="775" height="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="stubblebine_etal.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[In particular, we are going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[In particular, we are going to explore the .purple[**relationship**] between **extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and **sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).]
 
 
 ---
-# A preliminary analysis
+# Our research question
 
-Before we get to the core question of the Kelly et al. study--how are dietary restraint behaviors related to over-eating frequency?--we are going to explore another important relationship in the data that may also be related to our main research question: the .purple[**relationship**] between .red-pink[**dietary restraint behaviors**] (self-reports on the extent to which participants consciously restricted/controlled their food intake) and .red-pink[**body-mass index (BMI)**]. In particular, we are going to operationalize this by examining the relationship in our sample of young men between our predictor variable (***EDEQ_restraint***) and their body-mass index (***BMI***). 
+The core question of the Stubblebine et al. study is how students' personalities are related to their sense of belonging in college. The authors hypothesized that .red-pink[**extraversion**] would be positively related to belonging, and that .red-pink[**neuroticism**] would be negatively related to belonging. We are going to start by exploring the .purple[**relationship**] between .red-pink[**extraversion**] (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and .red-pink[**sense of belonging**] (students' average agreement with four statements such as, "I feel like I belong at [school name]") at the end of their first year of college. In particular, we are going to operationalize this by examining the relationship in our sample of first-year college students between our predictor variable (***extraversion***) and their sense of belonging (***belong***). 
 
 --
 
-&gt; We are examining this relationship so that we can better understand how all three of these variables (***OE_frequency***, ***EDEQ_restraint*** and ***BMI***) are related in Unit 3. Additionally, the properties of the variable ***BMI*** are pedadogically helpful in demonstrating the assumptions of OLS.
+&gt; In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-&gt; However, we recognize that BMI has been shown to be relatively uninformative about individuals' overall health and categorizes individuals based on distributions initially derived exclusively from white Western European (French and Scottish) study participants. We use the measure for pedagogical purposes because the variable is one of the few continuous measures in one of the few datasets that our UO colleagues shared with us, while noting its problematic historical use.
+&gt; Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
 
 
 
@@ -85,12 +85,12 @@ Before we get to the core question of the Kelly et al. study--how are dietary re
 ---
 # Our bivariate relationship
 
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-4-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
 **Our linear model:**
-`$$BMI_{i} = \beta_0 + \beta_1 (EDEQ\_restraint_{i}) + \varepsilon_{i}$$`
+`$$Belonging_{i} = \beta_0 + \beta_1 (Extraversion_{i}) + \varepsilon_{i}$$`
 
 ---
 class: middle, inverse
@@ -103,30 +103,30 @@ class: middle, inverse
 Let's try fitting our regression in R.
 
 
-```r
-fit &lt;- lm(BMI ~ EDEQ_restraint, data=do)
+``` r
+fit &lt;- lm(belong ~ extraversion, data=pb)
 summary(fit)
 ```
 
 ```
 
 Call:
-lm(formula = BMI ~ EDEQ_restraint, data = do)
+lm(formula = belong ~ extraversion, data = pb)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--19.047  -3.955  -0.922   2.701  33.282 
+-4.1565 -0.4621  0.1768  0.6768  1.7322 
 
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ```
 
 
@@ -139,19 +139,21 @@ F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-*(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+*(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
-**The predicted BMI for a young male with a dietary restraint rating of 0 is 23.92 `\((\beta_0)\)`.**
+**The predicted sense of belonging for a student with an extraversion rating of 0 is 4.05 `\((\beta_0)\)`.**
+
+.small[Notice that the extraversion scale runs from 1 to 5, so no student in our data actually has a rating of 0! More on this next class.]
 
 ---
 ## Evaluating regressions: Coefficients
@@ -162,22 +164,22 @@ F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-*(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+*(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
 --
-.small[**A one unit difference in dietary restraint is positively associated with a 1.04 difference in BMI.**]
+.small[**A one unit difference in extraversion is positively associated with a 0.22 difference in sense of belonging.**]
 
-.small[Even better: **We reject the null hypothesis, and conclude that *on average, in the population* there is a relationship between dietary restraint and BMI. We estimate that young men who are one unit apart on dietary restraint index will have a BMI score 1.04 points different from each other.**]
+.small[Even better: **We reject the null hypothesis, and conclude that *on average, in the population* there is a relationship between extraversion and sense of belonging. We estimate that students who are one unit apart on extraversion will have a sense of belonging score 0.22 points different from each other.**]
 
 --
 
@@ -192,15 +194,15 @@ F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
@@ -216,23 +218,23 @@ F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-*Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+*Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
 The .red-pink[**residual standard error (RSE)**] is the standard deviation of the residuals. This summarizes the variability of observed values around the model-predicted values, in the original units of the outcome. 
 
-`$$RSE = 6.089$$`
+`$$RSE = 0.956$$`
 
-This means observed values vary around our model-predicted BMI with a standard deviation of 6.089. In BMI, 6 units is quite large!
+This means observed values vary around our model-predicted sense of belonging with a standard deviation of 0.956. On a 1-6 scale, almost a full point is quite large!
 
 ---
 # Degrees of freedom
@@ -250,12 +252,12 @@ Both RSE and the related measure of model fit, .red-pink[**Root Mean Square Erro
 
 Use the stored model statistics to calculate RSE by hand: 
 
-```r
+``` r
 sqrt(sum(fit$residuals^2) / fit$df)
 ```
 
 ```
-## [1] 6.088998
+## [1] 0.9558941
 ```
 
 ---
@@ -267,19 +269,19 @@ Here is our summary of model performance.
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-*Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+*Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
-The R-squared value is .05. This means that our model accounts for 5% of the variance in BMI. Since our model has only one predictor, we can alternatively say Dietary Restraint accounts for 5% of the variance in BMI.
+The R-squared value is .06. This means that our model accounts for 6% of the variance in sense of belonging. Since our model has only one predictor, we can alternatively say Extraversion accounts for 6% of the variance in sense of belonging.
 
 --
 
@@ -328,7 +330,7 @@ Last term, we formulated a set of null hypotheses about relationship between cat
 
 --
 
-We can use the same framework to test elements of the General Linear Model and, in particular, regression coefficients. In particular, here we will test the null hypothesis that `\(\beta_{1} = 0\)` (there is no relationship between dietary restraint behaviors and BMI).
+We can use the same framework to test elements of the General Linear Model and, in particular, regression coefficients. In particular, here we will test the null hypothesis that `\(\beta_{1} = 0\)` (there is no relationship between extraversion and sense of belonging).
 
 `$$\Large H_{0}: \beta_{1}= 0$$`
 --
@@ -341,7 +343,7 @@ Our alternative hypothesis is that there is a relationship:
 We can imagine drawing samples over and over again (say...5,000 times) from this hypothetical null population. What values of `\(\hat{\beta_{1}}\)` might we observe?
 
 
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-12-.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-12-.gif" alt="" style="display: block; margin: auto;" /&gt;
 
 
 .footnote[h/t Simon Hess ([@simonhhess](https://twitter.com/simonhhess))]
@@ -382,15 +384,15 @@ There are multiple inferential tests in a regression model:
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-*(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+*(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-*F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+*F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
@@ -410,7 +412,7 @@ Here, the `\(p\)`-value refers to the probability of obtaining a slope equal to 
 ]
 
 .pull-right[
-&lt;img src="gosset.jpg" width="267" height="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="gosset.jpg" alt="" height="90%" style="display: block; margin: auto;" /&gt;
 ]
 
 The `\(t\)`-statistic represents an estimate of how many standard errors `\(\hat{\beta_1}\)` lies away from 0 in the `\(t\)`-distribution.
@@ -428,7 +430,7 @@ The `\(t\)`-statistic represents an estimate of how many standard errors `\(\hat
 
   
   
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-15-.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-15-.gif" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # How large is enough?
@@ -457,15 +459,15 @@ Our output shows us the significance of the intercept (typically, we are not int
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-*(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+*(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
@@ -476,20 +478,20 @@ F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
-`$$t = \frac{\hat{\beta_1} - 0}{SE(\hat{\beta_1})} = \frac{1.0367}{0.137} = 7.57$$`
-`$$Pr(t &lt; -7.57 \text{ or } t &gt; 7.57)|H_0 = 0.000000000000082 \text{ or } p &lt;0.001$$`
+`$$t = \frac{\hat{\beta_1} - 0}{SE(\hat{\beta_1})} = \frac{0.2222}{0.0136} = 16.38$$`
+`$$Pr(t &lt; -16.38 \text{ or } t &gt; 16.38)|H_0 = 0.00000...0017 \text{ (57 zeros!) or } p &lt;0.001$$`
 ---
 # Regression coefficients
 
@@ -497,19 +499,19 @@ F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
-Under the null hypothesis, it is extremely unlikely to obtain a Dietary Restraint slope of 1.04 (p &lt; .001). Therefore, we can reject the null hypothesis and conclude that there is a positive relationship between Dietary Restraint rating and BMI, on average in the population.
+Under the null hypothesis, it is extremely unlikely to obtain an Extraversion slope of 0.22 (p &lt; .001). Therefore, we can reject the null hypothesis and conclude that there is a positive relationship between extraversion and sense of belonging, on average in the population.
 
 ---
 # Confidence intervals (CIs)
@@ -526,22 +528,22 @@ Let's develop some intuition around the idea of .red-pink[**confidence intervals
 ---
 # Confidence interval intuition
 
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-19-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Confidence interval intuition
 
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-20-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Confidence interval intuition
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-21-1.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-21-1.gif" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Slope `\((\hat{\beta_{1}})\)` sampling distribution 
 We can use this same approach to construct a distribution of estimated slopes `\(\hat{\beta_{1}}\)`. Here, we imagine the "true" population slope is 1.
 
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-22-.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-22-.gif" alt="" style="display: block; margin: auto;" /&gt;
 
 
 .footnote[h/t Simon Hess ([@simonhhess](https://twitter.com/simonhhess))]
@@ -571,43 +573,43 @@ Confidence interval for `\(\hat{\beta_1}\)`:
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 95% CIs:
 `$$\hat{\beta_1} \pm t_{n-2}[se(\hat{\beta_1})]$$`
-$$ 1.037 \pm 1.96(0.137)$$
+$$ 0.222 \pm 1.96(0.0136)$$
 
-`$$[0.768, 1.306]$$`
+`$$[0.196, 0.249]$$`
 
 ---
 # Confidence intervals (CIs)
 
 Let's do the same with R
 
-```r
+``` r
 tidy(fit, conf.int=T)
 ```
 
 ```
-## # A tibble: 2 x 7
-##   term           estimate std.error statistic  p.value conf.low conf.high
-##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)       23.9      0.265     90.4  0          23.4       24.4 
-*## 2 EDEQ_restraint     1.04     0.137      7.57 8.18e-14    0.768      1.31
+## # A tibble: 2 × 7
+##   term         estimate std.error statistic  p.value conf.low conf.high
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     4.05     0.0449      90.1 0           3.96      4.13 
+*## 2 extraversion    0.222    0.0136      16.4 1.69e-58    0.196     0.249
 ```
 
 --
 
-&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_3_inference_files/figure-html/unnamed-chunk-25-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## `\(F\)`-Distributions and omnibus tests
@@ -633,27 +635,27 @@ Mean Squares (MS) are the Sums of Squares divided by their respective degrees of
 ```
 ...
 Coefficients:
-               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 6.089 on 1083 degrees of freedom
-Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-*F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+Residual standard error: 0.9559 on 4260 degrees of freedom
+Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+*F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ...
 ```
 
-Our omnibus test is significant at an `\(\alpha\)`-threshold of 0.05 `\((p &lt; 0.001)\)`, therefore we can reject the null hypothesis that the full model accounts for no variability in individuals' BMI.
+Our omnibus test is significant at an `\(\alpha\)`-threshold of 0.05 `\((p &lt; 0.001)\)`, therefore we can reject the null hypothesis that the full model accounts for no variability in students' sense of belonging.
 
 ---
 ## Summarizing regression results
 
-```r
+``` r
 modelsummary(fit, stars=T,
-  gof_omit = "Adj.|AIC|BIC|Log",
-  coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+  gof_omit = "Adj.|AIC|BIC|Log|^F$",
+  coef_rename = c("extraversion" = "Extraversion (1-5)"),
   escape=F) # &lt;- necessary for html, but don't need this for Word
 ```
 
@@ -667,31 +669,31 @@ modelsummary(fit, stars=T,
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 23.922*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.046*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.265) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.045) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Dietary Restraint Index (0-6) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1.037*** &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extraversion (1-5) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.222*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.137) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1085 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4262 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.050 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.059 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; RMSE &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 6.08 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.96 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
@@ -711,31 +713,31 @@ modelsummary(fit, stars=T,
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 23.922*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.046*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.265) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.045) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Dietary Restraint Index (0-6) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1.037*** &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extraversion (1-5) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.222*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.137) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1085 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4262 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.050 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.059 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; RMSE &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 6.08 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.96 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
@@ -744,7 +746,7 @@ modelsummary(fit, stars=T,
 
 
 
-.small[We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between BMI and Dietary Restraint, on average, in the population of young adult males. At an alpha threshold of 0.05, we found that Dietary Restraint was a significant predictor of BMI and accounted for approximately 5 percent of the variance in BMI. We estimate that young men who are one unit apart on a dietary restraint index will have a BMI score 1.04 (*p*&lt;0.001, 95% CI: 0.77, 1.31) points different from each other.]
+.small[We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between sense of belonging and extraversion, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 6 percent of the variance in belonging. We estimate that students one unit apart on extraversion will have belonging scores 0.22 (*p*&lt;0.001, 95% CI: 0.20, 0.25) points different from each other.]
 
 
  
@@ -785,24 +787,22 @@ class: middle, inverse
 
 ### Reading: 
 - **If you have not already**: LSWR Chapter 15.1 - 15.2 and 15.4 - 15.7 and Hu (2021)
-- **By January 21 class**: LSWR Chapter 5.7
+- **By January 19 class**: LSWR Chapter 5.7
 
 ### Quiz: 
-- Opens Jan. 21st
+- Opens Jan. 19th
 
 ### Assignment 1:
 - Now live
 - Have all information you need to complete parts 1 &amp; 2
-- Due Feb. 3
-
-
+- Due Feb. 1
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

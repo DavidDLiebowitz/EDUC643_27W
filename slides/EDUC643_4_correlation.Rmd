@@ -177,29 +177,31 @@ gridExtra::grid.arrange(small, medium, large, nrow = 1)
 ```
 ---
 # Visualize in our data
-Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+Let's transform *belong* and *extraversion* into standardized versions:
 ```{r, echo=T, fig.height=5}
 # Read in the data
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %>%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+pb <- read.csv(here("data/belonging.csv")) %>% 
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert,
+           neuroticism = t2__dv_composite__personality_neuroticism,
+           school = college_name) %>%
     drop_na()
 
 # Standardize the variables
-do <- do  %>% 
-      mutate(BMI_std = (BMI - mean(BMI)) / sd(BMI))
-do <- do %>% 
-      mutate(EDEQ_std = 
-      (EDEQ_restraint - mean(EDEQ_restraint)) / sd(EDEQ_restraint))
+pb <- pb  %>% 
+      mutate(belong_std = (belong - mean(belong)) / sd(belong))
+pb <- pb %>% 
+      mutate(extraversion_std = 
+      (extraversion - mean(extraversion)) / sd(extraversion))
 ```
 
 ---
 # Visualize in our data
-Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+Let's transform *belong* and *extraversion* into standardized versions:
 ```{r, echo=F, fig.height=5}
-std <- ggplot(do, aes(EDEQ_std, BMI_std)) +
-  geom_point() +
+set.seed(643)
+std <- ggplot(pb, aes(extraversion_std, belong_std)) +
+  geom_jitter(alpha=0.2, width=0.05, height=0.03) +
   geom_smooth(method='lm', se=F) +
   theme_minimal(base_size=16)
 
@@ -211,15 +213,15 @@ std
 
 ---
 # Visualize in our data
-Let's transform *BMI* and *EDEQ_RESTRAINT* into standardized versions:
+Let's transform *belong* and *extraversion* into standardized versions:
 ```{r, echo=F, fig.height=5}
 std
 ```
 The new fitted regression line is:
 
-$$\hat{BMI_{std}} = 0.000 + 0.2241 * DietaryRestraint_{std}$$
+$$\hat{Belonging_{std}} = 0.000 + 0.2434 * Extraversion_{std}$$
 
-For fun, multiply that 0.2241 by itself: $(0.2241)^2 = 0.0502$. .blue[**Anything familiar about 0.05?**]
+For fun, multiply that 0.2434 by itself: $(0.2434)^2 = 0.0592$. .blue[**Anything familiar about 0.059?**]
 
 ---
 # $r$ and $R^2$
@@ -238,7 +240,7 @@ Correlation coefficient values range from -1 to 1
 
 ### Calculate correlation coefficient in R
 ```{r, echo=T}
-cor(do$BMI, do$EDEQ_restraint)
+cor(pb$belong, pb$extraversion)
 ```
 
 ---
@@ -489,11 +491,11 @@ class: middle, inverse
 
 Regression equations can be used to evaluate the relationship between variables, and to predict expected values based on particular values of our predictors.
 
-We can ask: What is the expected BMI value for a young male with a Dietary Restraint rating of **4**?
+We can ask: What is the expected sense of belonging for a student with an extraversion rating of **4**?
 
 --
-$$\Large \hat{BMI} = 23.92 + 1.04*(\boldsymbol{4}) = 28.1$$
-The expected BMI for a Dietary Restraint of 4 is 28.1
+$$\Large \hat{Belonging} = 4.05 + 0.22*(\boldsymbol{4}) = 4.93$$
+The expected sense of belonging for an extraversion rating of 4 is 4.93
 
 --
 
@@ -504,15 +506,15 @@ Technically, there is no limit to what we can input!
 
 Regression equations can be used to evaluate the relationship between variables, and to predict expected values based on particular values of our predictors.
 
-We can ask: What is the expected BMI value for a young male with a Dietary Restraint rating of **400**?
+We can ask: What is the expected sense of belonging for a student with an extraversion rating of **400**?
 
 --
 
-Using our measure, this is not a possible value of Dietary Restraint but we can still estimate the predicted BMI using our regression equation.
+Using our measure, this is not a possible value of extraversion but we can still estimate the predicted sense of belonging using our regression equation.
 
 --
-$$\Large \hat{BMI} = 23.92 + 1.04*(\boldsymbol{400}) = 439.9$$
-This is not a possible value for a human's BMI.
+$$\Large \hat{Belonging} = 4.05 + 0.22*(\boldsymbol{400}) = 92.05$$
+This is not a possible value on a 1-6 sense of belonging scale.
 
 --
 
@@ -598,4 +600,3 @@ ggplot(data=bball, aes(height, skill, col=age)) +
   annotate("text", x=50, y=12, label="Age 10-14", color="#F8766D", size=5) +
   annotate("text", x=84, y=-12, label="Age 70-74", color="#00BFC4", size=5)
 ```
-

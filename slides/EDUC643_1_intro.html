@@ -4,7 +4,7 @@
     <title>Introduction and bivariate relationships</title>
     <meta charset="utf-8" />
     <meta name="author" content="David D. Liebowitz" />
-    <script src="EDUC643_1_intro_files/header-attrs-2.20/header-attrs.js"></script>
+    <script src="EDUC643_1_intro_files/header-attrs-2.31/header-attrs.js"></script>
     <link href="EDUC643_1_intro_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="EDUC643_1_intro_files/remark-css-0.0.1/uo.css" rel="stylesheet" />
     <link href="EDUC643_1_intro_files/remark-css-0.0.1/ki-fonts.css" rel="stylesheet" />
@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 
 # Roadmap
 
-&lt;img src="Roadmap.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Goals of EDUC quant sequence
@@ -124,7 +124,7 @@ Concrete learning objectives:
 ]
 
 .pull-right[
-&lt;img src="kids.jpg" width="85%" style="display: block; margin: auto;" /&gt;
+&lt;img src="kids.jpg" alt="" width="85%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -169,7 +169,7 @@ Course website is (we hope!) a valuable resource. Let's check it out!
 ---
 # Roadmap
 
-&lt;img src="Roadmap1.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap1.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -199,13 +199,13 @@ class: middle, inverse
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-&lt;img src="kelly_etal.png" width="775" height="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="stubblebine_etal.png" alt="" width="70%" style="display: block; margin: auto;" /&gt;
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[In particular, we are going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[In particular, we are going to explore the .purple[**relationship**] between **extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and **sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).]
 
 ---
 ### Quantitative research design components
@@ -230,87 +230,67 @@ Researchers (including two from the .green[**University of Oregon**]), [Nichole 
 ---
 # A glance at the data
 
-```r
-# Not all data comes to us in .csv format
-# Here we'll use the `haven` package to read in SPSS data
-# There are many other such packages, including: `foreign` and `rio`
+``` r
+# The study authors posted their data on the Open Science Framework
+# (https://osf.io/mv6ek/) as a .csv file, so we can use read.csv()
+# We use select() to keep only the variables we need and, at the
+# same time, give them shorter, easier-to-type names
 
-# install.packages("haven")
-do &lt;- read_spss(here("data/male_do_eating.sav")) %&gt;% 
-          select(OE_frequency, EDEQ_restraint, EDS_total,
-          BMI, age_year, income_group) 
+pb &lt;- read.csv(here("data/belonging.csv")) %&gt;%
+          select(belong = t2__dv_composite__belonging,
+                 extraversion = t2__dv_composite__personality_extrovert,
+                 neuroticism = t2__dv_composite__personality_neuroticism,
+                 school = college_name,
+                 first_gen = t1__generation_br_combined_recoded)
 
-head(do)
+head(pb)
 ```
 
 ```
-#&gt; # A tibble: 6 x 6
-#&gt;   OE_frequency EDEQ_restraint EDS_total   BMI age_year income_group        
-#&gt;          &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl+lbl&gt;           
-#&gt; 1            0            0          21  23.3       27 1 [less than 19,999]
-#&gt; 2            0            1.2        21  16.6       30 1 [less than 19,999]
-#&gt; 3            0            0.4        22  18.7       21 1 [less than 19,999]
-#&gt; 4            0            0.4        22  15.4       21 6 [60-69,999]       
-#&gt; 5            0            0          40  20.2       29 1 [less than 19,999]
-#&gt; 6            0            1.2        34  26.3       27 2 [20-29,999]
+#&gt;   belong extraversion neuroticism   school first_gen
+#&gt; 1   5.50          3.5         3.0 School C         2
+#&gt; 2   5.25           NA          NA School K         2
+#&gt; 3   5.00          4.0         3.5 School C         2
+#&gt; 4   4.75          3.0         4.0 School A         1
+#&gt; 5   4.75          2.0         2.5 School B         2
+#&gt; 6   2.50          2.0         3.5 School E         1
 ```
 
 ---
 # More glance-ing
 
 
-```r
-str(do)
+``` r
+str(pb)
 ```
 
 ```
-#&gt; tibble [1,114 x 6] (S3: tbl_df/tbl/data.frame)
-#&gt;  $ OE_frequency  : num [1:1114] 0 0 0 0 0 0 0 0 0 0 ...
-#&gt;   ..- attr(*, "label")= chr "Frequency of overeating episodes"
-#&gt;   ..- attr(*, "format.spss")= chr "F8.2"
-#&gt;  $ EDEQ_restraint: num [1:1114] 0 1.2 0.4 0.4 0 1.2 0.2 1.6 2.2 0 ...
-#&gt;   ..- attr(*, "label")= chr "Mean dietary restraint score (0-6, higher scores = higher restraint)"
-#&gt;   ..- attr(*, "format.spss")= chr "F8.2"
-#&gt;   ..- attr(*, "display_width")= int 16
-#&gt;  $ EDS_total     : num [1:1114] 21 21 22 22 40 34 21 49 46 24 ...
-#&gt;   ..- attr(*, "label")= chr "range is 21-126; all scores added up; higher scores = more exercise dependence symptoms"
-#&gt;   ..- attr(*, "format.spss")= chr "F8.2"
-#&gt;   ..- attr(*, "display_width")= int 11
-#&gt;  $ BMI           : num [1:1114] 23.3 16.6 18.7 15.4 20.2 ...
-#&gt;   ..- attr(*, "label")= chr "Body mass index in kg/m-squared"
-#&gt;   ..- attr(*, "format.spss")= chr "F8.2"
-#&gt;   ..- attr(*, "display_width")= int 10
-#&gt;  $ age_year      : num [1:1114] 27 30 21 21 29 27 22 28 24 19 ...
-#&gt;   ..- attr(*, "label")= chr "Total years of age"
-#&gt;   ..- attr(*, "format.spss")= chr "F8.2"
-#&gt;   ..- attr(*, "display_width")= int 10
-#&gt;  $ income_group  : dbl+lbl [1:1114]  1,  1,  1,  6,  1,  2,  6,  6,  8,  8,  3,  5,  4,  ...
-#&gt;    ..@ label      : chr "Income group (see values)"
-#&gt;    ..@ format.spss: chr "F8.2"
-#&gt;    ..@ labels     : Named num [1:11] 1 2 3 4 5 6 7 8 9 10 ...
-#&gt;    .. ..- attr(*, "names")= chr [1:11] "less than 19,999" "20-29,999" "30-39,999" "40-49,999" ...
+#&gt; 'data.frame':	4753 obs. of  5 variables:
+#&gt;  $ belong      : num  5.5 5.25 5 4.75 4.75 2.5 5.5 3.5 3 5.25 ...
+#&gt;  $ extraversion: num  3.5 NA 4 3 2 2 3 3.5 3 4 ...
+#&gt;  $ neuroticism : num  3 NA 3.5 4 2.5 3.5 4.5 5 4.5 1.5 ...
+#&gt;  $ school      : chr  "School C" "School K" "School C" "School A" ...
+#&gt;  $ first_gen   : int  2 2 2 1 2 1 1 2 2 1 ...
 ```
 
 ---
 # Check for missingness
 
 
-```r
+``` r
 # Check for missingness
-sapply(do, function(x) sum(is.na(x)))
+sapply(pb, function(x) sum(is.na(x)))
 ```
 
 ```
-#&gt;   OE_frequency EDEQ_restraint      EDS_total            BMI       age_year 
-#&gt;              0              5              0             15              0 
-#&gt;   income_group 
-#&gt;              3
+#&gt;       belong extraversion  neuroticism       school    first_gen 
+#&gt;            0          491          491            0            0
 ```
 
-```r
-# Things look good, but we'll focus on those cases that had complete  
-# records for all variables
-do &lt;- do %&gt;% drop_na()
+``` r
+# Some students did not complete the end-of-year personality items,
+# we'll focus on those cases that had complete records for all variables
+pb &lt;- pb %&gt;% drop_na()
 ```
 
 .blue[**What is this approach to missingness called?**]
@@ -320,82 +300,81 @@ do &lt;- do %&gt;% drop_na()
 
 ---
 # Even more glance-ing
-Let's start by focusing on a few variables of interest: dietary restraint (***EDEQ_restraint***), over-eating frequency (***OE_frequency***), and exercise-dependency (***EDS_total***).
+Let's start by focusing on a few variables of interest: sense of belonging (***belong***), extraversion (***extraversion***), and neuroticism (***neuroticism***).
 
-```r
-summary(do$EDEQ_restraint)
-```
-
-```
-#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   0.000   0.200   1.200   1.386   2.200   6.000
-```
-
-```r
-summary(do$OE_frequency)
+``` r
+summary(pb$belong)
 ```
 
 ```
 #&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;   0.000   0.000   1.000   2.285   4.000  29.000
+#&gt;    1.00    4.25    5.00    4.74    5.50    6.00
 ```
 
-```r
-summary(do$EDS_total)
+``` r
+summary(pb$extraversion)
 ```
 
 ```
 #&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#&gt;  -99.00   33.00   55.00   54.03   72.00  126.00
+#&gt;   1.000   2.500   3.000   3.127   4.000   5.000
+```
+
+``` r
+summary(pb$neuroticism)
+```
+
+```
+#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#&gt;   1.000   2.500   3.000   3.183   4.000   5.000
 ```
 
 ---
-## Oh the tangled web SPSS weaves!
+## Oh the tangled web survey data weaves!
 
 
-```r
-ggplot(data=do, aes(EDS_total)) + geom_bar()
+``` r
+ggplot(data=pb, aes(first_gen)) + geom_bar()
 ```
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-9-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-9-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 
-```r
-do &lt;- do %&gt;% mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total))
+``` r
+# The codebook tells us: 1 = "First generation", 2 = "Continuing generation", 0 = "Unknown"
+pb &lt;- pb %&gt;% mutate(first_gen = ifelse(first_gen==0, NA, first_gen))
 
-sum(is.na(do$EDS_total))
+sum(is.na(pb$first_gen))
 ```
 
 ```
-#&gt; [1] 7
+#&gt; [1] 261
 ```
 
-```r
-do &lt;- filter(do, !is.na(EDS_total))
-```
+.small[*first_gen* is not part of our main analysis, so we'll keep these students in our sample for now.]
 
 ---
-# A preliminary analysis
+# Our research question
 
 
-Before we get to the core question of the Kelly et al. study--how are dietary restraint behaviors related to over-eating frequency?--we are going to explore another important relationship in the data that may also be related to our main research question: the .purple[**relationship**] between .red-pink[**dietary restraint behaviors**] (self-reports on the extent to which participants consciously restricted/controlled their food intake) and .red-pink[**body-mass index (BMI)**]. In particular, we are going to operationalize this by examining the relationship in our sample of young men between our predictor variable (***EDEQ_restraint***) and their body-mass index (***BMI***). 
+The core question of the Stubblebine et al. study is how students' personalities are related to their sense of belonging in college. The authors hypothesized that .red-pink[**extraversion**] would be positively related to belonging, and that .red-pink[**neuroticism**] would be negatively related to belonging. We are going to start by exploring the .purple[**relationship**] between .red-pink[**extraversion**] (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and .red-pink[**sense of belonging**] (students' average agreement with four statements such as, "I feel like I belong at [school name]") at the end of their first year of college. In particular, we are going to operationalize this by examining the relationship in our sample of first-year college students between our predictor variable (***extraversion***) and their sense of belonging (***belong***).
 
 --
 
-&gt; We are examining this relationship so that we can better understand how all three of these variables (***OE_frequency***, ***EDEQ_restraint*** and ***BMI***) are related in Unit 3. Additionally, the properties of the variable ***BMI*** in this particular dataset are pedadogically helpful in demonstrating the assumptions of OLS.
+&gt; In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-&gt; However, we recognize that BMI has been shown to be relatively uninformative about individuals' overall health and categorizes individuals based on distributions initially derived exclusively from white Western European (French and Scottish) study participants. We use the measure for pedagogical purposes because the variable is one of the few continuous measures in one of the few datasets that our UO colleagues shared with us, while noting its problematic historical use, particularly at the individual level.
+&gt; Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
 
 ---
 # Bivariate relationships
 
-We are interested in the *relationship* between dietary restraint (*EDEQ_restraint*) and body-mass index (*BMI*). Statistically, the relationship is the same regardless of which variable is the "outcome."
+We are interested in the *relationship* between extraversion (*extraversion*) and sense of belonging (*belong*). Statistically, the relationship is the same regardless of which variable is the "outcome."
 
 .pull-left[
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-11-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-11-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 ]
 .pull-right[
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-12-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-12-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 ]
 
 --
@@ -405,15 +384,15 @@ However, our convention is to consider the variable on the Y-axis to be the one 
 ---
 # Bivariate relationships
 
-Given the focus of the Kelly et al. paper and for pedagogical reasons, for the moment, we are choosing to plot BMI against dietary restraint. 
+Given the focus of the Stubblebine et al. paper, we are choosing to plot sense of belonging against extraversion. Because both measures take on a limited set of values, many students share the exact same point on the plot. So, we "jitter" the points (add a small amount of random noise to each one) and make them partially transparent so we can see them all.
 
 
-```r
-biv &lt;- ggplot(data=do, aes(x=EDEQ_restraint, y=BMI)) + 
-          geom_point()
+``` r
+biv &lt;- ggplot(data=pb, aes(x=extraversion, y=belong)) +
+          geom_jitter(alpha=0.2, width=0.1, height=0.05)
 ```
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-14-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-14-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Bivariate relationships
@@ -429,56 +408,56 @@ biv &lt;- ggplot(data=do, aes(x=EDEQ_restraint, y=BMI)) +
 ---
 ## Bivariate relationships: Direction
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-15-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-15-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Bivariate relationships: Linearity
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-16-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-16-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Bivariate relationships: Outliers
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-17-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-17-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Bivariate relationships: Strength
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-18-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-18-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 **Note that these have the same slope (magnitude)**
 
 ---
 ## Bivariate relationships: Magnitude
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-19-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-19-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 **Note that these have the same strength (tightness of fit)**
 
 ---
 ## Bivariate relationships: Magnitude
 
 Note that if you change the scale of either axis, it will change the perceived--**but not the *actual***--size of the magnitude
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-20-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-20-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 
 
 ---
-# BMI and over-eating
+# Extraversion and belonging
 
 .blue[So what can we say with respect to these five characteristics in our data?]
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-21-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-21-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # A line through our cloud
 
 Notice that in the previous slide, we added a line running through our data
 
-&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-22-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_1_intro_files/figure-html/unnamed-chunk-22-1.svg" alt="" style="display: block; margin: auto;" /&gt;
 That line is defined by the intercept (value `\(Y\)` takes when `\(X=0\)`) and the slope (the difference in `\(Y\)` per 1 unit difference in `\(X\)`)
 &gt; `\(Y = intercept + slope*X\)` (you may have seen this in HS as Y = mX + b)
 
-&gt; We could think of this relationship, therefore, as `\(BMI = slope*EDEQ\_restraint + intercept\)` ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
+&gt; We could think of this relationship, therefore, as `\(Belonging = slope*Extraversion + intercept\)` ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
 
 
 ---
@@ -497,7 +476,7 @@ class: middle, inverse
 # To-Dos
 
 ### Reading: 
-- **By January 16 class**: LSWR Chapter 15.1 - 15.2 and 15.4 - 15.7 and Hu (2021)
+- **By January 14 class**: LSWR Chapter 15.1 - 15.2 and 15.4 - 15.7 and Hu (2021)
 
 ### Review: 
 - Review EDUC 641, Unit 4 (Lectures 13 - 16)
@@ -507,9 +486,9 @@ class: middle, inverse
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

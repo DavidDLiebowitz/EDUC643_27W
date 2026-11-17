@@ -2,26 +2,30 @@
 # Multiple regression
 ## Created by: David Liebowitz
 ### First created: 1/23/23
-### Last update: 1/24/25
-### inputs: male_do_eating.sav
+### Last update: 11/16/26
+### inputs: belonging.csv
 ######################################################
 
 # Load necessary packages
 library(pacman)
-p_load(here, haven, tidyverse, modelsummary, margins)
+p_load(here, tidyverse, modelsummary, margins)
 
 
 i_am("slides/EDUC643_7_code.R")
 
 # Import the data and implement previously identified data-cleaning steps
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-  select(OE_frequency, EDEQ_restraint, EDS_total,
-         BMI, age_year, income_group) %>%
-  mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+pb <- read.csv(here("data/belonging.csv")) %>% 
+  select(belong = t2__dv_composite__belonging,
+         extraversion = t2__dv_composite__personality_extrovert,
+         neuroticism = t2__dv_composite__personality_neuroticism,
+         agreeableness = t2__dv_composite__personality_agreeable,
+         conscientiousness = t2__dv_composite__personality_conscientious,
+         openness = t2__dv_composite__personality_open,
+         school = college_name) %>%
   drop_na()
 
 # Going to add an id variable
-do <- rownames_to_column(do, "id")
+pb <- rownames_to_column(pb, "id")
 
 #################################################
 ###  First, estimate the bivariate relationship
@@ -29,53 +33,53 @@ do <- rownames_to_column(do, "id")
 
 ### Some univariate stats
 
-summary(do$OE_frequency)
-sd(do$OE_frequency)
-summary(do$EDEQ_restraint)
+summary(pb$belong)
+sd(pb$belong)
+summary(pb$extraversion)
 
 ### Some univariate displays
 
-OE <- ggplot(do, aes(OE_frequency)) +
+BEL <- ggplot(pb, aes(belong)) +
   geom_histogram() +
   theme_minimal(base_size = 16)
-EDEQ <- ggplot(do, aes(EDEQ_restraint)) +
+EXT <- ggplot(pb, aes(extraversion)) +
   geom_histogram() +
   theme_minimal(base_size = 16)
 
-gridExtra::grid.arrange(OE, EDEQ, ncol=2)
+gridExtra::grid.arrange(BEL, EXT, ncol=2)
 
 ### Some bivariate statistics
-cor(do$OE_frequency, do$EDEQ_restraint)
+cor(pb$belong, pb$extraversion)
 
 
 # Bivariate visualization
-lm_plot <- ggplot(do, aes(x=EDEQ_restraint, y=OE_frequency)) + 
-  geom_point() +
+lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
   geom_smooth(method = "lm") +
-  xlab("Dietary restraint index") +
-  ylab("Overeating frequency") +
+  xlab("Extraversion") +
+  ylab("Sense of belonging") +
   theme_minimal(base_size = 16)
 
 lm_plot
 
 # Estimate the bivariate relationship
-fit <- lm(OE_frequency ~ EDEQ_restraint, data=do)
+fit <- lm(belong ~ extraversion, data=pb)
 summary(fit)
 
 # Examine the bivariate regression assumptions
 
-do$predict <- predict(fit)
-do$resid <- resid(fit)
-do$stu_resid <- rstudent(fit)
+pb$predict <- predict(fit)
+pb$resid <- resid(fit)
+pb$stu_resid <- rstudent(fit)
 
 # Plot the raw residuals
-ggplot(do, aes(x = resid)) + 
-  geom_histogram(binwidth = 1) +
+ggplot(pb, aes(x = resid)) + 
+  geom_histogram(binwidth = 0.25) +
   theme_minimal(base_size = 16)
 
 # Residuals v fitted plot
-ggplot(do, aes(x = predict, y = stu_resid)) + 
-  geom_point() +
+ggplot(pb, aes(x = predict, y = stu_resid)) + 
+  geom_jitter(alpha=0.2, width=0.01, height=0) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Studentized Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -85,21 +89,21 @@ ggplot(do, aes(x = predict, y = stu_resid)) +
 ###  Now, multiple regression
 ################################################
 
-### The relationship between OE_frequency and BMI
-oe_bmi <- ggplot(do, aes(x=BMI, y=OE_frequency)) + 
-  geom_point() +
+### The relationship between belong and neuroticism
+bel_neuro <- ggplot(pb, aes(x=neuroticism, y=belong)) + 
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
   geom_smooth(method = "lm") +
-  xlab("BMI") +
-  ylab("Overeating frequency") +
+  xlab("Neuroticism") +
+  ylab("Sense of belonging") +
   theme_minimal(base_size = 16)
 
-oe_bmi
+bel_neuro
 
 # And the bivariate relationship
-summary(lm(OE_frequency ~ BMI, data=do))
+summary(lm(belong ~ neuroticism, data=pb))
 
 # Finally, the multivariate relationship
-fit2 <- lm(OE_frequency ~ EDEQ_restraint + BMI, data=do)
+fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
 
 fit2
 
@@ -170,7 +174,7 @@ attr(row, 'position') <- c(8)
 modelsummary(list(fit, fit2),
              stars=T,
              gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE",
-             coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+             coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
              add_rows = row,   # <- with the added row
              escape=F)  
 
@@ -180,24 +184,24 @@ modelsummary(list(fit, fit2),
 modelsummary(list(fit, fit2),
              stars=T,
              gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE",
-             coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
-             output = "slides/do_multiple.docx")
+             coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
+             output = "slides/belong_multiple.docx")
 
 ## Creating a prototypical plot
 
-# Estimate the relationship in the mtcars data
-car <- lm(mpg ~ hp + wt, data=mtcars)
+# Use our multiple regression of belonging on extraversion and neuroticism
+fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
 
 # Use the margins package and define prototypical values
-df2 <- margins::margins(car, at = list(wt = c(2,3,4)))
+df2 <- margins::margins(fit2, at = list(neuroticism = c(2,3,4)))
 
 # Use prototypical values in resulting dataset to show results
-proto <-  ggplot(data=df2, aes(x=hp, y=fitted, color=as.factor(wt))) + 
+proto <-  ggplot(data=df2, aes(x=extraversion, y=fitted, color=as.factor(neuroticism))) + 
   geom_smooth(method='lm', se=F) +
-  xlab("Horsepower") + ylab("Predicted MPG") +
-  scale_color_discrete(name = "Weight",
+  xlab("Extraversion") + ylab("Predicted sense of belonging") +
+  scale_color_discrete(name = "Neuroticism",
                        breaks=c(2,3,4),
-                       labels=c("2,000 lbs","3,000 lbs","4,000 lbs")) +
+                       labels=c("Low (2)","Middle (3)","High (4)")) +
   theme_minimal(base_size=16)
 
 proto
@@ -207,9 +211,9 @@ proto
 ######################################
 
 # First, limit our data to only the variables of interest
-cordat <- do %>%
-  dplyr::select(OE_frequency, EDEQ_restraint, EDS_total,
-                BMI, age_year, income_group)
+cordat <- pb %>%
+  dplyr::select(belong, extraversion, neuroticism,
+                agreeableness, conscientiousness, openness)
 
 ## Note, when you load the MASS package (to generate the simulated data) it has its own function involving select
 ## If you try to use the select function after the MASS package, you'll get an error
@@ -217,17 +221,12 @@ cordat <- do %>%
 
 # I'm going to rename some, so they fit nicely on the screen
 cordat <- cordat %>%
-  rename(OE = OE_frequency,
-         EDEQ = EDEQ_restraint,
-         EDS = EDS_total,
-         Age = age_year,
-         Income=income_group)
-
-# Income was initially recorded as a categorical variable
-# It's generally interval, and I'm going to re-code it as numeric
-# In fact, we probably would want to use the Spearman correlation coefficient
-# But for now, it's ok
-cordat$Income = as.numeric(as.character(cordat$Income))
+  rename(Belong = belong,
+         Extra = extraversion,
+         Neuro = neuroticism,
+         Agree = agreeableness,
+         Consc = conscientiousness,
+         Open = openness)
 
 #Produce the correlation matrix
 datasummary_correlation(cordat,

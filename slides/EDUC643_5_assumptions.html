@@ -33,47 +33,47 @@ class: center, middle, inverse, title-slide
 
 # Roadmap
 
-&lt;img src="Roadmap2.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="Roadmap2.jpg" alt="" width="90%" style="display: block; margin: auto;" /&gt;
 ---
 # A motivating question
 
 ### Reminder: 
 
-[Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003) set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+[Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
 
-Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question. 
+Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question. 
 
-However, before answering this question, we are exploring **the relationship between dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) **and body-mass index (BMI).**
+In particular, we are exploring **the relationship between extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) **and sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).
 
 
 ---
 # Bivariate relationship
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-3-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Regression results
 
 (from last unit)
 
-```r
-fit &lt;- lm(BMI ~ EDEQ_restraint, data=do)
+``` r
+fit &lt;- lm(belong ~ extraversion, data=pb)
 tidy(fit)
 ```
 
 ```
-## # A tibble: 2 x 5
-##   term           estimate std.error statistic  p.value
-##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)       23.9      0.265     90.4  0       
-## 2 EDEQ_restraint     1.04     0.137      7.57 8.18e-14
+## # A tibble: 2 × 5
+##   term         estimate std.error statistic  p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     4.05     0.0449      90.1 0       
+## 2 extraversion    0.222    0.0136      16.4 1.69e-58
 ```
 
 .small[
-- Each 1 unit difference in dietary restraint behaviors (*EDEQ_RESTRAINT*) is associated with a 1.04 unit difference in Body Mass Index (*BMI*).
- + This represents 1/6th of a standard deviation of the outcome (*BMI*), or a relatively large magnitude relationship
+- Each 1 unit difference in extraversion (*extraversion*) is associated with a 0.22 unit difference in sense of belonging (*belong*).
+ + This represents nearly a quarter of a standard deviation of the outcome (*belong*), or a moderately sized relationship
 - Relationship is statistically significant
- + Unlikely that in the population of 18-30 yo males that there is no relationship between dietary restraint behaviors and BMI.
+ + Unlikely that in the population of first-year college students that there is no relationship between extraversion and sense of belonging.
 - There is still a lot of residual variation
 ]
 
@@ -104,7 +104,7 @@ class: middle, inverse
 
 When you conduct any kind of statistical analysis, there are four phenomenon you tend to be interested in:
 - .red-pink[**the parameter**]: the underlying substantive concept you are seeking to learn about ***in the population***
-  + "the effect of the program on the dropout rate", "disordered eating", etc.
+  + "the effect of the program on the dropout rate", "sense of belonging", etc.
 - .red-pink[**the estimand**]: the "true" distribution of the conceptual relationship ***in the population***; identified as a result of our research design
   + "a randomized control trial of the program", "adjusting for demographics", etc.
 - .red-pink[**the estimator**]: the method used to obtain an approximation of this quantity ***in the sample***
@@ -156,7 +156,7 @@ At each value of X, there is a distribution of Y. These distributions have a mea
 ]
 
 .pull-right[
-&lt;img src="reg_assumpt.png" width="1280" style="display: block; margin: auto;" /&gt;
+&lt;img src="reg_assumpt.png" alt="" width="1280" style="display: block; margin: auto;" /&gt;
 (6. **Outliers** are baked into several of above)
 ]
 
@@ -175,29 +175,29 @@ class: middle, inverse
 Classical measurement error (our predictor variable is measured imprecisely) will bias our results to zero and increase residual standard error.
 
 
-```r
-summary(lm(BMI ~ EDEQ_restraint, data=do))
+``` r
+summary(lm(belong ~ extraversion, data=pb))
 ```
 
 ```
 ## 
 ## Call:
-## lm(formula = BMI ~ EDEQ_restraint, data = do)
+## lm(formula = belong ~ extraversion, data = pb)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -19.047  -3.955  -0.922   2.701  33.282 
+## -4.1565 -0.4621  0.1768  0.6768  1.7322 
 ## 
 ## Coefficients:
-##                Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)     23.9223     0.2647  90.384  &lt; 2e-16 ***
-*## EDEQ_restraint   1.0367     0.1370   7.566 8.18e-14 ***
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   4.04558    0.04488   90.14   &lt;2e-16 ***
+*## extraversion  0.22218    0.01357   16.38   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-*## Residual standard error: 6.089 on 1083 degrees of freedom
-## Multiple R-squared:  0.05021,	Adjusted R-squared:  0.04933 
-## F-statistic: 57.25 on 1 and 1083 DF,  p-value: 8.177e-14
+*## Residual standard error: 0.9559 on 4260 degrees of freedom
+## Multiple R-squared:  0.05922,	Adjusted R-squared:  0.059 
+## F-statistic: 268.2 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ```
 ---
 # Addding measurement error
@@ -205,42 +205,42 @@ summary(lm(BMI ~ EDEQ_restraint, data=do))
 Classical measurement error (our predictor variable is measured imprecisely) will bias our results to zero and increase residual standard error.
 
 
-```r
-do$EDEQ_noise &lt;- jitter(do$EDEQ_restraint, factor = 5, amount = 1)
-summary(lm(BMI ~ EDEQ_noise, data=do))
+``` r
+pb$extraversion_noise &lt;- jitter(pb$extraversion, factor = 5, amount = 1)
+summary(lm(belong ~ extraversion_noise, data=pb))
 ```
 
 ```
 ## 
 ## Call:
-## lm(formula = BMI ~ EDEQ_noise, data = do)
+## lm(formula = belong ~ extraversion_noise, data = pb)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -17.819  -3.957  -1.081   2.612  32.530 
+## -4.2108 -0.4545  0.1662  0.6874  1.7053 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  24.1310     0.2554  94.488  &lt; 2e-16 ***
-*## EDEQ_noise    0.8833     0.1266   6.978 5.19e-12 ***
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)         4.19993    0.04046  103.81   &lt;2e-16 ***
+*## extraversion_noise  0.17187    0.01198   14.34   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-*## Residual standard error: 6.112 on 1083 degrees of freedom
-## Multiple R-squared:  0.04303,	Adjusted R-squared:  0.04215 
-## F-statistic:  48.7 on 1 and 1083 DF,  p-value: 5.192e-12
+*## Residual standard error: 0.9626 on 4260 degrees of freedom
+## Multiple R-squared:  0.04606,	Adjusted R-squared:  0.04584 
+## F-statistic: 205.7 on 1 and 4260 DF,  p-value: &lt; 2.2e-16
 ```
 
 ---
 # Measurement error in `\(x\)`
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-8-.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-8-.gif" alt="" style="display: block; margin: auto;" /&gt;
 
 .footnote[h/t Simon Hess ([@simonhhess](https://twitter.com/simonhhess))]
 
 ---
 # Measurement error in `\(y\)`
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-9-.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-9-.gif" alt="" style="display: block; margin: auto;" /&gt;
 
 .footnote[h/t Simon Hess ([@simonhhess](https://twitter.com/simonhhess))]
 
@@ -259,6 +259,8 @@ summary(lm(BMI ~ EDEQ_noise, data=do))
 #### We will also learn about some solutions in 633/634 (SEM) and EDLD 650 and 679 (causal inference)
 #### These are generally problems that are solved by design rather than stats
 
+.small[In our worked example, Stubblebine et al. report that their two-item measure of extraversion has a reliability (Cronbach's `\(\alpha\)`) of about 0.70 at the end of the first year. So, it is quite likely that measurement error leads us to *understate* the true relationship between extraversion and belonging.]
+
 ---
 class: middle, inverse
 
@@ -269,19 +271,19 @@ class: middle, inverse
 ---
 # Residuals
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-10-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-Our fitted regression line contains the "predicted" values of *BMI* for each value of *DIETARY_RESTRAINT*. But almost all of the "actual" values of *BMI* lie off the actual line regression line.
+Our fitted regression line contains the "predicted" values of *belong* for each value of *extraversion*. But almost all of the "actual" values of *belong* lie off the actual line regression line.
 ---
-# Example: Participant #1082
+# Example: Student #1142
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-11-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 
 --
 
-.blue[*What can we say about this study participant's BMI, relative to our prediction?*]
+.blue[*What can we say about this student's sense of belonging, relative to our prediction?*]
 
 
 ---
@@ -292,7 +294,7 @@ The difference ("vertical distance") between the observed value of the outcome a
 #### Residuals can be substantively and statistically useful:
 - Represent individual deviations from average trend
 - Tell us about values of the outcome after taking into account ("adjusting for") the predictor
- + In this case, tell us whether study participants have higher or lower BMI indices than predicted, given their dietary restraint behaviors
+ + In this case, tell us whether students report a higher or lower sense of belonging than predicted, given their extraversion
 
 ---
 # Raw and studentized residuals
@@ -330,20 +332,20 @@ Our regression assumptions of .red-pink[**homscedasticity, normality**] and .red
 ---
 # Recovering residuals in R
 
-```r
-fit &lt;- lm(BMI ~ EDEQ_restraint, data=do)
+``` r
+fit &lt;- lm(belong ~ extraversion, data=pb)
 
 # predict asks for the predicted values
-do$predict &lt;- predict(fit)
+pb$predict &lt;- predict(fit)
 
 # residuals asks for the raw residual
-do$resid &lt;- residuals(fit)
+pb$resid &lt;- residuals(fit)
 
 # rstandard asks for the standardized residual
-do$std_resid &lt;- rstandard(fit)
+pb$std_resid &lt;- rstandard(fit)
 
 # rstudent asks for the studentized residual
-do$stu_resid &lt;- rstudent(fit)
+pb$stu_resid &lt;- rstudent(fit)
 ```
 
 We can now treat these residual and predicted values as new variables in our dataset and examine them using all the other univariate and multivariate analysis tools we have.
@@ -352,25 +354,25 @@ We can now treat these residual and predicted values as new variables in our dat
 # Examining the residuals
 
 
-```r
-summary(do$resid)
+``` r
+summary(pb$resid)
 ```
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -19.047  -3.955  -0.922   0.000   2.701  33.282
+## -4.1565 -0.4621  0.1768  0.0000  0.6768  1.7322
 ```
 
-```r
-sd(do$resid)
+``` r
+sd(pb$resid)
 ```
 
 ```
-## [1] 6.086189
+## [1] 0.955782
 ```
 
 - Sample mean of the residuals is *always* exactly zero
-- On a scale ranging from about 5 to 60, most of our residuals are within 6 or so BMI units. However, we've done a poor job of predicting BMI for some participants.
+- On a scale ranging from 1 to 6, most of our residuals are within about one point of sense of belonging. However, we've done a poor job of predicting belonging for some students (by as much as four points!).
 
 
 ---
@@ -379,24 +381,24 @@ sd(do$resid)
 - Compare to the raw residuals on the previous slide to the standardized residuals. *How similar are they?*&lt;sup&gt; 1&lt;/sup&gt;
 
 
-```r
-summary(do$std_resid)
+``` r
+summary(pb$std_resid)
 ```
 
 ```
-##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-## -3.134177 -0.650214 -0.151496  0.000021  0.443938  5.471042
+##       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+## -4.3503102 -0.4834990  0.1849729 -0.0000029  0.7081121  1.8132067
 ```
 
-```r
-sd(do$std_resid)
+``` r
+sd(pb$std_resid)
 ```
 
 ```
-## [1] 1.000632
+## [1] 1.000127
 ```
 
-- Note the minima and maxima standardized residual values. .blue[*Given a sample of ~1100 individuals, what does this make you think?*]
+- Note the minima and maxima standardized residual values. .blue[*Given a sample of ~4,300 students, what does this make you think?*]
 
 
 .footnote[[1] Our standardized and studentized residuals have means *close to* zero, but not quite because of "leverage" corrections (see slide 22)
@@ -408,13 +410,13 @@ sd(do$std_resid)
 
 In addition to examining the original scatterplot to detect the presence of non-linearity...
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-15-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 # Non-linearity
 
 In addition to examining the original scatterplot to detect the presence of non-linearity...
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-16-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -425,35 +427,35 @@ In addition to examining the original scatterplot to detect the presence of non-
 
 Plotting the residual values against their fitted values can provide informative insights to many of our regression assumptions. 
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-17-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 ## Non-linearity: residuals v. fitted plot
 
 Plotting the residual values against their fitted values can provide informative insights to many of our regression assumptions. 
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-18-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 ## Non-linearity: residuals v. fitted plot
 
-Let's look at this for our estimates of disordered eating:
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+Let's look at this for our estimates of sense of belonging:
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-19-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-.blue[**What evidence do you observe of linearity or non-linearity in the residuals for our disordered eating sample?**]
+.blue[**What evidence do you observe of linearity or non-linearity in the residuals for our sense of belonging sample?**]
 
 ---
 ## Non-linearity: residuals v. fitted plot
 
-Let's look at this for our estimates of disordered eating:
+Let's look at this for our estimates of sense of belonging:
 
-```r
-ggplot(do, aes(x = predict, y = resid)) + 
-         geom_point() +
+``` r
+ggplot(pb, aes(x = predict, y = resid)) + 
+         geom_jitter(alpha=0.2, width=0.01, height=0) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
 ```
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-20-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -462,18 +464,18 @@ ggplot(do, aes(x = predict, y = resid)) +
 
 **Heteroscedasticity**: when variance of Y conditional on X `\((\sigma^2_{Y|X})\)` differs as a function of X
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-21-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 # Heteroscedasticity
 
 **Heteroscedasticity**: when variance of Y conditional on X `\((\sigma^2_{Y|X})\)` differs as a function of X
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-22-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 # Residual heterodscedasticity
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-23-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-.blue[**What evidence do you observe of homoscedasticity or heteroscedastictiy in the residuals for our disordered eating sample?**]
+.blue[**What evidence do you observe of homoscedasticity or heteroscedastictiy in the residuals for our sense of belonging sample?**]
 
 ---
 ## Solutions to heteroscedasticity
@@ -491,10 +493,10 @@ However, we generally can correct for the presence of heteroscedasticity by the 
 
 .small[
 
-```r
+``` r
 modelsummary(fit, 
-  stars=T, gof_omit = "Adj.|AIC|BIC|Log|RMSE",
-  coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+  stars=T, gof_omit = "Adj.|AIC|BIC|Log|RMSE|^F$",
+  coef_rename = c("extraversion" = "Extraversion (1-5)"),
   vcov =  list("iid", "robust"), escape=F)
 ```
 
@@ -502,40 +504,40 @@ modelsummary(fit,
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt;  (1) &lt;/th&gt;
+*   &lt;th style="text-align:center;"&gt;  (1) &lt;/th&gt;
    &lt;th style="text-align:center;"&gt;   (2) &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 23.922*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 23.922*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.046*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.046*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.265) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (0.258) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.045) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.047) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Dietary Restraint Index (0-6) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1.037*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1.037*** &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extraversion (1-5) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.222*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.222*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.137) &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.161) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1085 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1085 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4262 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4262 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.050 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.050 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.059 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.059 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Std.Errors &lt;/td&gt;
@@ -554,36 +556,36 @@ modelsummary(fit,
 For the standard errors (and associated inference tests) that we conduct in the regression analysis to be correct, the residuals **must be normally distributed.** Here it makes most sense to use our *studentized residuals*. .blue[**Why?**]
 
 
-```r
+``` r
 boxplot(rstudent(fit))
 ```
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-25-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
-A few outliers, particularly in the positive direction... (means we are *under*-predicting the BMI of these folks)
+A number of outliers, all in the negative direction... (means we are *over*-predicting the sense of belonging of these students)
 
 ---
 # Residual normality: histogram
 
 For the standard errors (and associated inference tests) that we conduct in the regression analysis to be correct, the residuals **must be normally distributed**
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-26-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
 And this is confirmed in this histogram. .blue[What sort of skew is this distribution exhibiting?]
 
 
-All in all, though, these seem roughly normally distributed.
+.small[A "ceiling" at the top of the belonging scale bunches up our positive residuals and leaves a long negative tail. With 4,000+ students, the CLT gives us some comfort about our inference.]
 
 
 ---
 ## Residual normality: resid v. fitted 
 
 For the standard errors (and associated inference tests) that we conduct in the regression analysis to be correct, the residuals **must be normally distributed**
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-27-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 .blue[What would you be looking for here to assess for **normality**?]
 
@@ -593,13 +595,13 @@ For the standard errors (and associated inference tests) that we conduct in the 
 .small[For the standard errors (and associated inference tests) that we conduct in the regression analysis to be correct, the residuals **must be normally distributed**. A .red-pink[**quantile-quantile (Q-Q) plot**] compares where observed values in the sample--at specified percentiles of the distribution--fall in relation to where those same percentile values would fall in a normal distribution. A straight line indicates what a precisely normal distribution would look like.]
 
 
-```r
-qq &lt;- ggplot(do) + 
+``` r
+qq &lt;- ggplot(pb) + 
         stat_qq(aes(sample=stu_resid)) +
         geom_abline(color=blue)   # by default, slope=1, intercept=0
 ```
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-29-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -610,17 +612,17 @@ qq &lt;- ggplot(do) +
 
 If observations (and residuals) are correlated (i.e., there is some feature in our data that makes some observations have correlated outcomes), then our model is mis-specified and we will have biased standard errors.
 
-.small[Imagine that most of the young men in our disordered eating sample lived in one of six cities.]
+.small[In our data, the students in our sample attend one of 11 different colleges and universities.]
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-30-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 ---
 # Residual independence
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-31-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-.small[It might seem like we have 1083 degrees of freedom, but actually there is far less independent variation in our data because one's membership in a particular group (in this case city) informs (some) of one's outcome value. Thus, our na&amp;iuml;ve inference will be incorrect.]
+.small[It might seem like we have 4,260 degrees of freedom, but actually there is far less independent variation in our data because one's membership in a particular group (in this case school) informs (some) of one's outcome value. Notice that we systematically over-predict belonging at some schools and under-predict it at others (diamonds show mean residuals). Thus, our na&amp;iuml;ve inference will be incorrect.]
 
 --
 
@@ -635,12 +637,12 @@ If observations (and residuals) are correlated (i.e., there is some feature in o
 
 .small[
 
-```r
-modelsummary(lm_city,
-  stars=T, coef_omit = "city", escape=F,
-  gof_omit = "Adj.|AIC|BIC|Log|RMSE",
-  coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
-  vcov =  list("iid", ~ city))
+``` r
+modelsummary(lm_school,
+  stars=T, coef_omit = "school", escape=F,
+  gof_omit = "Adj.|AIC|BIC|Log|RMSE|^F$",
+  coef_rename = c("extraversion" = "Extraversion (1-5)"),
+  vcov =  list("iid", ~ school))
 ```
 
 &lt;table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table"&gt;
@@ -654,38 +656,38 @@ modelsummary(lm_city,
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 32.476*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 32.476*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.036*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4.036*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (1.316) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; (2.269) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.092) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; (0.079) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; Dietary Restraint Index (0-6) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1.026*** &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1.026* &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Extraversion (1-5) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.220*** &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.220*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;box-shadow: 0px 1.5px"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.212) &lt;/td&gt;
-   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.461) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.014) &lt;/td&gt;
+   &lt;td style="text-align:center;box-shadow: 0px 1.5px"&gt; (0.025) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Num.Obs. &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1085 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 1085 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4262 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 4262 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; R2 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.589 &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; 0.589 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.081 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0.081 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Std.Errors &lt;/td&gt;
    &lt;td style="text-align:center;"&gt; IID &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; by: city &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; by: school &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
@@ -717,38 +719,38 @@ These could be a result of:
 ---
 # Outliers
 
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-33-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
-.blue[*How would you characterize participant #11 on leverage and distance?*]
+.blue[*How would you characterize student #2506 on leverage and distance?*]
 
 
 ---
 # Outliers
 
 
-```r
-do_out &lt;- filter(do, id!=11)
-tidy(lm(BMI ~ EDEQ_restraint, data=do))
+``` r
+pb_out &lt;- filter(pb, id!=2506)
+tidy(lm(belong ~ extraversion, data=pb))
 ```
 
 ```
-## # A tibble: 2 x 5
-##   term           estimate std.error statistic  p.value
-##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 (Intercept)       23.9      0.265     90.4  0       
-*## 2 EDEQ_restraint     1.04     0.137      7.57 8.18e-14
+## # A tibble: 2 × 5
+##   term         estimate std.error statistic  p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+*## 1 (Intercept)     4.05     0.0449      90.1 0       
+*## 2 extraversion    0.222    0.0136      16.4 1.69e-58
 ```
 
-```r
-tidy(lm(BMI ~ EDEQ_restraint, data=do_out))
+``` r
+tidy(lm(belong ~ extraversion, data=pb_out))
 ```
 
 ```
-## # A tibble: 2 x 5
-##   term           estimate std.error statistic  p.value
-##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-*## 1 (Intercept)       23.9      0.261     91.3  0       
-*## 2 EDEQ_restraint     1.06     0.135      7.84 1.09e-14
+## # A tibble: 2 × 5
+##   term         estimate std.error statistic  p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+*## 1 (Intercept)     4.04     0.0448      90.2 0       
+*## 2 extraversion    0.224    0.0135      16.5 1.79e-59
 ```
 
 --
@@ -757,19 +759,19 @@ tidy(lm(BMI ~ EDEQ_restraint, data=do_out))
 
 ---
 # Depends on context
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-35-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-35-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 
 ---
 # Depends on context
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-36-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-36-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 # Depends on context
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-37-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-37-1.png" alt="" style="display: block; margin: auto;" /&gt;
 
 ---
 # Depends on context
-&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-38-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="EDUC643_5_assumptions_files/figure-html/unnamed-chunk-38-1.png" alt="" style="display: block; margin: auto;" /&gt;
 ---
 # Outlier best practices
 
@@ -839,16 +841,16 @@ We can conduct a series of diagnostic steps and (sometimes) corrections to ensur
 # To-Dos
 
 ### Reading: 
-- **Finish by Jan. 28**: LSWR Chapter 15.8 - 15.9
+- **Finish by Jan. 26**: LSWR Chapter 15.8 - 15.9
 
 ### Quiz 1:
-- Open now, closes 1/22 at 5p
+- Open now, closes 1/20 at 5p
 
 ### Quiz 2: 
-- Opens 3:45 Tuesday, Jan. 30 (closes 5pm on 1/31)
+- Opens 3:45 Thursday, Jan. 28 (closes 5pm on 1/29)
 
 ### Assignment 1:
-- Due Feb 3., 11:59pm
+- Due Feb 1., 11:59pm
 
 ### Next week: Multiple regression
 
@@ -861,9 +863,9 @@ We can conduct a series of diagnostic steps and (sometimes) corrections to ensur
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

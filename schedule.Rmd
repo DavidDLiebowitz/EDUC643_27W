@@ -42,7 +42,7 @@ Lectures:
 - Class 2 (1/7) slides: [html](./slides/EDUC643_2_GLM.html) | [pdf](./slides/EDUC643_2_GLM.pdf)
 - Class 3 (1/12) slides: [html](./slides/EDUC643_3_inference.html) | [pdf](./slides/EDUC643_3_inference.pdf)
 - Class 4 (1/14) slides: [html](./slides/EDUC643_4_correlation.html) | [pdf](./slides/EDUC643_4_correlation.pdf)
-- Data: [male_do_eating.sav](./data/male_do_eating.sav) | [codebook](./data/male_do_eating_codebook.pdf)
+- Data: [belonging.csv](./data/belonging.csv) | [codebook](./data/belonging_codebook.xlsx) | [Stubblebine et al. (2024)](./data/Stubblebine et al 2024.pdf)
 - R code: [R script](./slides/EDUC643_1_code.R)
 - Labs:
    + Week 2: [rmd](./labs/Week2.Rmd)
@@ -71,7 +71,7 @@ Readings:
 Lecture: 
 
 - Class 5-6 (1/19 and 1/21) slides: [html](./slides/EDUC643_5_assumptions.html) | [pdf](./slides/EDUC643_5_assumptions.pdf)
-- Data: [male_do_eating.sav](./data/male_do_eating.sav)
+- Data: [belonging.csv](./data/belonging.csv) | [codebook](./data/belonging_codebook.xlsx)
 - R code: [R script](./slides/EDUC643_5_code.R)
 - Labs: 
     + Week 3: [rmd](./labs/EDUC643_Wk3.Rmd) | [RMarkdown assignment template](./labs/formatted_rmd_starter.Rmd)
@@ -108,7 +108,7 @@ Readings:
 Lecture: 
 
 - Class 7-9 (1/26, 1/28, 2/2) slides: [html](./slides/EDUC643_7_mult_regression.html) | [pdf](./slides/EDUC643_7_mult_regression.pdf)
-- Data: [male_do_eating.sav](./data/male_do_eating.sav)
+- Data: [belonging.csv](./data/belonging.csv) | [codebook](./data/belonging_codebook.xlsx)
 - R code: [R script](./slides/EDUC643_7_code.R)
 - Prototypical plots: [xlsx](./data/prototypical_plots.xlsx)
 - Labs:

@@ -20,7 +20,6 @@ knitr::opts_chunk$set(include = TRUE,
 
 ```{r}
 #Load libraries
-library(haven)
 library(tidyverse)
 library(modelsummary)
 library(here)
@@ -30,39 +29,38 @@ library(here)
 
 ```{r}
 # Read the data
-df0 <- read_sav("https://daviddliebowitz.github.io/EDUC643_23W/data/male_do_eating.sav")
+df0 <- read.csv("https://daviddliebowitz.github.io/EDUC643_27W/data/belonging.csv")
 
 # You can look at the variables and their types using this function
 glimpse(df0)
 
-## Variables that have <dbl + lbl> are factors. To see what each variable mean, 
-## you can use the following code
+## To see what each variable means, look at the codebook the study authors posted:
+## https://daviddliebowitz.github.io/EDUC643_27W/data/belonging_codebook.xlsx
 
-attr(df0$MBAS_muscularity, 'label')
+## Variables that start with t1__ were measured the summer before college;
+## variables that start with t2__ were measured at the end of the first year.
 
-## To see what different values in a <dbl + lbl> column mean you can use
-## the following code
+## Some variables are categorical, but stored as numbers. You can see their values using
 
-attr(df0$education_group, 'labels')
-attr(df0$income_group, 'labels')
-attr(df0$updated_race_group, 'labels')
-
-## You can also convert the columns to factor for values that are categorical
-
-df0 <- as_factor(df0)
+table(df0$t1__generation_br_combined_recoded)  # 0 = Unknown, 1 = First gen, 2 = Continuing gen
+table(df0$college_name)
 ```
 
-For this lab, we will focus on only continuous predictors. Let's subset to the relevant continuous predictors. There are many subscales and we'll select the total on those scales.
+For this lab, we will focus on only continuous predictors. Let's subset to the relevant continuous predictors. There are individual survey items as well as composite scores, and we'll select the end-of-first-year (t2) composites for each of the Big Five personality traits.
 
 ```{r}
 df0 <- df0 %>%
-  select(Study_ID, BMI, age_year, EDEQ_restraint, DERS_total, DMS_mean, EDS_total, 
-         SATAQ_total) %>%
-  mutate(EDS_total = ifelse(EDS_total == -99, NA, EDS_total)) %>%
+  select(Study_ID = token_var,
+         belong = t2__dv_composite__belonging,
+         extraversion = t2__dv_composite__personality_extrovert,
+         neuroticism = t2__dv_composite__personality_neuroticism,
+         agreeableness = t2__dv_composite__personality_agreeable,
+         conscientiousness = t2__dv_composite__personality_conscientious,
+         openness = t2__dv_composite__personality_open) %>%
   drop_na()
 ```
 
-**Research Question: What is the relationship between BMI and Dietary Restraint Index, after controlling for person-level covariates?**
+**Research Question: What is the relationship between sense of belonging and extraversion, after controlling for person-level covariates?**
 
 **Q1. Write the null and alternate hypothesis**
 
@@ -70,9 +68,9 @@ df0 <- df0 %>%
 
 *H1: There is a relationship between ...*
 
-In this analysis, two key variables, BMI and EDEQ_restraint. First, let's plot a relationship without any covariates.
+In this analysis, two key variables, belong and extraversion. First, let's plot a relationship without any covariates.
 
-#### Task 2: Summarize the bivariate relationship between BMI and Directory restraint index (EDEQ_restraint)
+#### Task 2: Summarize the bivariate relationship between sense of belonging (belong) and extraversion
 
 -   Visualize the bivariate relationship
 
@@ -80,10 +78,10 @@ In this analysis, two key variables, BMI and EDEQ_restraint. First, let's plot a
 # Replace x with the predictor variable and y with the outcome variable.
 
 # ggplot(df0, aes(x = ..., y = ...)) +
-#   geom_point(color = "grey60") +
+#   geom_jitter(color = "grey60", alpha = 0.3, width = 0.1, height = 0.05) +
 #   geom_smooth(method = "lm", color = "#de6386") +
-#   labs( y = "BMI",
-#         x = "EDEQ_restraint") +
+#   labs( y = "Sense of belonging",
+#         x = "Extraversion") +
 #   theme_bw()
 ```
 
@@ -150,11 +148,11 @@ ggplot(cormat_df, aes(Variable2, Variable1, fill = correlation)) +
 
 #### Task 4 - Multiple Regression
 
-Add age as a covariate and choose others per your decision to see if relationship between BMI and Directory restraint index (EDEQ_restraint) changes.
+Add agreeableness as a covariate and choose others per your decision to see if relationship between sense of belonging (belong) and extraversion changes.
 
 -   Write a formal multiple regression model
 
-$$ BMI = \beta_0 + \beta_1 * EDEQ + \beta_2 * AGE + ... + \epsilon $$.
+$$ BELONG = \beta_0 + \beta_1 * EXTRAVERSION + \beta_2 * AGREEABLENESS + ... + \epsilon $$.
 
 **Q4. Interpret** $\beta_1$ coefficient.
 
@@ -170,17 +168,17 @@ $$ BMI = \beta_0 + \beta_1 * EDEQ + \beta_2 * AGE + ... + \epsilon $$.
 # modelsummary(...,
 #              estimate = "{estimate}{stars}[{conf.low}, {conf.high}]",
 #              gof_omit = "Adj.|Log.Lik.|AIC|BIC|RMSE",
-#              coef_rename = c('EDEQ_restraint' = 'Dietary restraint',
-#                              'age_year' = 'Age'))
+#              coef_rename = c('extraversion' = 'Extraversion',
+#                              'agreeableness' = 'Agreeableness'))
 ```
 
 -   Make a prototypical plot
 
-Let's visualize the relationship at different ages
+Let's visualize the relationship at different levels of agreeableness
 
 ```{r}
-# Select 3 age groups you want to show on the plot.
-summary(df0$age_year)
+# Select 3 levels of agreeableness you want to show on the plot.
+summary(df0$agreeableness)
 
 ```
 
@@ -189,16 +187,16 @@ summary(df0$age_year)
 
 # install.packages("margins")
 
-# This gives the predicted values at different points in the age. 
-# In age_year = c(...) write the 3 ages you want to depict
+# This gives the predicted values at different levels of agreeableness. 
+# In agreeableness = c(...) write the 3 values you want to depict
 
-# margins::margins(model, at = list(age_year = c(...))) %>% 
-#   ggplot(aes(x = EDEQ_restraint, 
+# margins::margins(model, at = list(agreeableness = c(...))) %>% 
+#   ggplot(aes(x = extraversion, 
 #              y = fitted, 
-#              color = as.factor(age_year))) +
+#              color = as.factor(agreeableness))) +
 #   geom_smooth(method = 'lm', se = F) +
-#   labs( y = "BMI",
-#         x = "EDEQ_restraint",
-#         color = "Age")+
+#   labs( y = "Sense of belonging",
+#         x = "Extraversion",
+#         color = "Agreeableness")+
 #   theme_bw()
 ```

@@ -2,26 +2,27 @@
 # Estimating bivariate relationship and check assumptions
 ## Created by: David Liebowitz
 ### First created: 12/15/22
-### Last update: 1/17/25
-### inputs: male_do_eating.sav
+### Last update: 11/16/26
+### inputs: belonging.csv
 ######################################################
 
 # Load necessary packages
 library(pacman)
-p_load(here, haven, tidyverse, modelsummary)
+p_load(here, tidyverse, broom, modelsummary)
 
 
 i_am("slides/EDUC643_5_code.R")
 
 # Import the data and implement previously identified data-cleaning steps
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-  select(OE_frequency, EDEQ_restraint, EDS_total,
-         BMI, age_year, income_group) %>%
-  mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+pb <- read.csv(here("data/belonging.csv")) %>%
+  select(belong = t2__dv_composite__belonging,
+         extraversion = t2__dv_composite__personality_extrovert,
+         neuroticism = t2__dv_composite__personality_neuroticism,
+         school = college_name) %>%
   drop_na()
 
 # Going to add an id variable
-do <- rownames_to_column(do, "id")
+pb <- rownames_to_column(pb, "id")
 
 ################################
 ###  Bivariate relationship
@@ -29,16 +30,16 @@ do <- rownames_to_column(do, "id")
 
 # Plot bivariate relationship
 
-lm_plot <- ggplot(do, aes(x=EDEQ_restraint, y=BMI)) + 
-  geom_point() +
+lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) +
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
   geom_smooth(method = "lm") +
-  xlab("Dietary restraint index") + 
+  xlab("Extraversion") +
   theme_minimal(base_size = 16)
 
 lm_plot
 
 # Fit regression
-fit <- lm(BMI ~ EDEQ_restraint, data=do)
+fit <- lm(belong ~ extraversion, data=pb)
 
 # As an alternative to summary, can use tidy from the `broom` package to more easily manipulate results post-estimation
 # Automatically returns a dataframe
@@ -53,23 +54,23 @@ summary(fit)
 ###################################
 
 # Extract raw residuals and fitted/predicted values
-do$predict <- predict(fit)
-do$resid <- residuals(fit)
+pb$predict <- predict(fit)
+pb$resid <- residuals(fit)
 
 # Extract standardized and studentized residuals
-do$std_resid <- rstandard(fit)
-do$stu_resid <- rstudent(fit)
+pb$std_resid <- rstandard(fit)
+pb$stu_resid <- rstudent(fit)
 
 # Produce some summary statistics for raw and standardized residuals
-summary(do$resid)
-sd(do$resid)
+summary(pb$resid)
+sd(pb$resid)
 
-summary(do$std_resid)
-sd(do$std_resid)
+summary(pb$std_resid)
+sd(pb$std_resid)
 
 # Generate residuals vs. fitted plot
-ggplot(do, aes(x = predict, y = resid)) + 
-  geom_point() +
+ggplot(pb, aes(x = predict, y = resid)) +
+  geom_jitter(alpha=0.2, width=0.01, height=0) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Raw Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
@@ -81,12 +82,12 @@ ggplot(do, aes(x = predict, y = resid)) +
 boxplot(rstudent(fit))
 
 # via histogram
-ggplot(do, aes(x = resid)) + 
-  geom_histogram(binwidth = 1) +
+ggplot(pb, aes(x = resid)) +
+  geom_histogram(binwidth = 0.25) +
   theme_minimal(base_size = 16)
 
 # via Q-Q plot
-ggplot(do) + 
+ggplot(pb) +
   stat_qq(aes(sample=stu_resid)) +
   geom_abline(color='blue') +
   theme_minimal(base_size = 16)
@@ -97,35 +98,35 @@ ggplot(do) +
 ####################################################################################
 
 # Use modelsumamry to report different types of standard errors
-modelsummary(fit, 
+modelsummary(fit,
              stars=T,
              gof_omit = "Adj.|AIC|BIC|Log|RMSE",
-             coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+             coef_rename = c("extraversion" = "Extraversion (1-5)"),
              vcov =  list("iid", "robust"))
 
-### Going to create artificial clusters:
-do <- do %>% mutate(city = case_when(predict<=25 & stu_resid>0 ~ "San Francisco",
-                                     predict<=25 & stu_resid<=0 ~ "Portland",
-                                     predict >25 & predict <=28 & stu_resid>0 ~ "Seattle",
-                                     predict >25 & predict <=28 & stu_resid<=0 ~ "Los Angeles",
-                                     predict >28 & stu_resid>0 ~ "Eugene",
-                                     predict >28 & stu_resid<=0 ~ "Oakland"))
+### Students in our data are clustered within 11 colleges and universities
+# Look at the studentized residuals by school
+ggplot(pb, aes(x = school, y = stu_resid)) +
+  geom_boxplot() +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 4) +
+  geom_hline(yintercept = 0, color = "red", linetype="dashed") +
+  theme_minimal(base_size = 16)
 
 # Then fit a regression in which I include these clusters as predictors
-lm_city <- lm(BMI ~ EDEQ_restraint + as.factor(city), data=do)
+lm_school <- lm(belong ~ extraversion + as.factor(school), data=pb)
 
 # Finally, implement a post-hoc correction to the standard errors
-modelsummary(lm_city,
+modelsummary(lm_school,
              stars=T,
-             coef_omit = "city",
+             coef_omit = "school",
              gof_omit = "Adj.|AIC|BIC|Log|RMSE",
-             coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
-             vcov =  list("iid", ~ city))
+             coef_rename = c("extraversion" = "Extraversion (1-5)"),
+             vcov =  list("iid", ~ school))
 
 ## As an alternative, can use estimatr::lm_robust
 ## You'll see that to get the exact same standard errors, you need to specify se_type== "HC3"
-hetero <- estimatr::lm_robust(BMI ~ EDEQ_restraint, data=do)
+hetero <- estimatr::lm_robust(belong ~ extraversion, data=pb)
 summary(hetero)
 
-cluster <- estimatr::lm_robust(BMI ~ EDEQ_restraint + as.factor(city), data=do)
+cluster <- estimatr::lm_robust(belong ~ extraversion + as.factor(school), clusters = school, data=pb)
 summary(cluster)

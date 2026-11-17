@@ -85,25 +85,29 @@ include_graphics("Roadmap3.jpg")
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-```{r, echo=F, out.height="80%"}
-include_graphics("kelly_etal.png")
+```{r, echo=F, out.width="70%"}
+include_graphics("stubblebine_etal.png")
 ```
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[After a prolonged throat clearing, we're going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants restricted their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[After a prolonged throat clearing, we're going to return to the .purple[**relationship**] between **extraversion** and **sense of belonging**, and ask how it changes when we also consider students' **neuroticism** (self-reports on the extent to which they get nervous easily, rather than being relaxed).]
 
 
 
 ```{r}
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %>%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+pb <- read.csv(here("data/belonging.csv")) %>% 
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert,
+           neuroticism = t2__dv_composite__personality_neuroticism,
+           agreeableness = t2__dv_composite__personality_agreeable,
+           conscientiousness = t2__dv_composite__personality_conscientious,
+           openness = t2__dv_composite__personality_open,
+           school = college_name) %>%
     drop_na()
-do <- rownames_to_column(do, "id")
+pb <- rownames_to_column(pb, "id")
 
 ```
 
@@ -126,13 +130,13 @@ do <- rownames_to_column(do, "id")
 ---
 # Univariate statistics
 
-We're interested in characterizing the relationship between over-eating frequency (*OE_frequency*) and dietary restraint behaviors (*EDEQ_restraint*), so we can start out by examining each of these variables independently. 
+We're interested in characterizing the relationship between sense of belonging (*belong*) and extraversion (*extraversion*), so we can start out by examining each of these variables independently. 
 ```{r, echo=T}
 
-summary(do$OE_frequency)
-sd(do$OE_frequency)
+summary(pb$belong)
+sd(pb$belong)
 
-summary(do$EDEQ_restraint)
+summary(pb$extraversion)
 
 ```
 
@@ -145,14 +149,14 @@ etc.
 Now some univariate visualizations...
 
 ```{r, fig.height=5.5}
-OE <- ggplot(do, aes(OE_frequency)) +
+BEL <- ggplot(pb, aes(belong)) +
         geom_histogram() +
         theme_minimal(base_size = 16)
-EDEQ <- ggplot(do, aes(EDEQ_restraint)) +
+EXT <- ggplot(pb, aes(extraversion)) +
         geom_histogram() +
         theme_minimal(base_size = 16)
 
-gridExtra::grid.arrange(OE, EDEQ, ncol=2)
+gridExtra::grid.arrange(BEL, EXT, ncol=2)
 ```
 
 ---
@@ -161,7 +165,7 @@ gridExtra::grid.arrange(OE, EDEQ, ncol=2)
 Now some **bivariate** statistics...
 
 ```{r, echo=T}
-cor(do$OE_frequency, do$EDEQ_restraint)
+cor(pb$belong, pb$extraversion)
 
 ```
 
@@ -169,11 +173,12 @@ cor(do$OE_frequency, do$EDEQ_restraint)
 # Bivariate relationship
 
 ```{r, echo=F, fig.height=5.5}
-lm_plot <- ggplot(do, aes(x=EDEQ_restraint, y=OE_frequency)) + 
-  geom_point() +
+set.seed(643)
+lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
   geom_smooth(method = "lm") +
-  xlab("Dietary restraint index") +
-  ylab("Overeating frequency") +
+  xlab("Extraversion") +
+  ylab("Sense of belonging") +
   theme_minimal(base_size = 16)
 
 lm_plot
@@ -187,7 +192,7 @@ lm_plot
 # Regression results
 
 ```{r, echo=F, highlight.output=c(12, 16:18)}
-fit <- lm(OE_frequency ~ EDEQ_restraint, data=do)
+fit <- lm(belong ~ extraversion, data=pb)
 summary(fit)
 ```
 
@@ -206,34 +211,34 @@ We've looked a little already at the linearity of our relationship and the homos
 How can we test for homoscedasticity, linearity and normality in our residuals?
 
 ```{r, echo=T}
-do$predict <- predict(fit)
-do$resid <- resid(fit)
-do$stu_resid <- rstudent(fit)
+pb$predict <- predict(fit)
+pb$resid <- resid(fit)
+pb$stu_resid <- rstudent(fit)
 ```
 ---
 ## Regression diagnostics: normality
 
 ```{r, echo=F, fig.height=4.5}
-ggplot(do, aes(x = resid)) + 
-  geom_histogram(binwidth = 1) +
+ggplot(pb, aes(x = resid)) + 
+  geom_histogram(binwidth = 0.25) +
   theme_minimal(base_size = 16)
 
 ```
 
-.red-pink[The bulk of our residuals are roughly normally distributed, but we clearly have a long right tail. Perhaps we would want to test the sensitivity of our models for the exclusion of these outlying values?] .blue[What is driving this long right tail?]
+.red-pink[The bulk of our residuals are roughly normally distributed, but we clearly have a long left tail. Perhaps we would want to test the sensitivity of our models for the exclusion of these outlying values?] .blue[What is driving this long left tail?]
 ---
 # Residuals v. fitted
 ```{r, echo=F, fig.height=4.5}
-ggplot(do, aes(x = predict, y = stu_resid)) + 
-         geom_point() +
+ggplot(pb, aes(x = predict, y = stu_resid)) + 
+         geom_jitter(alpha=0.2, width=0.01, height=0) +
   geom_hline(yintercept = 0, color = "red", linetype="dashed") +
   ylab("Studentized Residuals") + xlab("Fitted values") +
   theme_minimal(base_size = 16)
 ```
 
-.red-pink[We are clearly under-predicting for some set of individuals. There is also some evidence of heteroscedasticity.]
+.red-pink[We are clearly over-predicting belonging for some set of students. There is also some evidence of heteroscedasticity.]
 
-.tiny[There are some orange flags in our estimates here. In fact, we are conducting a somewhat different analysis than Kelly et al. (2018). They conducted a logistic regression for the presence of *any* medical or psychological challenges. We will learn how to do that analysis in EDUC 645. However, we are going to proceed with our analysis while noting that some of our assumptions may not be fully met.]
+.tiny[There are some orange flags in our estimates here. Our outcome has a "ceiling" (no student can report a sense of belonging above 6) and many students are at or near the top of the scale. We are also conducting a somewhat simpler analysis than Stubblebine et al. (2024), who additionally adjust for students' school, the intervention condition they were assigned to, and their demographic characteristics. We will learn how to include such categorical predictors in Unit 4. However, we are going to proceed with our analysis while noting that some of our assumptions may not be fully met.]
 
 ---
 # Regression results
@@ -241,35 +246,36 @@ ggplot(do, aes(x = predict, y = stu_resid)) +
 summary(fit)
 ```
 
-.small[Let's assume that we trust the way we've characterized this bivariate relationship. .purple[***But perhaps there are other features among the participants that also influence their eating behaviors?***]]
+.small[Let's assume that we trust the way we've characterized this bivariate relationship. .purple[***But perhaps there are other features among the students that also influence their sense of belonging?***]]
 
 ---
 # Another variable
 
-Perhaps we should consider another variable that might also be related to overeating frequency (*OE_FREQUENCY*). 
+Perhaps we should consider another variable that might also be related to sense of belonging (*belong*). 
 
 --
-What about one we already know a good deal about...*BMI*?
+What about another personality trait that Stubblebine et al. hypothesized would matter...*neuroticism*?
 
 --
 
 ```{r, echo=F, fig.height=5.5}
-oe_bmi <- ggplot(do, aes(x=BMI, y=OE_frequency)) + 
-  geom_point() +
+set.seed(643)
+bel_neuro <- ggplot(pb, aes(x=neuroticism, y=belong)) + 
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
   geom_smooth(method = "lm") +
-  xlab("BMI") +
-  ylab("Overeating frequency") +
+  xlab("Neuroticism") +
+  ylab("Sense of belonging") +
   theme_minimal(base_size = 16)
 
-oe_bmi
+bel_neuro
 
 ```
 ---
 # Another variable
-Perhaps we should consider another variable that might also be related to overeating frequency (*OE_FREQUENCY*). What about one we already know a good deal about...*BMI*?
+Perhaps we should consider another variable that might also be related to sense of belonging (*belong*). What about another personality trait that Stubblebine et al. hypothesized would matter...*neuroticism*?
 
 ```{r, echo=T, output.lines=-c(1:4), highlight.output=c(9, 13:15)}
-summary(lm(OE_frequency ~ BMI, data=do))
+summary(lm(belong ~ neuroticism, data=pb))
 
 ```
 
@@ -285,7 +291,7 @@ class: middle, inverse
 # Multiple regression
 Mathematically, we simply add additional terms to our equation like this:
 
-$$OE\_frequency_{i} = \beta_{0} + \beta_{1}DietaryRestraint_{i} + \beta_{2}BMI_{i} + \varepsilon_{i}$$
+$$Belonging_{i} = \beta_{0} + \beta_{1}Extraversion_{i} + \beta_{2}Neuroticism_{i} + \varepsilon_{i}$$
 
 or more generally for $k$ predictors...
 
@@ -296,7 +302,7 @@ $$Y_{i} = \beta_{0} + \beta{1}X_{1} + \beta_{2}X_{2} + \cdots + \beta_{k}X_{k} +
 We can estimate our postulated linear model in R as follows:
 
 ```{r, echo=T, output.lines=-c(1:2), highlight.output=c(11:12)}
-summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
+summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
 
 
@@ -454,36 +460,36 @@ We make **the same** assumptions as in bivariate regression, but now extended to
 ---
 # Interpreting our results
 ```{r, output.lines=-c(1:2), highlight.output=c(10)}
-summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
+summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
-.small[**Interpretation of the intercept:** we estimate that individuals with a dietary restraint index=0 and BMI score=0 will have an overeating score of 0.87]
+.small[**Interpretation of the intercept:** we estimate that students with an extraversion score=0 and neuroticism score=0 will have a sense of belonging score of 4.36 (again, neither of these is a value that either scale can actually take!)]
 
 ---
 # Interpreting our results
 ```{r, output.lines=-c(1:2), highlight.output=c(11)}
-summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
+summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
-.small[**Interpretation of *EDEQ_restraint*:** adjusting for individuals' BMI, we estimate that young men who score one unit apart on the dietary-restraint index will have 0.84 unit different overeating scores.]
+.small[**Interpretation of *extraversion*:** adjusting for students' neuroticism, we estimate that students who score one unit apart on extraversion will have 0.20 unit different sense of belonging scores.]
 
 ---
 # Interpreting our results
 ```{r, output.lines=-c(1:2), highlight.output=c(12)}
-summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
+summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
-.small[**Interpretation of *BMI*:** adjusting for individuals' dietary restraint behavior, we estimate that young men who have one unit different body-mass indices will have 0.01 unit different overeating scores.]
+.small[**Interpretation of *neuroticism*:** adjusting for students' extraversion, we estimate that students who score one unit apart on neuroticism will have 0.08 unit lower sense of belonging scores.]
 
 --
-.small[In fact...]
+.small[That's quite a bit smaller than the unadjusted relationship (-0.14)...]
 
 ---
 # Multiple regression
 We can now use these regression estimates to construct our .red-pink[**fitted equation**]:
 
-$$\hat{OE\_frequency_{i}} = 0.872 + 0.842 * DietaryRestraint_{i} + 0.010 * BMI_{i} + \varepsilon_{i}$$
+$$\hat{Belonging_{i}} = 4.364 + 0.201 * Extraversion_{i} + (-0.079) * Neuroticism_{i} + \varepsilon_{i}$$
 
 --
 
-.blue[**Looking at the results from the previous slides, has including the covariate *BMI* clarified the relationship between *OE_frequency* and *EDEQ_restraint*? Why or why not?**]
+.blue[**Looking at the results from the previous slides, has including the covariate *neuroticism* clarified the relationship between *belong* and *extraversion*? Why or why not?**]
 
 --
 
@@ -677,7 +683,7 @@ In fact, if we can be confident that our .red-pink[**general linear model**] inc
 
 --
 
-.blue[**What would have to be true of our postulated model for us to be able to interpret the relationship between *dietary restraint behaviors* and *over-eating patterns* as *causal* in our context?**]
+.blue[**What would have to be true of our postulated model for us to be able to interpret the relationship between *extraversion* and *sense of belonging* as *causal* in our context?**]
 
 --
 
@@ -695,7 +701,7 @@ This is not what we are doing in multiple regression!
 
 --
 
-.blue[**What are some reasons why a multiple regression with a rich set of covariates might still not "control" for reasons why some people exhibit different patterns of dietary restraint than others?**]
+.blue[**What are some reasons why a multiple regression with a rich set of covariates might still not "control" for reasons why some students are more extraverted than others?**]
 
 > Synonyms you may encounter for statistical adjustment: .red[**"controlling for,"**] .orange[**"partialling out,"**] or .green[**"holding constant"**]
 
@@ -710,7 +716,7 @@ class: middle, inverse
 ---
 # Estimate in R
 ```{r, echo=T, output.lines=-c(1:2), highlight.output=c(11:12)}
-summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
+summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
 
 ---
@@ -718,37 +724,37 @@ summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
 Oh, by the way have you ever heard of partial correlations?
 
 ```{r, echo=T}
-ppcor::pcor.test(x=do$OE_frequency, y=do$EDEQ_restraint, z=do$BMI)
+ppcor::pcor.test(x=pb$belong, y=pb$extraversion, z=pb$neuroticism)
 ```
 
 --
 ```{r, echo=T}
-partial1 <- lm(OE_frequency ~ BMI, data=do)
-do$OE_partial <- resid(partial1)
+partial1 <- lm(belong ~ neuroticism, data=pb)
+pb$belong_partial <- resid(partial1)
 
-partial2 <- lm(EDEQ_restraint ~ BMI, data=do)
-do$EDEQ_partial <- resid(partial2)
+partial2 <- lm(extraversion ~ neuroticism, data=pb)
+pb$extraversion_partial <- resid(partial2)
 
-cor(do$OE_partial, do$EDEQ_partial)
+cor(pb$belong_partial, pb$extraversion_partial)
 ```
 
 ---
 # Goodness of fit statistics
 ```{r, echo=T, output.lines=-c(1:4), highlight.output=c(14:15)}
-summary(lm(OE_frequency ~ EDEQ_restraint + BMI, data=do))
+summary(lm(belong ~ extraversion + neuroticism, data=pb))
 ```
 
 --
-This is a better fit (with more variance explained) than with *BMI* alone .blue[**...why?**]
+This is a better fit (with more variance explained) than with *neuroticism* alone .blue[**...why?**]
 
 --
-.blue[**What does it mean that this is no better fit than with *EDEQ_restraint* alone?**]
+.blue[**What does it mean that this is only a slightly better fit than with *extraversion* alone?**]
 
 ---
 # Variance decomposition in MR
 
 Just as before:
-$$SS_\text{BMI} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
+$$SS_\text{Belonging} = \color{purple}{SS_\text{Model}} + \color{green}{SS_\text{Residual}}$$
 
 --
 The sum of the squares of the model are now calculated based on the distance each observation has from the fitted regression ***plane***:
@@ -756,10 +762,10 @@ $$\color{purple}{SS_\text{Model} = \sum{(\hat{Y} - \bar{Y})^2}}$$
 
 --
 The total sum of the squares is as before:
-$$SS_{BMI}= \sum{(Y - \bar{Y})^2}$$
+$$SS_{Belonging}= \sum{(Y - \bar{Y})^2}$$
 
 --
-and $R^2$ is just $\frac{SS_{\text{Model}}}{SS_{\text{BMI}}}$ or more generally $\frac{SS_{\text{Model}}}{SS_{\text{Total}}}$
+and $R^2$ is just $\frac{SS_{\text{Model}}}{SS_{\text{Belonging}}}$ or more generally $\frac{SS_{\text{Model}}}{SS_{\text{Total}}}$
 
 ---
 class: middle, inverse
@@ -794,7 +800,7 @@ class: middle, inverse
 # Communicating results I
 
 ```{r}
-fit2 <- lm(OE_frequency ~ EDEQ_restraint + BMI, data=do)
+fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
 
 # Add a row with the F-statistic
 row <- tribble(~term,          ~'1',  ~'2', 
@@ -806,8 +812,8 @@ attr(row, 'position') <- c(8)
 ```{r, echo=T}
 modelsummary(list(fit, fit2),
    stars=T,
-   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE",
-   coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE|^F$",
+   coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
    add_rows = row, escape=F)
 ```
 
@@ -815,23 +821,23 @@ modelsummary(list(fit, fit2),
 # Communicating results II
 It can be hard to interpret for a lay reader the substantive meaning of describing a relationship, adjusting for other factors. It can be quite helpful in these instances to plot "prototypical values," allowing your reader to safely return to the land of two-dimensions.
 
-Unfortunately, in our worked example, there is no real variation in over-eating frequency by BMI, so we'll use the toy example we looked at earlier.
+Let's do this for our worked example, displaying the relationship between extraversion and belonging at several prototypical values of neuroticism.
 
 ---
 # Communicating results II
 ```{r, echo=T, fig.height=5}
 # Fit your regression
-car <- lm(mpg ~ hp + wt, data=mtcars)
+fit2 <- lm(belong ~ extraversion + neuroticism, data=pb)
 # Use the margins package and define prototypical values
-df2 <- margins::margins(car, at = list(wt = c(2,3,4)))
+df2 <- margins::margins(fit2, at = list(neuroticism = c(2,3,4)))
 
 # Use prototypical values in resulting dataset to show results
-proto <-  ggplot(data=df2, aes(x=hp, y=fitted, color=as.factor(wt))) + 
+proto <-  ggplot(data=df2, aes(x=extraversion, y=fitted, color=as.factor(neuroticism))) + 
    geom_smooth(method='lm', se=F) +
-   xlab("Horsepower") + ylab("Predicted MPG") +
-   scale_color_discrete(name = "Weight",
+   xlab("Extraversion") + ylab("Predicted sense of belonging") +
+   scale_color_discrete(name = "Neuroticism",
                        breaks=c(2,3,4),
-                       labels=c("2,000 lbs","3,000 lbs","4,000 lbs")) +
+                       labels=c("Low (2)","Middle (3)","High (4)")) +
    theme_minimal(base_size=16)
 ```
 
@@ -845,11 +851,11 @@ proto
 # Prototypical plots by hand
 .small[It can help build your understanding and intuition to build these prototypical plots by hand.]
 ```{r, output.lines=-c(1:4)}
-summary(car)
+summary(fit2)
 ```
 
 --
-Fitted equation: $\hat{mpg} = 37.22727 + (-0.03177)*hp + (-3.87783)*wt$
+Fitted equation: $\hat{belong} = 4.36357 + (0.20106)*extraversion + (-0.07917)*neuroticism$
 
 ---
 # Communicating results III
@@ -887,9 +893,9 @@ Examine the distribution of the other predictors and consider:
 ```{r}
 modelsummary(list(fit, fit2),
    stars=T,
-   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE|Std",
+   gof_omit = "Adj.|AIC|BIC|Log|RMSE|RSE|Std|^F$",
    vcov = "robust",
-   coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+   coef_rename = c("extraversion" = "Extraversion (1-5)", "neuroticism" = "Neuroticism (1-5)"),
    add_rows = row,
    notes=c("Cells report coefficients and heteroscedastic-robust standard errors in parentheses."),
    escape=F)
@@ -897,7 +903,7 @@ modelsummary(list(fit, fit2),
 
 ---
 # Putting it all together
-> We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between dietary-restraint and over-eating behaviors, on average, in the population of young adult males. At an alpha threshold of 0.05, we found that dietary-restraint behaviors were a significant predictor of over-eating patterns and accounted for approximately 10 percent of the overall variance in over-eating. We estimated that young men who are one unit apart on a dietary restraint index will have an over-eating score 0.85 (*p*<0.001, 95% CI: 0.74, 1.04) points different from each other (Table 1). Adjusting for individuals' body-mass index does not meaningfully alter the nature of our estimated relationship. In fact, when we hold individuals' dietary restraint behaviors constant, we fail to reject the null and conclude that there is no adjusted-relationship between BMI and over-eating, on average in the population. For parsimony, we adopt Model 1 as our preferred specification.
+> We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between extraversion and sense of belonging, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 6 percent of the overall variance in belonging. We estimated that students who are one unit apart on extraversion will have a sense of belonging score 0.22 (*p*<0.001, 95% CI: 0.19, 0.25) points different from each other (Table 1). Adjusting for students' neuroticism modestly attenuates this relationship: holding neuroticism constant, we estimate that students who are one unit apart on extraversion will have sense of belonging scores 0.20 (*p*<0.001, 95% CI: 0.17, 0.23) points different from each other. When we hold students' extraversion constant, we also reject the null and conclude that there is an adjusted-relationship between neuroticism and belonging, on average in the population; students who are one unit apart on neuroticism report sense of belonging scores 0.08 points lower (*p*<0.001). Because neuroticism is theoretically related to belonging and improves the fit of our model, we adopt Model 2 as our preferred specification.
 
 
 ---
@@ -1063,18 +1069,17 @@ As before, it's all the GLM...
 # Estimates of collinearity in R
 
 ```{r, echo=F}
-cordat <- do %>%
-        dplyr::select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group)
+cordat <- pb %>%
+        dplyr::select(belong, extraversion, neuroticism,
+           agreeableness, conscientiousness, openness)
 
 cordat <- cordat %>%
-          rename(OE = OE_frequency,
-                EDEQ = EDEQ_restraint,
-                EDS = EDS_total,
-                Age = age_year,
-                Income=income_group)
-
-cordat$Income = as.numeric(as.character(cordat$Income))
+          rename(Belong = belong,
+                Extra = extraversion,
+                Neuro = neuroticism,
+                Agree = agreeableness,
+                Consc = conscientiousness,
+                Open = openness)
 ```
 
 ```{r, echo=T}
@@ -1201,4 +1206,3 @@ class: middle, inverse
 
 ### Assignment 2:
 - Due Feb 12., 11:59pm
-

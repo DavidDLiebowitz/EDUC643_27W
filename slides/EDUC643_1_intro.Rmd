@@ -265,15 +265,15 @@ class: middle, inverse
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-```{r, echo=F, out.height="80%"}
-include_graphics("kelly_etal.png")
+```{r, echo=F, out.width="70%"}
+include_graphics("stubblebine_etal.png")
 ```
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[In particular, we are going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[In particular, we are going to explore the .purple[**relationship**] between **extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and **sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).]
 
 ---
 ### Quantitative research design components
@@ -298,16 +298,19 @@ include_graphics("kelly_etal.png")
 ---
 # A glance at the data
 ```{r, echo=T}
-# Not all data comes to us in .csv format
-# Here we'll use the `haven` package to read in SPSS data
-# There are many other such packages, including: `foreign` and `rio`
+# The study authors posted their data on the Open Science Framework
+# (https://osf.io/mv6ek/) as a .csv file, so we can use read.csv()
+# We use select() to keep only the variables we need and, at the
+# same time, give them shorter, easier-to-type names
 
-# install.packages("haven")
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-          select(OE_frequency, EDEQ_restraint, EDS_total,
-          BMI, age_year, income_group) 
+pb <- read.csv(here("data/belonging.csv")) %>%
+          select(belong = t2__dv_composite__belonging,
+                 extraversion = t2__dv_composite__personality_extrovert,
+                 neuroticism = t2__dv_composite__personality_neuroticism,
+                 school = college_name,
+                 first_gen = t1__generation_br_combined_recoded)
 
-head(do)
+head(pb)
 ```
 
 ---
@@ -315,7 +318,7 @@ head(do)
 
 ```{r, echo=T}
 
-str(do)
+str(pb)
 ```
 
 ---
@@ -324,11 +327,11 @@ str(do)
 ```{r, echo=T}
 
 # Check for missingness
-sapply(do, function(x) sum(is.na(x)))
+sapply(pb, function(x) sum(is.na(x)))
 
-# Things look good, but we'll focus on those cases that had complete  
-# records for all variables
-do <- do %>% drop_na()
+# Some students did not complete the end-of-year personality items,
+# we'll focus on those cases that had complete records for all variables
+pb <- pb %>% drop_na()
 ```
 
 .blue[**What is this approach to missingness called?**]
@@ -338,58 +341,61 @@ do <- do %>% drop_na()
 
 ---
 # Even more glance-ing
-Let's start by focusing on a few variables of interest: dietary restraint (***EDEQ_restraint***), over-eating frequency (***OE_frequency***), and exercise-dependency (***EDS_total***).
+Let's start by focusing on a few variables of interest: sense of belonging (***belong***), extraversion (***extraversion***), and neuroticism (***neuroticism***).
 ```{r, echo=T}
-summary(do$EDEQ_restraint)
-summary(do$OE_frequency)
-summary(do$EDS_total)
+summary(pb$belong)
+summary(pb$extraversion)
+summary(pb$neuroticism)
 ```
 
 ---
-## Oh the tangled web SPSS weaves!
+## Oh the tangled web survey data weaves!
 
 ```{r, echo=T, fig.height=3}
-ggplot(data=do, aes(EDS_total)) + geom_bar()
+ggplot(data=pb, aes(first_gen)) + geom_bar()
 ```
 
 ```{r, echo=T}
-do <- do %>% mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total))
+# The codebook tells us: 1 = "First generation", 2 = "Continuing generation", 0 = "Unknown"
+pb <- pb %>% mutate(first_gen = ifelse(first_gen==0, NA, first_gen))
 
-sum(is.na(do$EDS_total))
-
-do <- filter(do, !is.na(EDS_total))
+sum(is.na(pb$first_gen))
 ```
 
+.small[*first_gen* is not part of our main analysis, so we'll keep these students in our sample for now.]
+
 ---
-# A preliminary analysis
+# Our research question
 
 
-Before we get to the core question of the Kelly et al. study--how are dietary restraint behaviors related to over-eating frequency?--we are going to explore another important relationship in the data that may also be related to our main research question: the .purple[**relationship**] between .red-pink[**dietary restraint behaviors**] (self-reports on the extent to which participants consciously restricted/controlled their food intake) and .red-pink[**body-mass index (BMI)**]. In particular, we are going to operationalize this by examining the relationship in our sample of young men between our predictor variable (***EDEQ_restraint***) and their body-mass index (***BMI***). 
+The core question of the Stubblebine et al. study is how students' personalities are related to their sense of belonging in college. The authors hypothesized that .red-pink[**extraversion**] would be positively related to belonging, and that .red-pink[**neuroticism**] would be negatively related to belonging. We are going to start by exploring the .purple[**relationship**] between .red-pink[**extraversion**] (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and .red-pink[**sense of belonging**] (students' average agreement with four statements such as, "I feel like I belong at [school name]") at the end of their first year of college. In particular, we are going to operationalize this by examining the relationship in our sample of first-year college students between our predictor variable (***extraversion***) and their sense of belonging (***belong***).
 
 --
 
-> We are examining this relationship so that we can better understand how all three of these variables (***OE_frequency***, ***EDEQ_restraint*** and ***BMI***) are related in Unit 3. Additionally, the properties of the variable ***BMI*** in this particular dataset are pedadogically helpful in demonstrating the assumptions of OLS.
+> In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-> However, we recognize that BMI has been shown to be relatively uninformative about individuals' overall health and categorizes individuals based on distributions initially derived exclusively from white Western European (French and Scottish) study participants. We use the measure for pedagogical purposes because the variable is one of the few continuous measures in one of the few datasets that our UO colleagues shared with us, while noting its problematic historical use, particularly at the individual level.
+> Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
 
 ---
 # Bivariate relationships
 
-We are interested in the *relationship* between dietary restraint (*EDEQ_restraint*) and body-mass index (*BMI*). Statistically, the relationship is the same regardless of which variable is the "outcome."
+We are interested in the *relationship* between extraversion (*extraversion*) and sense of belonging (*belong*). Statistically, the relationship is the same regardless of which variable is the "outcome."
 
 .pull-left[
 ```{r, echo=F}
-ggplot(do, aes(x=BMI, y=EDEQ_restraint)) + 
-  geom_point() +
-  ggtitle("BMI Predicting Dietary Restraint") +
+set.seed(643)
+ggplot(pb, aes(x=belong, y=extraversion)) +
+  geom_jitter(alpha=0.2, width=0.05, height=0.1) +
+  ggtitle("Belonging Predicting Extraversion") +
   theme_minimal(base_size = 16)
 ```
 ]
 .pull-right[
 ```{r, echo = F}
-ggplot(do, aes(x = EDEQ_restraint, y = BMI)) + 
-  geom_point() +
-  ggtitle("Dietary Restraint Predicting BMI") +
+set.seed(643)
+ggplot(pb, aes(x = extraversion, y = belong)) +
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  ggtitle("Extraversion Predicting Belonging") +
   theme_minimal(base_size = 16)
 
 ```
@@ -402,16 +408,18 @@ However, our convention is to consider the variable on the Y-axis to be the one 
 ---
 # Bivariate relationships
 
-Given the focus of the Kelly et al. paper and for pedagogical reasons, for the moment, we are choosing to plot BMI against dietary restraint. 
+Given the focus of the Stubblebine et al. paper, we are choosing to plot sense of belonging against extraversion. Because both measures take on a limited set of values, many students share the exact same point on the plot. So, we "jitter" the points (add a small amount of random noise to each one) and make them partially transparent so we can see them all.
 
 ```{r, echo=T}
-biv <- ggplot(data=do, aes(x=EDEQ_restraint, y=BMI)) + 
-          geom_point()
+biv <- ggplot(data=pb, aes(x=extraversion, y=belong)) +
+          geom_jitter(alpha=0.2, width=0.1, height=0.05)
 ```
 
 ```{r, echo = F, fig.height=3.75, fig.width = 6}
+set.seed(643)
 lm_plot <- biv +
-            xlab("Dietary restraint index (0-6)") +
+            xlab("Extraversion (1-5)") +
+            ylab("Sense of belonging (1-6)") +
             theme_minimal(base_size = 16)
 
 
@@ -569,7 +577,7 @@ gridExtra::grid.arrange(shallow, yaxis, xaxis, ncol=3)
 
 
 ---
-# BMI and over-eating
+# Extraversion and belonging
 
 .blue[So what can we say with respect to these five characteristics in our data?]
 
@@ -590,7 +598,7 @@ lm_plot +
 That line is defined by the intercept (value $Y$ takes when $X=0$) and the slope (the difference in $Y$ per 1 unit difference in $X$)
 > $Y = intercept + slope*X$ (you may have seen this in HS as Y = mX + b)
 
-> We could think of this relationship, therefore, as $BMI = slope*EDEQ\_restraint + intercept$ ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
+> We could think of this relationship, therefore, as $Belonging = slope*Extraversion + intercept$ ... In fact, that's how we described this in EDUC 641, .purple[but that's not quite right...]
 
 
 ---

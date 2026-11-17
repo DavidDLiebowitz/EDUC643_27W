@@ -110,35 +110,36 @@ include_graphics("Roadmap1.jpg")
 ---
 # A motivating question
 
-Researchers (including two from the .green[**University of Oregon**]), [Nichole Kelly, Elizabeth Cotter and Claire Guidinger (2018)](https://doi.org/10.1016/j.eatbeh.2018.07.003), set out to understand the extent to which young men who exhibit overeating behaviors have weight-related medical and psychological challenges.
+Researchers [Alexandria Stubblebine, Maithreyi Gopalan and Shannon Brady (2024)](https://doi.org/10.1371/journal.pone.0295436) set out to understand who comes to feel like they belong in college, and in particular, how students' personalities are related to their sense of belonging at the end of their first year.
 
-```{r, echo=F, out.height="80%"}
-include_graphics("kelly_etal.png")
+```{r, echo=F, out.width="70%"}
+include_graphics("stubblebine_etal.png")
 ```
 
-.small[Using real-world data (generously provided by Nichole Kelly) about the dietary habits, health, and self-appraisals of males 18-30, we are going to attempt to answer a similar question.]
+.small[Using real-world data (generously made public by the authors on the [Open Science Framework](https://osf.io/mv6ek/)) from surveys of first-year students at 12 colleges and universities in the U.S. and Canada, we are going to attempt to answer a similar question.]
 
-.small[In particular, we are going to explore the .purple[**relationship**] between **dietary restraint behaviors** (self-reports on the extent to which participants consciously restricted/controlled their food intake) and **over-eating frequency** (participants' self-reported frequency of over-eating episodes).]
+.small[In particular, we are going to explore the .purple[**relationship**] between **extraversion** (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and **sense of belonging** (students' self-reports on the extent to which they feel they belong and fit in at their college).]
 
 
 ---
-# A preliminary analysis
+# Our research question
 
-Before we get to the core question of the Kelly et al. study--how are dietary restraint behaviors related to over-eating frequency?--we are going to explore another important relationship in the data that may also be related to our main research question: the .purple[**relationship**] between .red-pink[**dietary restraint behaviors**] (self-reports on the extent to which participants consciously restricted/controlled their food intake) and .red-pink[**body-mass index (BMI)**]. In particular, we are going to operationalize this by examining the relationship in our sample of young men between our predictor variable (***EDEQ_restraint***) and their body-mass index (***BMI***). 
+The core question of the Stubblebine et al. study is how students' personalities are related to their sense of belonging in college. The authors hypothesized that .red-pink[**extraversion**] would be positively related to belonging, and that .red-pink[**neuroticism**] would be negatively related to belonging. We are going to start by exploring the .purple[**relationship**] between .red-pink[**extraversion**] (students' self-reports on the extent to which they are outgoing and sociable, rather than reserved) and .red-pink[**sense of belonging**] (students' average agreement with four statements such as, "I feel like I belong at [school name]") at the end of their first year of college. In particular, we are going to operationalize this by examining the relationship in our sample of first-year college students between our predictor variable (***extraversion***) and their sense of belonging (***belong***). 
 
 --
 
-> We are examining this relationship so that we can better understand how all three of these variables (***OE_frequency***, ***EDEQ_restraint*** and ***BMI***) are related in Unit 3. Additionally, the properties of the variable ***BMI*** are pedadogically helpful in demonstrating the assumptions of OLS.
+> In Unit 3, we will examine how all three of these variables (***belong***, ***extraversion*** and ***neuroticism***) are related.
 
-> However, we recognize that BMI has been shown to be relatively uninformative about individuals' overall health and categorizes individuals based on distributions initially derived exclusively from white Western European (French and Scottish) study participants. We use the measure for pedagogical purposes because the variable is one of the few continuous measures in one of the few datasets that our UO colleagues shared with us, while noting its problematic historical use.
+> Note that the study measured each personality trait with only two survey items (scored 1-5 and averaged), so these are fairly imprecise measures of students' personalities, as the authors themselves acknowledge. We'll return to the implications of this in Unit 2.
 
 
 
 ```{r, echo=F}
-do <- read_spss(here("data/male_do_eating.sav")) %>% 
-    select(OE_frequency, EDEQ_restraint, EDS_total,
-           BMI, age_year, income_group) %>%
-    mutate(EDS_total = ifelse(EDS_total==-99, NA, EDS_total)) %>%
+pb <- read.csv(here("data/belonging.csv")) %>% 
+    select(belong = t2__dv_composite__belonging,
+           extraversion = t2__dv_composite__personality_extrovert,
+           neuroticism = t2__dv_composite__personality_neuroticism,
+           school = college_name) %>%
     drop_na()
 
 ```
@@ -146,9 +147,10 @@ do <- read_spss(here("data/male_do_eating.sav")) %>%
 # Our bivariate relationship
 
 ```{r, echo = F, fig.height=5.5, fig.width = 8}
-lm_plot <- ggplot(do, aes(x=EDEQ_restraint, y=BMI)) + 
-  geom_point() +
-  ggtitle("BMI vs Dietary restraint") +
+set.seed(643)
+lm_plot <- ggplot(pb, aes(x=extraversion, y=belong)) + 
+  geom_jitter(alpha=0.2, width=0.1, height=0.05) +
+  ggtitle("Belonging vs Extraversion") +
     theme_minimal(base_size = 16)
 
 
@@ -159,7 +161,7 @@ lm_plot  +
 --
 
 **Our linear model:**
-$$BMI_{i} = \beta_0 + \beta_1 (EDEQ\_restraint_{i}) + \varepsilon_{i}$$
+$$Belonging_{i} = \beta_0 + \beta_1 (Extraversion_{i}) + \varepsilon_{i}$$
 
 ---
 class: middle, inverse
@@ -172,7 +174,7 @@ class: middle, inverse
 Let's try fitting our regression in R.
 
 ```{r, echo=T, comment = NA}
-fit <- lm(BMI ~ EDEQ_restraint, data=do)
+fit <- lm(belong ~ extraversion, data=pb)
 summary(fit)
 ```
 
@@ -187,7 +189,9 @@ summary(fit)
 
 ```
 
-**The predicted BMI for a young male with a dietary restraint rating of 0 is 23.92 $(\beta_0)$.**
+**The predicted sense of belonging for a student with an extraversion rating of 0 is 4.05 $(\beta_0)$.**
+
+.small[Notice that the extraversion scale runs from 1 to 5, so no student in our data actually has a rating of 0! More on this next class.]
 
 ---
 ## Evaluating regressions: Coefficients
@@ -200,9 +204,9 @@ summary(fit)
 ```
 
 --
-.small[**A one unit difference in dietary restraint is positively associated with a 1.04 difference in BMI.**]
+.small[**A one unit difference in extraversion is positively associated with a 0.22 difference in sense of belonging.**]
 
-.small[Even better: **We reject the null hypothesis, and conclude that *on average, in the population* there is a relationship between dietary restraint and BMI. We estimate that young men who are one unit apart on dietary restraint index will have a BMI score 1.04 points different from each other.**]
+.small[Even better: **We reject the null hypothesis, and conclude that *on average, in the population* there is a relationship between extraversion and sense of belonging. We estimate that students who are one unit apart on extraversion will have a sense of belonging score 0.22 points different from each other.**]
 
 --
 
@@ -232,9 +236,9 @@ summary(fit)
 
 The .red-pink[**residual standard error (RSE)**] is the standard deviation of the residuals. This summarizes the variability of observed values around the model-predicted values, in the original units of the outcome. 
 
-$$RSE = 6.089$$
+$$RSE = 0.956$$
 
-This means observed values vary around our model-predicted BMI with a standard deviation of 6.089. In BMI, 6 units is quite large!
+This means observed values vary around our model-predicted sense of belonging with a standard deviation of 0.956. On a 1-6 scale, almost a full point is quite large!
 
 ---
 # Degrees of freedom
@@ -265,7 +269,7 @@ summary(fit)
 
 ```
 
-The R-squared value is .05. This means that our model accounts for 5% of the variance in BMI. Since our model has only one predictor, we can alternatively say Dietary Restraint accounts for 5% of the variance in BMI.
+The R-squared value is .06. This means that our model accounts for 6% of the variance in sense of belonging. Since our model has only one predictor, we can alternatively say Extraversion accounts for 6% of the variance in sense of belonging.
 
 --
 
@@ -314,7 +318,7 @@ Last term, we formulated a set of null hypotheses about relationship between cat
 
 --
 
-We can use the same framework to test elements of the General Linear Model and, in particular, regression coefficients. In particular, here we will test the null hypothesis that $\beta_{1} = 0$ (there is no relationship between dietary restraint behaviors and BMI).
+We can use the same framework to test elements of the General Linear Model and, in particular, regression coefficients. In particular, here we will test the null hypothesis that $\beta_{1} = 0$ (there is no relationship between extraversion and sense of belonging).
 
 $$\Large H_{0}: \beta_{1}= 0$$
 --
@@ -527,8 +531,8 @@ summary(fit)
 summary(fit)
 ```
 
-$$t = \frac{\hat{\beta_1} - 0}{SE(\hat{\beta_1})} = \frac{1.0367}{0.137} = 7.57$$
-$$Pr(t < -7.57 \text{ or } t > 7.57)|H_0 = 0.000000000000082 \text{ or } p <0.001$$
+$$t = \frac{\hat{\beta_1} - 0}{SE(\hat{\beta_1})} = \frac{0.2222}{0.0136} = 16.38$$
+$$Pr(t < -16.38 \text{ or } t > 16.38)|H_0 = 0.00000...0017 \text{ (57 zeros!) or } p <0.001$$
 ---
 # Regression coefficients
 
@@ -536,7 +540,7 @@ $$Pr(t < -7.57 \text{ or } t > 7.57)|H_0 = 0.000000000000082 \text{ or } p <0.00
 summary(fit)
 ```
 
-Under the null hypothesis, it is extremely unlikely to obtain a Dietary Restraint slope of 1.04 (p < .001). Therefore, we can reject the null hypothesis and conclude that there is a positive relationship between Dietary Restraint rating and BMI, on average in the population.
+Under the null hypothesis, it is extremely unlikely to obtain an Extraversion slope of 0.22 (p < .001). Therefore, we can reject the null hypothesis and conclude that there is a positive relationship between extraversion and sense of belonging, on average in the population.
 
 ---
 # Confidence intervals (CIs)
@@ -778,9 +782,9 @@ summary(fit)
 ```
 95% CIs:
 $$\hat{\beta_1} \pm t_{n-2}[se(\hat{\beta_1})]$$
-$$ 1.037 \pm 1.96(0.137)$$
+$$ 0.222 \pm 1.96(0.0136)$$
 
-$$[0.768, 1.306]$$
+$$[0.196, 0.249]$$
 
 ---
 # Confidence intervals (CIs)
@@ -821,14 +825,14 @@ summary(fit)
 
 ```
 
-Our omnibus test is significant at an $\alpha$-threshold of 0.05 $(p < 0.001)$, therefore we can reject the null hypothesis that the full model accounts for no variability in individuals' BMI.
+Our omnibus test is significant at an $\alpha$-threshold of 0.05 $(p < 0.001)$, therefore we can reject the null hypothesis that the full model accounts for no variability in students' sense of belonging.
 
 ---
 ## Summarizing regression results
 ```{r, echo=T, results='asis'}
 modelsummary(fit, stars=T,
-  gof_omit = "Adj.|AIC|BIC|Log",
-  coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+  gof_omit = "Adj.|AIC|BIC|Log|^F$",
+  coef_rename = c("extraversion" = "Extraversion (1-5)"),
   escape=F) # <- necessary for html, but don't need this for Word
 ```
 
@@ -837,14 +841,14 @@ modelsummary(fit, stars=T,
 
 ```{r, echo=F, results='asis'}
 modelsummary(fit, stars=T,
-     gof_omit = "Adj.|AIC|BIC|Log",
-     coef_rename = c("EDEQ_restraint" = "Dietary Restraint Index (0-6)"),
+     gof_omit = "Adj.|AIC|BIC|Log|^F$",
+     coef_rename = c("extraversion" = "Extraversion (1-5)"),
      escape=F)
 ```
 
 
 
-.small[We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between BMI and Dietary Restraint, on average, in the population of young adult males. At an alpha threshold of 0.05, we found that Dietary Restraint was a significant predictor of BMI and accounted for approximately 5 percent of the variance in BMI. We estimate that young men who are one unit apart on a dietary restraint index will have a BMI score 1.04 (*p*<0.001, 95% CI: 0.77, 1.31) points different from each other.]
+.small[We postulated a linear model which we estimated via Ordinary-Least Squares regression to assess whether there is a relationship between sense of belonging and extraversion, on average, in the population of first-year college students. At an alpha threshold of 0.05, we found that extraversion was a significant predictor of sense of belonging and accounted for approximately 6 percent of the variance in belonging. We estimate that students one unit apart on extraversion will have belonging scores 0.22 (*p*<0.001, 95% CI: 0.20, 0.25) points different from each other.]
 
 
  
@@ -894,5 +898,3 @@ class: middle, inverse
 - Now live
 - Have all information you need to complete parts 1 & 2
 - Due Feb. 1
-
-
